@@ -142,7 +142,7 @@ export const TelebirrReceipt = ({
       {os === "android" && (
         <div className="h-[32px] w-full flex items-center justify-between px-[14px] pt-[17px] shrink-0 z-10 bg-white">
           <div className={cn(
-            "text-[17.5px] font-[400] text-black tracking-[-0.4px] leading-none shrink-0",
+            "text-[12.2px] font-[500] text-black tracking-[-0.2px] leading-none shrink-0",
             notchType === "punch_left" ? "ml-[37.5px]" : "ml-[4px]"
           )}>
             {data.time}
@@ -189,7 +189,7 @@ export const TelebirrReceipt = ({
       {os === "ios" && (
         <div className={cn("h-[48px] w-full flex items-end justify-between px-[22px] pb-[8px] shrink-0 font-bold z-10 bg-white",
           notchType === "dynamic_island" ? "pt-[12px]" : "")}>
-          <div className="text-[19.5px] font-[500] text-black tracking-tight">{data.time}</div>
+          <div className="text-[15.2px] font-[600] text-black tracking-tight">{data.time}</div>
           <div className="flex items-center gap-[5.5px]">
             <svg width="17" height="11" viewBox="0 0 20 14" fill="black">
               <rect x="0" y="11" width="3.5" height="3" rx="0.5" />
