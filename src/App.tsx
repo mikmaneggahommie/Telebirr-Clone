@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { toPng } from "html-to-image";
 import { Download, RefreshCcw } from "lucide-react";
-import { TelebirrReceipt, ReceiptData } from "./components/TelebirrReceipt";
+import { TelebirrReceipt, ReceiptData, devicePresets, PresetKey } from "./components/TelebirrReceipt";
 
-const ANDROID_MODELS = [
-  { value: "m1", label: "Samsung M1" },
-  { value: "s22", label: "Samsung S22" },
-] as const;
-
-const IOS_MODELS = [
-  { value: "xr", label: "iPhone XR" },
-] as const;
+const PRESET_OPTIONS: { value: PresetKey; label: string }[] = [
+  { value: "iphone_modern", label: "iPhone Modern" },
+  { value: "iphone_classic", label: "iPhone Classic" },
+  { value: "samsung", label: "Samsung" },
+  { value: "pixel", label: "Pixel" },
+  { value: "generic_android", label: "Generic Android" },
+  { value: "test_accuracy", label: "Test Accuracy Mode (720x1560)" },
+];
 
 /* ─── Premium Toggle Component ─── */
 const PremiumToggle = ({ enabled, onClick, label }: { enabled: boolean; onClick: () => void; label: string }) => (
@@ -28,8 +28,9 @@ const PremiumToggle = ({ enabled, onClick, label }: { enabled: boolean; onClick:
 
 export function App() {
   const [data, setData] = useState<ReceiptData>({
-    os: "android",
-    phoneModel: "m1",
+    preset: "samsung",
+    cameraHoleOverride: "default",
+    navBarOverride: "default",
     time: "11:43",
     battery: "48",
     amount: "-2.00",
@@ -56,30 +57,26 @@ export function App() {
     setData({ ...data, transactionNumber: `${prefix}${suffix}` });
   };
 
-  const handleOsChange = (newOs: "android" | "ios") => {
-    const defaultModel = newOs === "android" ? "m1" : "xr";
-    setData({
-      ...data,
-      os: newOs,
-      phoneModel: defaultModel as "m1" | "s22" | "xr",
-    });
-  };
+  const currentOs = devicePresets[data.preset]?.os || "android";
 
   const handleDownload = async () => {
-    // IMPORTANT: Fix download to target ONLY the screen content, not the frame
     const screenElement = document.getElementById("receipt-screen");
     if (screenElement) {
-      let pixelRatio = 3; // High quality default
-      if (data.phoneModel === "s22") pixelRatio = 3;
-      if (data.phoneModel === "m1") pixelRatio = 3; // Increased for M1
-      if (data.phoneModel === "xr") pixelRatio = 2.5;
+      // For all models, use a high quality pixel ratio
+      let pixelRatio = 3; 
+      if (currentOs === "ios") pixelRatio = 2.5;
+
+      // Force 720x1560 exact output for accuracy testing
+      if (data.preset === "test_accuracy") {
+        pixelRatio = 2.0; 
+      }
 
       try {
         const dataUrl = await toPng(screenElement, {
           quality: 1,
           pixelRatio: pixelRatio,
           cacheBust: true,
-          backgroundColor: "#ffffff", // Ensure solid white background
+          backgroundColor: "#ffffff",
           style: {
             transform: 'scale(1)',
           }
@@ -93,8 +90,6 @@ export function App() {
       }
     }
   };
-
-  const models = data.os === "android" ? ANDROID_MODELS : IOS_MODELS;
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-50 font-sans overflow-hidden">
@@ -200,32 +195,52 @@ export function App() {
               </select>
             </div>
             <div className="col-span-1">
-               <label className="block text-[10px] font-bold text-gray-400 mb-1">Model</label>
+               <label className="block text-[10px] font-bold text-gray-400 mb-1">Theme Preset</label>
                <select
-                 value={data.phoneModel}
-                 onChange={(e) => setData({ ...data, phoneModel: e.target.value as any })}
-                 className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium"
+                 value={data.preset}
+                 onChange={(e) => setData({ ...data, preset: e.target.value as PresetKey })}
+                 className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-[#8dc73f] focus:outline-none"
                >
-                 {models.map((m) => (
-                   <option key={m.value} value={m.value}>{m.label}</option>
+                 {PRESET_OPTIONS.map((opt) => (
+                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                  ))}
                </select>
             </div>
           </div>
 
-          <div className="flex gap-2">
-            <button
-               onClick={() => handleOsChange("android")}
-               className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${data.os === "android" ? "bg-black text-white" : "bg-gray-100 text-gray-500"}`}
-            >
-              ANDROID
-            </button>
-            <button
-               onClick={() => handleOsChange("ios")}
-               className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${data.os === "ios" ? "bg-white border border-gray-200 text-black" : "bg-gray-100 text-gray-500"}`}
-            >
-              iOS
-            </button>
+          {/* Layout Tweaks */}
+          <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
+             <h2 className="text-[11px] font-black text-gray-900 uppercase tracking-widest mb-4 border-b border-gray-200 pb-2">Layout Tweaks</h2>
+             
+             <div className="space-y-4">
+               <div>
+                 <label className="block text-[10px] font-bold text-gray-400 mb-1">Camera Hole Override</label>
+                 <select
+                   value={data.cameraHoleOverride}
+                   onChange={(e) => setData({ ...data, cameraHoleOverride: e.target.value as any })}
+                   className="w-full px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-bold focus:ring-2 focus:ring-[#8dc73f] focus:outline-none"
+                 >
+                   <option value="default">Default for Preset</option>
+                   <option value="left">Left Punch-Hole</option>
+                   <option value="center">Center Punch-Hole</option>
+                   <option value="none">None</option>
+                 </select>
+               </div>
+               
+               <div>
+                 <label className="block text-[10px] font-bold text-gray-400 mb-1">Nav Bar Override</label>
+                 <select
+                   value={data.navBarOverride}
+                   onChange={(e) => setData({ ...data, navBarOverride: e.target.value as any })}
+                   className="w-full px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-bold focus:ring-2 focus:ring-[#8dc73f] focus:outline-none"
+                 >
+                   <option value="default">Default for Preset</option>
+                   <option value="gestures">Gestures</option>
+                   <option value="buttons">3-Buttons</option>
+                   <option value="hidden">Hidden</option>
+                 </select>
+               </div>
+             </div>
           </div>
 
           {/* Status Bar Section */}
@@ -236,7 +251,7 @@ export function App() {
                <div className="grid grid-cols-3 gap-2">
                  <PremiumToggle label="Silent" enabled={data.silentMode} onClick={() => setData({...data, silentMode: !data.silentMode})} />
                  <PremiumToggle label="Location" enabled={data.showLocation} onClick={() => setData({...data, showLocation: !data.showLocation})} />
-                 {data.os === "android" && (
+                 {currentOs === "android" && (
                    <PremiumToggle label="VoLTE" enabled={data.showVolte} onClick={() => setData({...data, showVolte: !data.showVolte})} />
                  )}
                </div>
@@ -247,20 +262,20 @@ export function App() {
                    <select
                      value={data.connectivity}
                      onChange={(e) => setData({ ...data, connectivity: e.target.value as any })}
-                     className="w-full px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-bold"
+                     className="w-full px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-bold focus:ring-2 focus:ring-[#8dc73f] focus:outline-none"
                    >
                      <option value="wifi">WiFi Only</option>
                      <option value="data">Data Only</option>
                      <option value="both">WiFi + Data</option>
                    </select>
                  </div>
-                 {data.os === "android" && (
+                 {currentOs === "android" && (
                    <div>
                      <label className="block text-[10px] font-bold text-gray-400 mb-1">Sim Cards</label>
                      <select
                        value={data.simCount}
                        onChange={(e) => setData({ ...data, simCount: parseInt(e.target.value) as any })}
-                       className="w-full px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-bold"
+                       className="w-full px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-bold focus:ring-2 focus:ring-[#8dc73f] focus:outline-none"
                      >
                        <option value={1}>Single Sim</option>
                        <option value={2}>Dual Sim</option>
