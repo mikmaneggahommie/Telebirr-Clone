@@ -242,7 +242,7 @@ export const TelebirrReceipt = ({
         </div>
 
         {/* Success Text */}
-        <div className="w-full flex flex-col items-center justify-center mt-[9px] translate-x-[3.5px]">
+        <div className="w-full flex flex-col items-center justify-center mt-[9px] translate-x-[2px]">
           <span className="text-[#8dc73f] text-[13.5px] font-[450] tracking-tight leading-none">Successful</span>
         </div>
 
