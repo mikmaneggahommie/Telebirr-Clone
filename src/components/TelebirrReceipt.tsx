@@ -233,7 +233,7 @@ export const TelebirrReceipt = ({
         </div>
 
         {/* Success Circle  */}
-        <div className="w-full flex flex-col items-center justify-center mt-[7px]">
+        <div className="w-full flex flex-col items-center justify-center mt-[10px]">
           <div className="w-[44px] h-[44px] aspect-square flex-none bg-[#8dc73f] rounded-full flex items-center justify-center">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="20 6 9 17 4 12" />
@@ -242,7 +242,7 @@ export const TelebirrReceipt = ({
         </div>
 
         {/* Success Text */}
-        <div className="w-full flex flex-col items-center justify-center mt-[16px]">
+        <div className="w-full flex flex-col items-center justify-center mt-[8px] translate-x-[1.5px]">
           <span className="text-[#8dc73f] text-[13.5px] font-[450] tracking-tight leading-none">Successful</span>
         </div>
 
