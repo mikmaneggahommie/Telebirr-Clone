@@ -143,7 +143,7 @@ export const TelebirrReceipt = ({
         <div className="h-[32px] w-full flex items-center justify-between px-[14px] pt-[16px] shrink-0 z-10 bg-white">
           <div className={cn(
             "text-[13.5px] font-[450] leading-none shrink-0",
-            notchType === "punch_left" ? "ml-[38.5px]" : "ml-[4px]"
+            notchType === "punch_left" ? "ml-[36.5px]" : "ml-[4px]"
           )}
           style={{ color: '#3a3a3a', letterSpacing: '0.8px', fontFamily: 'Roboto, sans-serif' }}
           >
@@ -233,7 +233,7 @@ export const TelebirrReceipt = ({
         </div>
 
         {/* Success Circle  */}
-        <div className="w-full flex flex-col items-center justify-center mt-6">
+        <div className="w-full flex flex-col items-center justify-center mt-[12px]">
           <div className="w-[44px] h-[44px] aspect-square flex-none bg-[#8dc73f] rounded-full flex items-center justify-center">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="20 6 9 17 4 12" />
@@ -242,12 +242,12 @@ export const TelebirrReceipt = ({
         </div>
 
         {/* Success Text */}
-        <div className="w-full flex flex-col items-center justify-center mt-2">
+        <div className="w-full flex flex-col items-center justify-center mt-[4px]">
           <span className="text-[#8dc73f] text-[13.5px] font-[450] tracking-tight leading-none">Successful</span>
         </div>
 
         {/* Amount */}
-        <div className="w-full flex items-baseline justify-center gap-1 mt-14 mb-8">
+        <div className="w-full flex items-baseline justify-center gap-1 mt-[84px] mb-8">
           <span className="text-[31.5px] font-[450] text-[#222] tracking-tighter leading-none">
             -{data.amount.toString().replace(/[^0-9.]/g, "").split(".")[0] || "0"}.00
           </span>
