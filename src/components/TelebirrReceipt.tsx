@@ -247,11 +247,11 @@ export const TelebirrReceipt = ({
         </div>
 
         {/* Amount */}
-        <div className="w-full flex items-baseline justify-center gap-1 mt-[81px] translate-x-[1px] mb-8">
-          <span className="text-[31.5px] font-[410] text-[#222] tracking-tighter leading-none">
+        <div className="w-full flex items-baseline justify-center gap-1 mt-[81px] -translate-x-[1px] mb-8">
+          <span className="text-[31.5px] font-[405] text-[#222] tracking-tighter leading-none">
             -{data.amount.toString().replace(/[^0-9.]/g, "").split(".")[0] || "0"}.00
           </span>
-          <span className="text-[11px] font-[410] text-[#222] leading-none translate-x-[4px] -translate-y-[1.5px]">
+          <span className="text-[11px] font-[405] text-[#222] leading-none translate-x-[4px] -translate-y-[1.5px]">
             (ETB)
           </span>
         </div>
