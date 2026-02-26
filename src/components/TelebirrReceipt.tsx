@@ -140,11 +140,13 @@ export const TelebirrReceipt = ({
     >
       {/* status Bar */}
       {os === "android" && (
-        <div className="h-[32px] w-full flex items-center justify-between px-[14px] pt-[17px] shrink-0 z-10 bg-white">
+        <div className="h-[32px] w-full flex items-center justify-between px-[14px] pt-[16px] shrink-0 z-10 bg-white">
           <div className={cn(
-            "text-[12.2px] font-[500] text-black tracking-[-0.2px] leading-none shrink-0",
-            notchType === "punch_left" ? "ml-[37.5px]" : "ml-[4px]"
-          )}>
+            "text-[13.5px] font-[450] leading-none shrink-0",
+            notchType === "punch_left" ? "ml-[38.5px]" : "ml-[4px]"
+          )}
+          style={{ color: '#3a3a3a', letterSpacing: '0.8px', fontFamily: 'Roboto, sans-serif' }}
+          >
             {data.time}
           </div>
           <div className="flex items-center gap-[4.5px] shrink-0">
@@ -189,7 +191,7 @@ export const TelebirrReceipt = ({
       {os === "ios" && (
         <div className={cn("h-[48px] w-full flex items-end justify-between px-[22px] pb-[8px] shrink-0 font-bold z-10 bg-white",
           notchType === "dynamic_island" ? "pt-[12px]" : "")}>
-          <div className="text-[15.2px] font-[600] text-black tracking-tight">{data.time}</div>
+          <div className="text-[16.5px] font-[300] tracking-wide" style={{ color: '#3a3a3a' }}>{data.time}</div>
           <div className="flex items-center gap-[5.5px]">
             <svg width="17" height="11" viewBox="0 0 20 14" fill="black">
               <rect x="0" y="11" width="3.5" height="3" rx="0.5" />
