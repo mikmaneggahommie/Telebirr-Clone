@@ -247,7 +247,7 @@ export const TelebirrReceipt = ({
         </div>
 
         {/* Amount */}
-        <div className="w-full flex items-baseline justify-center gap-1 mt-[84px] translate-x-[1px] mb-8">
+        <div className="w-full flex items-baseline justify-center gap-1 mt-[78px] translate-x-[4px] mb-8">
           <span className="text-[31.5px] font-[415] text-[#222] tracking-tighter leading-none">
             -{data.amount.toString().replace(/[^0-9.]/g, "").split(".")[0] || "0"}.00
           </span>
