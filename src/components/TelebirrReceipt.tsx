@@ -243,20 +243,20 @@ export const TelebirrReceipt = ({
 
         {/* Success Text */}
         <div className="w-full flex flex-col items-center justify-center mt-[9px] translate-x-[2px]">
-          <span className="text-[#8dc73f] text-[13.5px] font-[410] tracking-[0.02px] leading-none">Successful</span>
+          <span className="text-[#8dc73f] text-[13.5px] font-[410] tracking-[-0.21px] leading-none">Successful</span>
         </div>
 
         {/* Amount */}
         <div className="w-full flex items-baseline justify-center gap-1 mt-[80px] -translate-x-[1px] mb-8">
-          <div className="flex items-baseline translate-y-[0.5px]">
-            <span className="text-[31.5px] font-[405] text-[#222] tracking-tighter leading-none">
-              -{data.amount.toString().replace(/[^0-9.]/g, "").split(".")[0] || "0"}
+          <div className="flex items-baseline -translate-y-[0.5px] -translate-x-[1.5px]" style={{ transform: "scaleX(0.96) scaleY(0.94)", transformOrigin: "bottom right" }}>
+            <span className="text-[31.5px] font-[400] text-[#111] tracking-normal leading-none translate-x-[2.0px] -translate-y-[0.3px]" style={{ WebkitTextStroke: "1.1px currentColor" }}>
+              -{data.amount.toString().replace(/[^0-9.]/g, "").split(".")[0] || "0"}.
             </span>
-            <span className="text-[31.5px] font-[405] text-[#222] tracking-tighter leading-none translate-x-[0.5px]">
-              .00
+            <span className="text-[31.5px] font-[400] text-[#111] tracking-normal leading-none translate-x-[0.8px] -translate-y-[0.2px]" style={{ WebkitTextStroke: "1.1px currentColor" }}>
+              00
             </span>
           </div>
-          <span className="text-[11px] font-[405] text-[#222] leading-none translate-x-[2.5px] -translate-y-[0.3px]">
+          <span className="text-[11px] font-[400] text-[#111] leading-none -translate-x-[0.7px] -translate-y-[0.5px]" style={{ WebkitTextStroke: "0.55px currentColor" }}>
             (ETB)
           </span>
         </div>
