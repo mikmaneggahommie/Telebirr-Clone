@@ -217,12 +217,12 @@ export function App() {
     tableKeyStroke: 0.1,
     tableKeySize: 11,
     tableKeyColumnX: 0.5,
-    tableKeyColumnY: -2.5,
+    tableKeyColumnY: -7,
     tableValWeight: 410,
     tableValStroke: 0,
     tableValSize: 11.2,
-    tableValColumnX: -5,
-    tableValColumnY: -2.5,
+    tableValColumnX: -4.5,
+    tableValColumnY: -8,
     dotSize: 7.5,
     finishedTextSize: 13,
     navIconSize: 20,
@@ -253,18 +253,18 @@ export function App() {
     use12HourFormat: false,
     layoutTweaks: {
       topActions: { x: 0, y: -2 },
-      successBadge: { x: 0, y: -4.5 },
-      successText: { x: 0, y: -5 },
+      successBadge: { x: 0.5, y: -4.5 },
+      successText: { x: 1.5, y: -5.5 },
       amountBlock: { x: -0.5, y: -7.5 },
-      divider: { x: 0, y: -13 },
+      divider: { x: 0, y: -18.5 },
       table: { x: 2.5, y: -13.5 },
-      qr: { x: 0, y: -15.5 },
+      qr: { x: -1, y: -23 },
       qrIcon: { x: 18, y: 0 },
       qrText: { x: 2, y: 1 },
       qrArrow: { x: -9, y: 0 },
-      banner: { x: 0, y: -4, h: 105 },
-      dots: { x: 0, y: -3.5 },
-      finishedButton: { x: -0.5, y: -3 },
+      banner: { x: 0, y: -11, h: 105 },
+      dots: { x: 0, y: -10.5 },
+      finishedButton: { x: -6, y: -10.5 },
     },
   });
 
@@ -296,18 +296,18 @@ export function App() {
     set({
       layoutTweaks: {
         topActions: { x: 0, y: -2 },
-        successBadge: { x: 0, y: -4.5 },
-        successText: { x: 0, y: -5 },
+        successBadge: { x: 0.5, y: -4.5 },
+        successText: { x: 1.5, y: -5.5 },
         amountBlock: { x: -0.5, y: -7.5 },
-        divider: { x: 0, y: -13 },
+        divider: { x: 0, y: -18.5 },
         table: { x: 2.5, y: -13.5 },
-        qr: { x: 0, y: -15.5 },
+        qr: { x: -1, y: -23 },
         qrIcon: { x: 18, y: 0 },
         qrText: { x: 2, y: 1 },
         qrArrow: { x: -9, y: 0 },
-        banner: { x: 0, y: -4, h: 105 },
-        dots: { x: 0, y: -3.5 },
-        finishedButton: { x: -0.5, y: -3 },
+        banner: { x: 0, y: -11, h: 105 },
+        dots: { x: 0, y: -10.5 },
+        finishedButton: { x: -6, y: -10.5 },
       },
       downloadIconSize: 15,
       downloadIconX: 1,
@@ -322,12 +322,12 @@ export function App() {
       tableKeyStroke: 0.1,
       tableKeySize: 11,
       tableKeyColumnX: 0.5,
-      tableKeyColumnY: -2.5,
+      tableKeyColumnY: -7,
       tableValWeight: 410,
       tableValStroke: 0,
       tableValSize: 11.2,
-      tableValColumnX: -5,
-      tableValColumnY: -2.5,
+      tableValColumnX: -4.5,
+      tableValColumnY: -8,
       dotSize: 7.5,
       finishedTextSize: 13,
       navIconSize: 20,
@@ -710,22 +710,23 @@ export function App() {
               <h2 className="text-[11px] font-black text-[#444b43] uppercase tracking-[0.15em]">Position Tweaks</h2>
             </div>
             <div className="bg-white border border-[#e8f0eb] p-5 rounded-2xl space-y-5 shadow-sm">
-              <XYTweakSlider label="Download / Share Row" value={data.layoutTweaks?.topActions ?? { x: 0, y: -2 }} onChange={(v) => setTweak("topActions", v)} onReset={() => setTweak("topActions", { x: 0, y: -2 })} />
+              <XYTweakSlider label="Download / Share Row" value={{ x: data.layoutTweaks?.topActions?.x ?? 0, y: data.layoutTweaks?.topActions?.y ?? -2 }} onChange={(v) => setTweak("topActions", v)} onReset={() => setTweak("topActions", { x: 0, y: -2 })} />
               <XYTweakSlider label="Download Icon (Only)" value={{ x: data.downloadIconX, y: data.downloadIconY }} onChange={(v) => set({ downloadIconX: v.x, downloadIconY: v.y })} onReset={() => set({ downloadIconX: 1, downloadIconY: 0 })} />
               <XYTweakSlider label="Share Icon (Only)" value={{ x: data.shareIconX, y: data.shareIconY }} onChange={(v) => set({ shareIconX: v.x, shareIconY: v.y })} onReset={() => set({ shareIconX: 0, shareIconY: 0 })} />
-              <XYTweakSlider label="Checkmark Badge" value={data.layoutTweaks?.successBadge ?? { x: 0, y: -4.5 }} onChange={(v) => setTweak("successBadge", v)} onReset={() => setTweak("successBadge", { x: 0, y: -4.5 })} />
+              <XYTweakSlider label="Checkmark Badge" value={{ x: data.layoutTweaks?.successBadge?.x ?? 0.5, y: data.layoutTweaks?.successBadge?.y ?? -4.5 }} onChange={(v) => setTweak("successBadge", v)} onReset={() => setTweak("successBadge", { x: 0.5, y: -4.5 })} />
               <XYTweakSlider label="Checkmark Icon" value={{ x: data.checkmarkIconX, y: data.checkmarkIconY }} onChange={(v) => set({ checkmarkIconX: v.x, checkmarkIconY: v.y })} onReset={() => set({ checkmarkIconX: 0, checkmarkIconY: 1 })} />
-              <XYTweakSlider label="Successful Text" value={data.layoutTweaks?.successText ?? { x: 0, y: -5 }} onChange={(v) => setTweak("successText", v)} onReset={() => setTweak("successText", { x: 0, y: -5 })} />
-              <XYTweakSlider label="Amount Block" value={data.layoutTweaks?.amountBlock ?? { x: -0.5, y: -7.5 }} onChange={(v) => setTweak("amountBlock", v)} onReset={() => setTweak("amountBlock", { x: -0.5, y: -7.5 })} />
-              <XYTweakSlider label="Divider Line" value={data.layoutTweaks?.divider ?? { x: 0, y: -13 }} onChange={(v) => setTweak("divider", v)} onReset={() => setTweak("divider", { x: 0, y: -13 })} />
+              <XYTweakSlider label="Successful Text" value={{ x: data.layoutTweaks?.successText?.x ?? 1.5, y: data.layoutTweaks?.successText?.y ?? -5.5 }} onChange={(v) => setTweak("successText", v)} onReset={() => setTweak("successText", { x: 1.5, y: -5.5 })} />
+              <XYTweakSlider label="Amount Block" value={{ x: data.layoutTweaks?.amountBlock?.x ?? -0.5, y: data.layoutTweaks?.amountBlock?.y ?? -7.5 }} onChange={(v) => setTweak("amountBlock", v)} onReset={() => setTweak("amountBlock", { x: -0.5, y: -7.5 })} />
+              <XYTweakSlider label="Divider Line" value={{ x: data.layoutTweaks?.divider?.x ?? 0, y: data.layoutTweaks?.divider?.y ?? -18.5 }} onChange={(v) => setTweak("divider", v)} onReset={() => setTweak("divider", { x: 0, y: -18.5 })} />
+              <XYTweakSlider label="Table Block (whole)" value={{ x: data.layoutTweaks?.table?.x ?? 2.5, y: data.layoutTweaks?.table?.y ?? -13.5 }} onChange={(v) => setTweak("table", v)} onReset={() => setTweak("table", { x: 2.5, y: -13.5 })} />
               <div className="h-px bg-[#f0f3ec]" />
-              <XYTweakSlider label="Left Column (Labels)" value={{ x: data.tableKeyColumnX, y: data.tableKeyColumnY }} onChange={(v) => set({ tableKeyColumnX: v.x, tableKeyColumnY: v.y })} onReset={() => set({ tableKeyColumnX: 0.5, tableKeyColumnY: -2.5 })} />
-              <XYTweakSlider label="Right Column (Values)" value={{ x: data.tableValColumnX, y: data.tableValColumnY }} onChange={(v) => set({ tableValColumnX: v.x, tableValColumnY: v.y })} onReset={() => set({ tableValColumnX: -5, tableValColumnY: -2.5 })} />
+              <XYTweakSlider label="Left Column (Labels)" value={{ x: data.tableKeyColumnX, y: data.tableKeyColumnY }} onChange={(v) => set({ tableKeyColumnX: v.x, tableKeyColumnY: v.y })} onReset={() => set({ tableKeyColumnX: 0.5, tableKeyColumnY: -7 })} />
+              <XYTweakSlider label="Right Column (Values)" value={{ x: data.tableValColumnX, y: data.tableValColumnY }} onChange={(v) => set({ tableValColumnX: v.x, tableValColumnY: v.y })} onReset={() => set({ tableValColumnX: -4.5, tableValColumnY: -8 })} />
               <div className="h-px bg-[#f0f3ec]" />
-              <XYTweakSlider label="QR Row (whole)" value={data.layoutTweaks?.qr ?? { x: 0, y: -15.5 }} onChange={(v) => setTweak("qr", v)} onReset={() => setTweak("qr", { x: 0, y: -15.5 })} />
-              <XYTweakSlider label="QR Icon" value={data.layoutTweaks?.qrIcon ?? { x: 18, y: 0 }} onChange={(v) => setTweak("qrIcon", v)} onReset={() => setTweak("qrIcon", { x: 18, y: 0 })} />
-              <XYTweakSlider label="QR Text" value={data.layoutTweaks?.qrText ?? { x: 2, y: 1 }} onChange={(v) => setTweak("qrText", v)} onReset={() => setTweak("qrText", { x: 2, y: 1 })} />
-              <XYTweakSlider label="QR Arrow" value={data.layoutTweaks?.qrArrow ?? { x: -9, y: 0 }} onChange={(v) => setTweak("qrArrow", v)} onReset={() => setTweak("qrArrow", { x: -9, y: 0 })} />
+              <XYTweakSlider label="QR Row (whole)" value={{ x: data.layoutTweaks?.qr?.x ?? -1, y: data.layoutTweaks?.qr?.y ?? -23 }} onChange={(v) => setTweak("qr", v)} onReset={() => setTweak("qr", { x: -1, y: -23 })} />
+              <XYTweakSlider label="QR Icon" value={{ x: data.layoutTweaks?.qrIcon?.x ?? 18, y: data.layoutTweaks?.qrIcon?.y ?? 0 }} onChange={(v) => setTweak("qrIcon", v)} onReset={() => setTweak("qrIcon", { x: 18, y: 0 })} />
+              <XYTweakSlider label="QR Text" value={{ x: data.layoutTweaks?.qrText?.x ?? 2, y: data.layoutTweaks?.qrText?.y ?? 1 }} onChange={(v) => setTweak("qrText", v)} onReset={() => setTweak("qrText", { x: 2, y: 1 })} />
+              <XYTweakSlider label="QR Arrow" value={{ x: data.layoutTweaks?.qrArrow?.x ?? -9, y: data.layoutTweaks?.qrArrow?.y ?? 0 }} onChange={(v) => setTweak("qrArrow", v)} onReset={() => setTweak("qrArrow", { x: -9, y: 0 })} />
               <div className="h-px bg-[#f0f3ec]" />
               <ValueTweakSlider label="QR Text Size" value={data.qrFontSize} min={10} max={22} step={0.1} onChange={(v) => set({ qrFontSize: Number(v.toFixed(1)) })} onReset={() => set({ qrFontSize: 13 })} format={(v) => `${v.toFixed(1)}px`} />
               <ValueTweakSlider label="QR Text Weight" value={data.qrTextWeight} min={300} max={900} step={10} onChange={(v) => set({ qrTextWeight: v })} onReset={() => set({ qrTextWeight: 600 })} />
@@ -736,9 +737,9 @@ export function App() {
               <ValueTweakSlider label="QR Arrow Height" value={data.qrArrowHeight} min={5} max={40} step={0.5} onChange={(v) => set({ qrArrowHeight: v })} onReset={() => set({ qrArrowHeight: 10 })} format={(v) => `${v}px`} />
               <ValueTweakSlider label="QR Arrow Stroke" value={data.qrArrowStroke} min={0.5} max={5} step={0.1} onChange={(v) => set({ qrArrowStroke: v })} onReset={() => set({ qrArrowStroke: 1.5 })} format={(v) => `${v}px`} />
               <div className="h-px bg-[#f0f3ec]" />
-              <XYTweakSlider label="Banner" value={data.layoutTweaks?.banner ?? { x: 0, y: -4 }} onChange={(v) => setTweak("banner", v)} onReset={() => setTweak("banner", { x: 0, y: -4 })} />
-              <XYTweakSlider label="Dots" value={data.layoutTweaks?.dots ?? { x: 0, y: -3.5 }} onChange={(v) => setTweak("dots", v)} onReset={() => setTweak("dots", { x: 0, y: -3.5 })} />
-              <XYTweakSlider label="Finished Button" value={data.layoutTweaks?.finishedButton ?? { x: -0.5, y: -3 }} onChange={(v) => setTweak("finishedButton", v)} onReset={() => setTweak("finishedButton", { x: -0.5, y: -3 })} />
+              <XYTweakSlider label="Banner" value={{ x: data.layoutTweaks?.banner?.x ?? 0, y: data.layoutTweaks?.banner?.y ?? -11 }} onChange={(v) => setTweak("banner", v)} onReset={() => setTweak("banner", { x: 0, y: -11 })} />
+              <XYTweakSlider label="Dots" value={{ x: data.layoutTweaks?.dots?.x ?? 0, y: data.layoutTweaks?.dots?.y ?? -10.5 }} onChange={(v) => setTweak("dots", v)} onReset={() => setTweak("dots", { x: 0, y: -10.5 })} />
+              <XYTweakSlider label="Finished Button" value={{ x: data.layoutTweaks?.finishedButton?.x ?? -6, y: data.layoutTweaks?.finishedButton?.y ?? -10.5 }} onChange={(v) => setTweak("finishedButton", v)} onReset={() => setTweak("finishedButton", { x: -6, y: -10.5 })} />
               <div className="h-px bg-[#f0f3ec]" />
               <ValueTweakSlider label="Banner Height" value={Math.round(data.layoutTweaks?.banner?.h ?? 105)} min={88} max={140} onChange={setBannerHeight} onReset={() => setBannerHeight(105)} format={(v) => `${Math.round(v)}px`} />
               <ValueTweakSlider label="Dots Size" value={data.dotSize} min={6.5} max={9} step={0.1} onChange={(v) => set({ dotSize: Number(v.toFixed(1)) })} onReset={() => set({ dotSize: 7.5 })} format={(v) => `${v.toFixed(1)}px`} />

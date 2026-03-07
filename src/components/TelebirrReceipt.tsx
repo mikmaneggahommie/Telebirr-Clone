@@ -24,7 +24,7 @@ export const devicePresets = {
   iphone_classic: { os: "ios", notch: "notch", font: "font-sans", nav: "home_indicator", width: "375px", height: "812px" },
   samsung: { os: "android", notch: "punch_center", font: "font-roboto", nav: "buttons", width: "360px", height: "800px" },
   generic_android: { os: "android", notch: "punch_left", font: "font-roboto", nav: "buttons", width: "360px", height: "780px" },
-  test_accuracy: { os: "android", notch: "punch_left", font: "font-roboto", nav: "buttons", width: "360px", height: "800px" },
+  test_accuracy: { os: "android", notch: "punch_left", font: "font-roboto", nav: "buttons", width: "360px", height: "780px" },
 } as const;
 
 export type PresetKey = keyof typeof devicePresets;
