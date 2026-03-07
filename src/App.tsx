@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { toPng } from "html-to-image";
-import { Download, RefreshCcw, Clock, ChevronDown } from "lucide-react";
+import { Download, RefreshCcw, Clock, ChevronDown, Check } from "lucide-react";
 import { TelebirrReceipt, ReceiptData, devicePresets, PresetKey, getBannerSrc, BANNER_SLOTS } from "./components/TelebirrReceipt";
+import { ReceiptLayoutTweaks } from "./components/layout/receiptLayout";
 
 const PRESET_OPTIONS: { value: PresetKey; label: string }[] = [
   { value: "iphone_modern", label: "iPhone (Modern — Dynamic Island)" },
@@ -10,6 +11,45 @@ const PRESET_OPTIONS: { value: PresetKey; label: string }[] = [
   { value: "generic_android", label: "Generic Android" },
   { value: "test_accuracy", label: "Test Accuracy Mode (720×1560)" },
 ];
+
+const EXPORT_SCREEN_ID = "receipt-export-screen";
+
+const nextFrame = () =>
+  new Promise<void>((resolve) => {
+    requestAnimationFrame(() => resolve());
+  });
+
+const waitForCaptureReady = async (node: HTMLElement) => {
+  try {
+    await document.fonts.ready;
+  } catch {
+    // Ignore font readiness errors and continue.
+  }
+
+  const images = Array.from(node.querySelectorAll("img"));
+  await Promise.all(
+    images.map(async (img) => {
+      if (!img.complete) {
+        await new Promise<void>((resolve) => {
+          const done = () => resolve();
+          img.addEventListener("load", done, { once: true });
+          img.addEventListener("error", done, { once: true });
+        });
+      }
+      if (img.decode) {
+        try {
+          await img.decode();
+        } catch {
+          // Ignore decode errors and continue.
+        }
+      }
+    }),
+  );
+
+  // Flush any pending layout/paint from async font/image updates.
+  await nextFrame();
+  await nextFrame();
+};
 
 const PremiumToggle = ({ enabled, onClick, label }: { enabled: boolean; onClick: () => void; label: string }) => (
   <div className="flex flex-col items-center gap-1.5 flex-1">
@@ -55,11 +95,140 @@ const StepSlider = ({
   );
 };
 
+const XYTweakSlider = ({
+  label,
+  value,
+  onChange,
+  onReset,
+}: {
+  label: string;
+  value: { x: number; y: number };
+  onChange: (v: { x: number; y: number }) => void;
+  onReset: () => void;
+}) => (
+  <div className="space-y-2">
+    <div className="flex items-center justify-between px-1">
+      <span className="text-[10px] font-black text-[#444b43] uppercase tracking-wider">{label}</span>
+      <div className="flex items-center gap-2">
+        <span className="text-[9px] font-bold text-[#8c948a]">x: {value.x} · y: {value.y}</span>
+        <button onClick={onReset} title="Reset to zero" className="text-[9px] font-black text-[#8c948a] hover:text-[#8dc73f] bg-[#f3f7f4] hover:bg-[#ebf2ee] px-1.5 py-0.5 rounded transition-colors">↺</button>
+      </div>
+    </div>
+    <div className="grid grid-cols-2 gap-3">
+      <div>
+        <div className="flex justify-between mb-1">
+          <span className="text-[9px] font-bold text-[#8c948a] uppercase ml-1">← X →</span>
+          <span className="text-[9px] font-black text-[#8dc73f] bg-[#f3f7f4] px-1.5 py-0.5 rounded">{value.x}</span>
+        </div>
+        <div className="tele-slider">
+          <div className="tele-slider__track" />
+          <div className="tele-slider__fill" style={{ width: `${((value.x + 40) / 80) * 100}%` }} />
+          <input type="range" min={-40} max={40} step={0.5} value={value.x} onChange={(e) => onChange({ ...value, x: parseFloat(e.target.value) })} className="tele-slider__input" />
+        </div>
+      </div>
+      <div>
+        <div className="flex justify-between mb-1">
+          <span className="text-[9px] font-bold text-[#8c948a] uppercase ml-1">↑ Y ↓</span>
+          <span className="text-[9px] font-black text-[#8dc73f] bg-[#f3f7f4] px-1.5 py-0.5 rounded">{value.y}</span>
+        </div>
+        <div className="tele-slider">
+          <div className="tele-slider__track" />
+          <div className="tele-slider__fill" style={{ width: `${((value.y + 40) / 80) * 100}%` }} />
+          <input type="range" min={-40} max={40} step={0.5} value={value.y} onChange={(e) => onChange({ ...value, y: parseFloat(e.target.value) })} className="tele-slider__input" />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const ValueTweakSlider = ({
+  label,
+  value,
+  min,
+  max,
+  step = 1,
+  onChange,
+  onReset,
+  format,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step?: number;
+  onChange: (v: number) => void;
+  onReset: () => void;
+  format?: (v: number) => string;
+}) => {
+  const progress = ((value - min) / Math.max(1, max - min)) * 100;
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between px-1">
+        <span className="text-[10px] font-black text-[#444b43] uppercase tracking-wider">{label}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-[9px] font-bold text-[#8c948a]">{format ? format(value) : value}</span>
+          <button onClick={onReset} title="Reset to default" className="text-[9px] font-black text-[#8c948a] hover:text-[#8dc73f] bg-[#f3f7f4] hover:bg-[#ebf2ee] px-1.5 py-0.5 rounded transition-colors">↺</button>
+        </div>
+      </div>
+      <div className="tele-slider">
+        <div className="tele-slider__track" />
+        <div className="tele-slider__fill" style={{ width: `${progress}%` }} />
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => onChange(parseFloat(e.target.value))}
+          className="tele-slider__input"
+        />
+      </div>
+    </div>
+  );
+};
+
 export function App() {
+  const [copied, setCopied] = useState(false);
   const [data, setData] = useState<ReceiptData>({
     preset: "test_accuracy",
     cameraHoleOverride: "default",
     navBarOverride: "default",
+    downloadIconSize: 15,
+    downloadIconX: 1,
+    downloadIconY: 0,
+    shareIconSize: 15,
+    shareIconX: 0,
+    shareIconY: 0,
+    checkmarkSize: 36,
+    checkmarkIconX: 0,
+    checkmarkIconY: 1,
+    checkmarkStroke: 2.8,
+    amountFontSize: 31.5,
+    amountStroke: 1.1,
+    qrFontSize: 13,
+    qrTextWeight: 600,
+    qrTextStroke: 0,
+    qrIconWidth: 24,
+    qrIconHeight: 28,
+    qrArrowWidth: 4.5,
+    qrArrowHeight: 10,
+    qrArrowStroke: 1.5,
+    tableKeyWeight: 400,
+    tableKeyStroke: 0.1,
+    tableKeySize: 11,
+    tableKeyColumnX: 0.5,
+    tableKeyColumnY: -2.5,
+    tableValWeight: 410,
+    tableValStroke: 0,
+    tableValSize: 11.2,
+    tableValColumnX: -5,
+    tableValColumnY: -2.5,
+    dotSize: 7.5,
+    finishedTextSize: 13,
+    navIconSize: 20,
+    bottomNavHeight: 42.5,
+    bottomNavIconsX: 0,
+    bottomNavIconsY: 0,
     time: "11:43",
     battery: "48",
     batteryCharging: false,
@@ -75,20 +244,108 @@ export function App() {
     showBluetooth: false,
     silentMode: true,
     showLocation: true,
-    showVolte: true,
+    showVolte: false,
+    showMobileData: false,
+    showHotspot: false,
     airplaneMode: false,
     showAlarm: false,
     showNfc: false,
     use12HourFormat: false,
     layoutTweaks: {
-      qr: { x: 0, y: 0 },
-      banner: { x: 0, y: 0 },
-      dots: { x: 0, y: 0 },
-      finishedButton: { x: 0, y: 0 },
+      topActions: { x: 0, y: -2 },
+      successBadge: { x: 0, y: -4.5 },
+      successText: { x: 0, y: -5 },
+      amountBlock: { x: -0.5, y: -7.5 },
+      divider: { x: 0, y: -13 },
+      table: { x: 2.5, y: -13.5 },
+      qr: { x: 0, y: -15.5 },
+      qrIcon: { x: 18, y: 0 },
+      qrText: { x: 2, y: 1 },
+      qrArrow: { x: -9, y: 0 },
+      banner: { x: 0, y: -4, h: 105 },
+      dots: { x: 0, y: -3.5 },
+      finishedButton: { x: -0.5, y: -3 },
     },
   });
 
   const set = (patch: Partial<ReceiptData>) => setData(prev => ({ ...prev, ...patch }));
+
+  const setTweak = (key: keyof ReceiptLayoutTweaks, val: { x: number; y: number }) =>
+    set({
+      layoutTweaks: {
+        ...data.layoutTweaks,
+        [key]: {
+          ...(data.layoutTweaks?.[key] ?? {}),
+          ...val,
+        } as ReceiptLayoutTweaks[keyof ReceiptLayoutTweaks],
+      },
+    });
+
+  const setBannerHeight = (height: number) =>
+    set({
+      layoutTweaks: {
+        ...data.layoutTweaks,
+        banner: {
+          ...(data.layoutTweaks?.banner ?? { x: 0, y: -2 }),
+          h: height,
+        },
+      },
+    });
+
+  const resetAllTweaks = () =>
+    set({
+      layoutTweaks: {
+        topActions: { x: 0, y: -2 },
+        successBadge: { x: 0, y: -4.5 },
+        successText: { x: 0, y: -5 },
+        amountBlock: { x: -0.5, y: -7.5 },
+        divider: { x: 0, y: -13 },
+        table: { x: 2.5, y: -13.5 },
+        qr: { x: 0, y: -15.5 },
+        qrIcon: { x: 18, y: 0 },
+        qrText: { x: 2, y: 1 },
+        qrArrow: { x: -9, y: 0 },
+        banner: { x: 0, y: -4, h: 105 },
+        dots: { x: 0, y: -3.5 },
+        finishedButton: { x: -0.5, y: -3 },
+      },
+      downloadIconSize: 15,
+      downloadIconX: 1,
+      downloadIconY: 0,
+      shareIconSize: 15,
+      shareIconX: 0,
+      shareIconY: 0,
+      checkmarkSize: 36,
+      checkmarkIconX: 0,
+      checkmarkIconY: 1,
+      tableKeyWeight: 400,
+      tableKeyStroke: 0.1,
+      tableKeySize: 11,
+      tableKeyColumnX: 0.5,
+      tableKeyColumnY: -2.5,
+      tableValWeight: 410,
+      tableValStroke: 0,
+      tableValSize: 11.2,
+      tableValColumnX: -5,
+      tableValColumnY: -2.5,
+      dotSize: 7.5,
+      finishedTextSize: 13,
+      navIconSize: 20,
+      checkmarkStroke: 2.8,
+      amountFontSize: 31.5,
+      amountStroke: 1.1,
+      qrFontSize: 13,
+      qrTextWeight: 600,
+      qrTextStroke: 0,
+      qrIconWidth: 24,
+      qrIconHeight: 28,
+      qrArrowWidth: 4.5,
+      qrArrowHeight: 10,
+      qrArrowStroke: 1.5,
+      bottomNavHeight: 42.5,
+      bottomNavIconsX: 0,
+      bottomNavIconsY: 0,
+    });
 
   const generateRandomTransactionNumber = () => {
     const prefixes = ["DB", "TX", "RE", "BA", "CZ", "MN", "AA", "KL", "WF"];
@@ -122,6 +379,7 @@ export function App() {
   };
 
   const currentPreset = devicePresets[data.preset];
+  const activePreset = currentPreset || devicePresets.test_accuracy;
   const currentOs = currentPreset?.os || "android";
   const isIos = currentOs === "ios";
 
@@ -130,14 +388,27 @@ export function App() {
   };
 
   const handleDownload = async () => {
-    const screenElement = document.getElementById("receipt-screen");
+    const screenElement = document.getElementById(EXPORT_SCREEN_ID) as HTMLElement | null;
     if (!screenElement) return;
-    let pixelRatio = isIos ? 2.5 : 3;
-    if (data.preset === "test_accuracy") pixelRatio = 2.0;
+    let pixelRatio = 3;
+    if (data.preset === "test_accuracy") pixelRatio = 2;
+
+    const exportWidth = Number.parseInt(activePreset.width, 10);
+    const exportHeight = Number.parseInt(activePreset.height, 10);
+
     try {
+      await waitForCaptureReady(screenElement);
       const dataUrl = await toPng(screenElement, {
-        quality: 1, pixelRatio, cacheBust: true,
-        backgroundColor: "#ffffff", style: { transform: 'scale(1)' },
+        quality: 1,
+        pixelRatio,
+        width: exportWidth,
+        height: exportHeight,
+        canvasWidth: exportWidth,
+        canvasHeight: exportHeight,
+        cacheBust: false,
+        skipFonts: false,
+        backgroundColor: "#ffffff",
+        style: { transform: "none", transformOrigin: "top left" },
       });
       const link = document.createElement("a");
       link.download = `Telebirr_Receipt_${data.transactionNumber || new Date().getTime()}.png`;
@@ -231,6 +502,7 @@ export function App() {
                   </div>
                 </div>
               </div>
+
             </div>
           </section>
 
@@ -310,6 +582,8 @@ export function App() {
                     <PremiumToggle label="Slnt" enabled={data.silentMode} onClick={() => set({ silentMode: !data.silentMode })} />
                     <PremiumToggle label="Loc" enabled={data.showLocation} onClick={() => set({ showLocation: !data.showLocation })} />
                     <PremiumToggle label="LTE" enabled={data.showVolte} onClick={() => set({ showVolte: !data.showVolte })} />
+                    <PremiumToggle label="Data" enabled={data.showMobileData} onClick={() => set({ showMobileData: !data.showMobileData })} />
+                    <PremiumToggle label="Spot" enabled={data.showHotspot} onClick={() => set({ showHotspot: !data.showHotspot })} />
                     <PremiumToggle label="NFC" enabled={data.showNfc} onClick={() => set({ showNfc: !data.showNfc })} />
                   </>
                 )}
@@ -429,6 +703,143 @@ export function App() {
             </div>
           </section>
 
+          {/* Card: Position Tweaks */}
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 px-1">
+              <div className="w-1 h-3 bg-[#8dc73f] rounded-full" />
+              <h2 className="text-[11px] font-black text-[#444b43] uppercase tracking-[0.15em]">Position Tweaks</h2>
+            </div>
+            <div className="bg-white border border-[#e8f0eb] p-5 rounded-2xl space-y-5 shadow-sm">
+              <XYTweakSlider label="Download / Share Row" value={data.layoutTweaks?.topActions ?? { x: 0, y: -2 }} onChange={(v) => setTweak("topActions", v)} onReset={() => setTweak("topActions", { x: 0, y: -2 })} />
+              <XYTweakSlider label="Download Icon (Only)" value={{ x: data.downloadIconX, y: data.downloadIconY }} onChange={(v) => set({ downloadIconX: v.x, downloadIconY: v.y })} onReset={() => set({ downloadIconX: 1, downloadIconY: 0 })} />
+              <XYTweakSlider label="Share Icon (Only)" value={{ x: data.shareIconX, y: data.shareIconY }} onChange={(v) => set({ shareIconX: v.x, shareIconY: v.y })} onReset={() => set({ shareIconX: 0, shareIconY: 0 })} />
+              <XYTweakSlider label="Checkmark Badge" value={data.layoutTweaks?.successBadge ?? { x: 0, y: -4.5 }} onChange={(v) => setTweak("successBadge", v)} onReset={() => setTweak("successBadge", { x: 0, y: -4.5 })} />
+              <XYTweakSlider label="Checkmark Icon" value={{ x: data.checkmarkIconX, y: data.checkmarkIconY }} onChange={(v) => set({ checkmarkIconX: v.x, checkmarkIconY: v.y })} onReset={() => set({ checkmarkIconX: 0, checkmarkIconY: 1 })} />
+              <XYTweakSlider label="Successful Text" value={data.layoutTweaks?.successText ?? { x: 0, y: -5 }} onChange={(v) => setTweak("successText", v)} onReset={() => setTweak("successText", { x: 0, y: -5 })} />
+              <XYTweakSlider label="Amount Block" value={data.layoutTweaks?.amountBlock ?? { x: -0.5, y: -7.5 }} onChange={(v) => setTweak("amountBlock", v)} onReset={() => setTweak("amountBlock", { x: -0.5, y: -7.5 })} />
+              <XYTweakSlider label="Divider Line" value={data.layoutTweaks?.divider ?? { x: 0, y: -13 }} onChange={(v) => setTweak("divider", v)} onReset={() => setTweak("divider", { x: 0, y: -13 })} />
+              <div className="h-px bg-[#f0f3ec]" />
+              <XYTweakSlider label="Left Column (Labels)" value={{ x: data.tableKeyColumnX, y: data.tableKeyColumnY }} onChange={(v) => set({ tableKeyColumnX: v.x, tableKeyColumnY: v.y })} onReset={() => set({ tableKeyColumnX: 0.5, tableKeyColumnY: -2.5 })} />
+              <XYTweakSlider label="Right Column (Values)" value={{ x: data.tableValColumnX, y: data.tableValColumnY }} onChange={(v) => set({ tableValColumnX: v.x, tableValColumnY: v.y })} onReset={() => set({ tableValColumnX: -5, tableValColumnY: -2.5 })} />
+              <div className="h-px bg-[#f0f3ec]" />
+              <XYTweakSlider label="QR Row (whole)" value={data.layoutTweaks?.qr ?? { x: 0, y: -15.5 }} onChange={(v) => setTweak("qr", v)} onReset={() => setTweak("qr", { x: 0, y: -15.5 })} />
+              <XYTweakSlider label="QR Icon" value={data.layoutTweaks?.qrIcon ?? { x: 18, y: 0 }} onChange={(v) => setTweak("qrIcon", v)} onReset={() => setTweak("qrIcon", { x: 18, y: 0 })} />
+              <XYTweakSlider label="QR Text" value={data.layoutTweaks?.qrText ?? { x: 2, y: 1 }} onChange={(v) => setTweak("qrText", v)} onReset={() => setTweak("qrText", { x: 2, y: 1 })} />
+              <XYTweakSlider label="QR Arrow" value={data.layoutTweaks?.qrArrow ?? { x: -9, y: 0 }} onChange={(v) => setTweak("qrArrow", v)} onReset={() => setTweak("qrArrow", { x: -9, y: 0 })} />
+              <div className="h-px bg-[#f0f3ec]" />
+              <ValueTweakSlider label="QR Text Size" value={data.qrFontSize} min={10} max={22} step={0.1} onChange={(v) => set({ qrFontSize: Number(v.toFixed(1)) })} onReset={() => set({ qrFontSize: 13 })} format={(v) => `${v.toFixed(1)}px`} />
+              <ValueTweakSlider label="QR Text Weight" value={data.qrTextWeight} min={300} max={900} step={10} onChange={(v) => set({ qrTextWeight: v })} onReset={() => set({ qrTextWeight: 600 })} />
+              <ValueTweakSlider label="QR Text Stroke" value={data.qrTextStroke} min={0} max={1} step={0.02} onChange={(v) => set({ qrTextStroke: v })} onReset={() => set({ qrTextStroke: 0 })} format={(v) => `${v}px`} />
+              <ValueTweakSlider label="QR Icon Width" value={data.qrIconWidth} min={10} max={50} onChange={(v) => set({ qrIconWidth: v })} onReset={() => set({ qrIconWidth: 24 })} format={(v) => `${v}px`} />
+              <ValueTweakSlider label="QR Icon Height" value={data.qrIconHeight} min={10} max={50} onChange={(v) => set({ qrIconHeight: v })} onReset={() => set({ qrIconHeight: 28 })} format={(v) => `${v}px`} />
+              <ValueTweakSlider label="QR Arrow Width" value={data.qrArrowWidth} min={2} max={30} step={0.5} onChange={(v) => set({ qrArrowWidth: v })} onReset={() => set({ qrArrowWidth: 4.5 })} format={(v) => `${v}px`} />
+              <ValueTweakSlider label="QR Arrow Height" value={data.qrArrowHeight} min={5} max={40} step={0.5} onChange={(v) => set({ qrArrowHeight: v })} onReset={() => set({ qrArrowHeight: 10 })} format={(v) => `${v}px`} />
+              <ValueTweakSlider label="QR Arrow Stroke" value={data.qrArrowStroke} min={0.5} max={5} step={0.1} onChange={(v) => set({ qrArrowStroke: v })} onReset={() => set({ qrArrowStroke: 1.5 })} format={(v) => `${v}px`} />
+              <div className="h-px bg-[#f0f3ec]" />
+              <XYTweakSlider label="Banner" value={data.layoutTweaks?.banner ?? { x: 0, y: -4 }} onChange={(v) => setTweak("banner", v)} onReset={() => setTweak("banner", { x: 0, y: -4 })} />
+              <XYTweakSlider label="Dots" value={data.layoutTweaks?.dots ?? { x: 0, y: -3.5 }} onChange={(v) => setTweak("dots", v)} onReset={() => setTweak("dots", { x: 0, y: -3.5 })} />
+              <XYTweakSlider label="Finished Button" value={data.layoutTweaks?.finishedButton ?? { x: -0.5, y: -3 }} onChange={(v) => setTweak("finishedButton", v)} onReset={() => setTweak("finishedButton", { x: -0.5, y: -3 })} />
+              <div className="h-px bg-[#f0f3ec]" />
+              <ValueTweakSlider label="Banner Height" value={Math.round(data.layoutTweaks?.banner?.h ?? 105)} min={88} max={140} onChange={setBannerHeight} onReset={() => setBannerHeight(105)} format={(v) => `${Math.round(v)}px`} />
+              <ValueTweakSlider label="Dots Size" value={data.dotSize} min={6.5} max={9} step={0.1} onChange={(v) => set({ dotSize: Number(v.toFixed(1)) })} onReset={() => set({ dotSize: 7.5 })} format={(v) => `${v.toFixed(1)}px`} />
+              <ValueTweakSlider label="Finished Text Size" value={data.finishedTextSize} min={10} max={20} step={0.1} onChange={(v) => set({ finishedTextSize: Number(v.toFixed(1)) })} onReset={() => set({ finishedTextSize: 13 })} format={(v) => `${v.toFixed(1)}px`} />
+              <ValueTweakSlider label="Checkmark Size" value={data.checkmarkSize} min={20} max={45} onChange={(v) => set({ checkmarkSize: Math.round(v) })} onReset={() => set({ checkmarkSize: 36 })} format={(v) => `${Math.round(v)}px`} />
+              <ValueTweakSlider label="Checkmark Stroke" value={data.checkmarkStroke} min={0.5} max={5} step={0.1} onChange={(v) => set({ checkmarkStroke: v })} onReset={() => set({ checkmarkStroke: 2.8 })} format={(v) => `${v}px`} />
+              <ValueTweakSlider label="Amount Font Size" value={data.amountFontSize} min={20} max={45} step={0.5} onChange={(v) => set({ amountFontSize: v })} onReset={() => set({ amountFontSize: 31.5 })} format={(v) => `${v}px`} />
+              <ValueTweakSlider label="Amount Stroke" value={data.amountStroke} min={0} max={2.5} step={0.05} onChange={(v) => set({ amountStroke: v })} onReset={() => set({ amountStroke: 1.1 })} format={(v) => `${v}px`} />
+              <ValueTweakSlider label="Download Icon Size" value={data.downloadIconSize} min={12} max={24} onChange={(v) => set({ downloadIconSize: Math.round(v) })} onReset={() => set({ downloadIconSize: 15 })} format={(v) => `${Math.round(v)}px`} />
+              <ValueTweakSlider label="Share Icon Size" value={data.shareIconSize} min={12} max={24} onChange={(v) => set({ shareIconSize: Math.round(v) })} onReset={() => set({ shareIconSize: 15 })} format={(v) => `${Math.round(v)}px`} />
+              <ValueTweakSlider label="Bottom Nav Height" value={data.bottomNavHeight} min={36} max={52} step={0.5} onChange={(v) => set({ bottomNavHeight: Number(v.toFixed(1)) })} onReset={() => set({ bottomNavHeight: 42.5 })} format={(v) => `${v.toFixed(1)}px`} />
+              <ValueTweakSlider label="Bottom Nav Icon Size" value={data.navIconSize} min={14} max={26} step={0.5} onChange={(v) => set({ navIconSize: Number(v.toFixed(1)) })} onReset={() => set({ navIconSize: 20 })} format={(v) => `${v.toFixed(1)}px`} />
+              <XYTweakSlider label="Bottom Nav Icons" value={{ x: data.bottomNavIconsX, y: data.bottomNavIconsY }} onChange={(v) => set({ bottomNavIconsX: v.x, bottomNavIconsY: v.y })} onReset={() => set({ bottomNavIconsX: 0, bottomNavIconsY: 0 })} />
+              <div className="h-px bg-[#f0f3ec]" />
+              <ValueTweakSlider label="Table Key Weight" value={data.tableKeyWeight} min={300} max={900} step={10} onChange={(v) => set({ tableKeyWeight: Math.round(v) })} onReset={() => set({ tableKeyWeight: 400 })} />
+              <ValueTweakSlider label="Table Key Size" value={data.tableKeySize} min={9} max={16} step={0.1} onChange={(v) => set({ tableKeySize: Number(v.toFixed(1)) })} onReset={() => set({ tableKeySize: 11 })} format={(v) => `${v.toFixed(1)}px`} />
+              <ValueTweakSlider label="Table Key Stroke" value={data.tableKeyStroke} min={0} max={0.8} step={0.02} onChange={(v) => set({ tableKeyStroke: Number(v.toFixed(2)) })} onReset={() => set({ tableKeyStroke: 0.1 })} format={(v) => `${v.toFixed(2)}px`} />
+              <ValueTweakSlider label="Table Value Weight" value={data.tableValWeight} min={300} max={900} step={10} onChange={(v) => set({ tableValWeight: Math.round(v) })} onReset={() => set({ tableValWeight: 410 })} />
+              <ValueTweakSlider label="Table Value Size" value={data.tableValSize} min={9} max={16} step={0.1} onChange={(v) => set({ tableValSize: Number(v.toFixed(1)) })} onReset={() => set({ tableValSize: 11.2 })} format={(v) => `${v.toFixed(1)}px`} />
+              <ValueTweakSlider label="Table Value Stroke" value={data.tableValStroke} min={0} max={0.8} step={0.02} onChange={(v) => set({ tableValStroke: Number(v.toFixed(2)) })} onReset={() => set({ tableValStroke: 0 })} format={(v) => `${v.toFixed(2)}px`} />
+              <button
+                onClick={resetAllTweaks}
+                className="w-full py-2 rounded-xl border border-[#e8f0eb] text-[10px] font-black text-[#8c948a] uppercase tracking-wider hover:bg-[#f3f7f4] transition-colors"
+              >
+                Reset All
+              </button>
+              <button
+                onClick={() => {
+                  const t = data.layoutTweaks ?? {};
+                  const lines = [
+                    `preset: ${data.preset}`,
+                    `cameraHoleOverride: ${data.cameraHoleOverride}`,
+                    `navBarOverride: ${data.navBarOverride}`,
+                    `airplaneMode: ${data.airplaneMode}`,
+                    `batteryCharging: ${data.batteryCharging}`,
+                    `showBluetooth: ${data.showBluetooth}`,
+                    `showAlarm: ${data.showAlarm}`,
+                    `simCount: ${data.simCount}`,
+                    `use12HourFormat: ${data.use12HourFormat}`,
+                    `signalStrength: ${data.signalStrength}`,
+                    `wifiStrength: ${data.wifiStrength}`,
+                    `silentMode: ${data.silentMode}`,
+                    `showLocation: ${data.showLocation}`,
+                    `showVolte: ${data.showVolte}`,
+                    `showNfc: ${data.showNfc}`,
+                    `topActions:    x:${t.topActions?.x ?? 0} y:${t.topActions?.y ?? -2}`,
+                    `successBadge:  x:${t.successBadge?.x ?? 0.5} y:${t.successBadge?.y ?? -4.5}`,
+                    `successText:   x:${t.successText?.x ?? 0} y:${t.successText?.y ?? -5}`,
+                    `amountBlock:   x:${t.amountBlock?.x ?? -0.5} y:${t.amountBlock?.y ?? -6.5}`,
+                    `divider:       x:${t.divider?.x ?? 0} y:${t.divider?.y ?? -12}`,
+                    `table:         x:${t.table?.x ?? 2.5} y:${t.table?.y ?? -13.5}`,
+                    `qr:            x:${t.qr?.x ?? 0} y:${t.qr?.y ?? -12.5}`,
+                    `qrIcon:        x:${t.qrIcon?.x ?? 18} y:${t.qrIcon?.y ?? 0}`,
+                    `qrText:        x:${t.qrText?.x ?? 2} y:${t.qrText?.y ?? 1}`,
+                    `qrArrow:       x:${t.qrArrow?.x ?? -9} y:${t.qrArrow?.y ?? 0}`,
+                    `qrFontSize: ${data.qrFontSize}`,
+                    `qrTextWeight: ${data.qrTextWeight}`,
+                    `qrTextStroke: ${data.qrTextStroke}`,
+                    `qrIconWidth: ${data.qrIconWidth}`,
+                    `qrIconHeight: ${data.qrIconHeight}`,
+                    `qrArrowWidth: ${data.qrArrowWidth}`,
+                    `qrArrowHeight: ${data.qrArrowHeight}`,
+                    `qrArrowStroke: ${data.qrArrowStroke}`,
+                    `banner:        x:${t.banner?.x ?? 0} y:${t.banner?.y ?? -2} h:${t.banner?.h ?? 105}`,
+                    `bannerHeight: ${data.layoutTweaks?.banner?.h ?? 105}`,
+                    `dots:          x:${t.dots?.x ?? 0} y:${t.dots?.y ?? -1.5}`,
+                    `finishedButton:x:${t.finishedButton?.x ?? -0.5} y:${t.finishedButton?.y ?? 0}`,
+                    `dotSize: ${data.dotSize}`,
+                    `finishedTextSize: ${data.finishedTextSize}`,
+                    `checkmarkSize: ${data.checkmarkSize}`,
+                    `checkmarkStroke: ${data.checkmarkStroke}`,
+                    `checkmarkIcon: x:${data.checkmarkIconX} y:${data.checkmarkIconY}`,
+                    `amountFontSize: ${data.amountFontSize}`,
+                    `amountStroke: ${data.amountStroke}`,
+                    `downloadIconSize: ${data.downloadIconSize}`,
+                    `downloadIcon: x:${data.downloadIconX} y:${data.downloadIconY}`,
+                    `shareIconSize: ${data.shareIconSize}`,
+                    `shareIcon: x:${data.shareIconX} y:${data.shareIconY}`,
+                    `bottomNavHeight: ${data.bottomNavHeight}`,
+                    `bottomNavIconSize: ${data.navIconSize}`,
+                    `bottomNavIcons: x:${data.bottomNavIconsX} y:${data.bottomNavIconsY}`,
+                    `tableKeyWeight: ${data.tableKeyWeight}`,
+                    `tableKeySize: ${data.tableKeySize}`,
+                    `tableKeyStroke: ${data.tableKeyStroke}`,
+                    `tableKeyColumn: x:${data.tableKeyColumnX} y:${data.tableKeyColumnY}`,
+                    `tableValWeight: ${data.tableValWeight}`,
+                    `tableValSize: ${data.tableValSize}`,
+                    `tableValStroke: ${data.tableValStroke}`,
+                    `tableValColumn: x:${data.tableValColumnX} y:${data.tableValColumnY}`,
+                  ].join("\n");
+                  navigator.clipboard.writeText(lines);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+                className={`w-full py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 ${copied ? 'bg-[#8dc73f] text-white' : 'bg-[#f3f7f4] text-[#8dc73f] hover:bg-[#ebf2ee]'}`}
+              >
+                {copied ? <><Check size={12} /> Values Copied!</> : "Copy Values"}
+              </button>
+            </div>
+          </section>
+
         </div>
 
         {/* Global Action Footer - Truly Flush */}
@@ -447,6 +858,13 @@ export function App() {
       {/* Preview Area Container */}
       <div className="flex-1 bg-[#f0f2f1] flex items-center justify-center p-6 md:p-8 overflow-hidden">
         <TelebirrReceipt data={data} isPreview={true} />
+      </div>
+
+      {/* Dedicated unscaled export target for deterministic PNG output */}
+      <div className="fixed -left-[99999px] top-0 opacity-0 pointer-events-none" aria-hidden="true">
+        <div style={{ width: activePreset.width, height: activePreset.height }}>
+          <TelebirrReceipt data={data} captureId={EXPORT_SCREEN_ID} />
+        </div>
       </div>
     </div>
   );

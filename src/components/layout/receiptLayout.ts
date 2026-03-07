@@ -28,8 +28,17 @@ export type SectionName =
   | "finishedButton";
 
 export interface ReceiptLayoutTweaks {
+  topActions?: { x?: number; y?: number };
+  successBadge?: { x?: number; y?: number };
+  successText?: { x?: number; y?: number };
+  amountBlock?: { x?: number; y?: number };
+  divider?: { x?: number; y?: number };
+  table?: { x?: number; y?: number };
   qr?: { x?: number; y?: number };
-  banner?: { x?: number; y?: number };
+  qrIcon?: { x?: number; y?: number };
+  qrText?: { x?: number; y?: number };
+  qrArrow?: { x?: number; y?: number };
+  banner?: { x?: number; y?: number; h?: number };
   dots?: { x?: number; y?: number };
   finishedButton?: { x?: number; y?: number };
 }
@@ -39,6 +48,7 @@ export interface ReceiptLayoutContext {
   navType: ReceiptNav;
   canvasWidth: number;
   canvasHeight: number;
+  navButtonsHeight?: number; // Visual height for anchoring logic
   tweaks?: ReceiptLayoutTweaks;
 }
 
@@ -48,6 +58,20 @@ export interface SectionLayout {
   width: number;
   height: number;
   transform?: string;
+}
+
+export interface SubElementLayout {
+  x: number;
+  y: number;
+}
+
+export interface LayoutResults {
+  sections: Record<SectionName, SectionLayout>;
+  subElements: {
+    qrIcon: SubElementLayout;
+    qrText: SubElementLayout;
+    qrArrow: SubElementLayout;
+  };
 }
 
 export interface ReceiptLayoutSpec {
@@ -105,7 +129,7 @@ export const RECEIPT_LAYOUT_SPEC: ReceiptLayoutSpec = {
     topActionsTop: 37.5,
     afterTopActionsToBadge: 10,
     afterBadgeToText: 9,
-    afterTextToAmount: 80,
+    afterTextToAmount: 85,
     afterAmountToDivider: 43,
     afterDividerToTable: 9,
     afterTableToQr: 7,
@@ -131,7 +155,7 @@ const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(mi
 
 const getScale = (ctx: ReceiptLayoutContext) => {
   const status = STATUS_BAR_HEIGHT[ctx.os];
-  const nav = NAV_HEIGHT[ctx.navType];
+  const nav = ctx.navButtonsHeight ?? NAV_HEIGHT[ctx.navType];
   const contentHeight = Math.max(1, ctx.canvasHeight - status - nav);
 
   return {
@@ -140,29 +164,7 @@ const getScale = (ctx: ReceiptLayoutContext) => {
   };
 };
 
-const computeSectionTransforms = (ctx: ReceiptLayoutContext): Partial<Record<SectionName, string>> => {
-  const { sx, sy } = getScale(ctx);
-  const tweaks = ctx.tweaks ?? {};
-
-  const t = {
-    qr: { x: clamp(tweaks.qr?.x ?? 0, -40, 40), y: clamp(tweaks.qr?.y ?? 0, -40, 40) },
-    banner: { x: clamp(tweaks.banner?.x ?? 0, -40, 40), y: clamp(tweaks.banner?.y ?? 0, -40, 40) },
-    dots: { x: clamp(tweaks.dots?.x ?? 0, -40, 40), y: clamp(tweaks.dots?.y ?? 0, -40, 40) },
-    finishedButton: {
-      x: clamp(tweaks.finishedButton?.x ?? 0, -40, 40),
-      y: clamp(tweaks.finishedButton?.y ?? 0, -40, 40),
-    },
-  };
-
-  return {
-    qrRow: `translate(${t.qr.x * sx}px, ${t.qr.y * sy}px)`,
-    banner: `translate(${t.banner.x * sx}px, ${t.banner.y * sy}px)`,
-    dots: `translate(${t.dots.x * sx}px, ${t.dots.y * sy}px)`,
-    finishedButton: `translate(${t.finishedButton.x * sx}px, ${t.finishedButton.y * sy}px)`,
-  };
-};
-
-export const computeReceiptLayout = (ctx: ReceiptLayoutContext): Record<SectionName, SectionLayout> => {
+export const computeReceiptLayout = (ctx: ReceiptLayoutContext): LayoutResults => {
   const spec = RECEIPT_LAYOUT_SPEC;
   const { sx, sy } = getScale(ctx);
   const h = spec.sectionHeights;
@@ -181,19 +183,9 @@ export const computeReceiptLayout = (ctx: ReceiptLayoutContext): Record<SectionN
 
   const centerX = (w: number) => (ctx.canvasWidth - w) / 2;
 
-  return {
-    topActions: {
-      x: 0,
-      y: topActionsY,
-      width: ctx.canvasWidth,
-      height: h.topActions * sy,
-    },
-    successBadge: {
-      x: centerX(h.successBadge * sx),
-      y: successBadgeY,
-      width: h.successBadge * sx,
-      height: h.successBadge * sy,
-    },
+  const sections: Record<SectionName, SectionLayout> = {
+    topActions: { x: 0, y: topActionsY, width: ctx.canvasWidth, height: h.topActions * sy },
+    successBadge: { x: centerX(h.successBadge * sx), y: successBadgeY, width: h.successBadge * sx, height: h.successBadge * sy },
     successText: {
       x: 0,
       y: successTextY,
@@ -201,24 +193,9 @@ export const computeReceiptLayout = (ctx: ReceiptLayoutContext): Record<SectionN
       height: h.successText * sy,
       transform: `translate(${spec.xAdjustments.successText * sx}px, 0px)`,
     },
-    amountBlock: {
-      x: 0,
-      y: amountY,
-      width: ctx.canvasWidth,
-      height: h.amountBlock * sy,
-    },
-    divider: {
-      x: centerX(spec.width.divider * sx),
-      y: dividerY,
-      width: spec.width.divider * sx,
-      height: h.divider * sy,
-    },
-    tableBlock: {
-      x: centerX(spec.width.table * sx),
-      y: tableY,
-      width: spec.width.table * sx,
-      height: h.tableBlock * sy,
-    },
+    amountBlock: { x: 0, y: amountY, width: ctx.canvasWidth, height: h.amountBlock * sy },
+    divider: { x: centerX(spec.width.divider * sx), y: dividerY, width: spec.width.divider * sx, height: h.divider * sy },
+    tableBlock: { x: centerX(spec.width.table * sx), y: tableY, width: spec.width.table * sx, height: h.tableBlock * sy },
     qrRow: {
       x: centerX(spec.width.table * sx),
       y: qrY,
@@ -226,18 +203,8 @@ export const computeReceiptLayout = (ctx: ReceiptLayoutContext): Record<SectionN
       height: h.qrRow * sy,
       transform: `translate(${spec.xAdjustments.qrContent * sx}px, 0px)`,
     },
-    banner: {
-      x: centerX(spec.width.banner * sx),
-      y: bannerY,
-      width: spec.width.banner * sx,
-      height: h.banner * sy,
-    },
-    dots: {
-      x: centerX(spec.width.dots * sx),
-      y: dotsY,
-      width: spec.width.dots * sx,
-      height: h.dots * sy,
-    },
+    banner: { x: centerX(spec.width.banner * sx), y: bannerY, width: spec.width.banner * sx, height: h.banner * sy },
+    dots: { x: centerX(spec.width.dots * sx), y: dotsY, width: spec.width.dots * sx, height: h.dots * sy },
     finishedButton: {
       x: centerX(spec.width.finishedButton * sx),
       y: finishedButtonY,
@@ -246,31 +213,59 @@ export const computeReceiptLayout = (ctx: ReceiptLayoutContext): Record<SectionN
       transform: `translate(${spec.xAdjustments.finishedButton * sx}px, 0px)`,
     },
   };
-};
-
-export const applyTweaks = (
-  layout: Record<SectionName, SectionLayout>,
-  ctx: ReceiptLayoutContext,
-): Record<SectionName, SectionLayout> => {
-  const transforms = computeSectionTransforms(ctx);
 
   return {
-    ...layout,
-    qrRow: {
-      ...layout.qrRow,
-      transform: [layout.qrRow.transform, transforms.qrRow].filter(Boolean).join(" "),
-    },
-    banner: {
-      ...layout.banner,
-      transform: [layout.banner.transform, transforms.banner].filter(Boolean).join(" "),
-    },
-    dots: {
-      ...layout.dots,
-      transform: [layout.dots.transform, transforms.dots].filter(Boolean).join(" "),
-    },
-    finishedButton: {
-      ...layout.finishedButton,
-      transform: [layout.finishedButton.transform, transforms.finishedButton].filter(Boolean).join(" "),
+    sections,
+    subElements: {
+      qrIcon: { x: 0, y: 0 },
+      qrText: { x: 0, y: 0 },
+      qrArrow: { x: 0, y: 0 },
     },
   };
+};
+
+export const applyTweaks = (results: LayoutResults, ctx: ReceiptLayoutContext): LayoutResults => {
+  const { sx, sy } = getScale(ctx);
+  const tweaks = ctx.tweaks ?? {};
+  const { sections, subElements } = results;
+
+  const t = (val?: { x?: number; y?: number }) => ({
+    x: clamp(val?.x ?? 0, -50, 50),
+    y: clamp(val?.y ?? 0, -50, 50),
+  });
+
+  const updatedSections = { ...sections };
+  const updatedSubElements = { ...subElements };
+
+  // Apply Section Tweaks
+  (Object.keys(updatedSections) as SectionName[]).forEach((name) => {
+    const tweak = tweaks[name === "tableBlock" ? "table" : (name as keyof ReceiptLayoutTweaks)];
+    if (tweak) {
+      const { x, y } = t(tweak as any);
+      updatedSections[name].transform = [
+        updatedSections[name].transform,
+        `translate(${x * sx}px, ${y * sy}px)`,
+      ]
+        .filter(Boolean)
+        .join(" ");
+    }
+  });
+
+  // Special case: Banner Height tweak
+  if (tweaks.banner?.h) {
+    updatedSections.banner.height = tweaks.banner.h * sy;
+  }
+
+  // Apply Sub-Element Tweaks
+  const qrT = {
+    icon: t(tweaks.qrIcon),
+    text: t(tweaks.qrText),
+    arrow: t(tweaks.qrArrow),
+  };
+
+  updatedSubElements.qrIcon = { x: qrT.icon.x * sx, y: qrT.icon.y * sy };
+  updatedSubElements.qrText = { x: qrT.text.x * sx, y: qrT.text.y * sy };
+  updatedSubElements.qrArrow = { x: qrT.arrow.x * sx, y: qrT.arrow.y * sy };
+
+  return { sections: updatedSections, subElements: updatedSubElements };
 };
