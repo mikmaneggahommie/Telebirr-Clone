@@ -577,6 +577,13 @@ export function App() {
                 <PremiumToggle label="Charge" enabled={data.batteryCharging} onClick={() => set({ batteryCharging: !data.batteryCharging })} />
                 <PremiumToggle label="BT" enabled={data.showBluetooth} onClick={() => set({ showBluetooth: !data.showBluetooth })} />
                 <PremiumToggle label="Alarm" enabled={data.showAlarm} onClick={() => set({ showAlarm: !data.showAlarm })} />
+                {isIos && (
+                  <>
+                    <PremiumToggle label="Loc" enabled={data.showLocation} onClick={() => set({ showLocation: !data.showLocation })} />
+                    <PremiumToggle label="Data" enabled={data.showMobileData} onClick={() => set({ showMobileData: !data.showMobileData })} />
+                    <PremiumToggle label="Spot" enabled={data.showHotspot} onClick={() => set({ showHotspot: !data.showHotspot })} />
+                  </>
+                )}
                 {!isIos && (
                   <>
                     <PremiumToggle label="Slnt" enabled={data.silentMode} onClick={() => set({ silentMode: !data.silentMode })} />
@@ -784,6 +791,8 @@ export function App() {
                     `silentMode: ${data.silentMode}`,
                     `showLocation: ${data.showLocation}`,
                     `showVolte: ${data.showVolte}`,
+                    `showMobileData: ${data.showMobileData}`,
+                    `showHotspot: ${data.showHotspot}`,
                     `showNfc: ${data.showNfc}`,
                     `topActions:    x:${t.topActions?.x ?? 0} y:${t.topActions?.y ?? -2}`,
                     `successBadge:  x:${t.successBadge?.x ?? 0.5} y:${t.successBadge?.y ?? -4.5}`,

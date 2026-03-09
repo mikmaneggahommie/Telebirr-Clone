@@ -3,6 +3,7 @@ import { Download } from "lucide-react";
 import {
   applyTweaks,
   computeReceiptLayout,
+  REFERENCE_WIDTH,
   ReceiptLayoutTweaks,
   SectionLayout,
 } from "./layout/receiptLayout";
@@ -20,8 +21,8 @@ export const BANNER_IMAGE_MAP: Partial<Record<(typeof BANNER_SLOTS)[number], str
 export const getBannerSrc = (index: number): string | undefined => BANNER_IMAGE_MAP[index as (typeof BANNER_SLOTS)[number]];
 
 export const devicePresets = {
-  iphone_modern: { os: "ios", notch: "dynamic_island", font: "font-sans", nav: "home_indicator", width: "390px", height: "844px" },
-  iphone_classic: { os: "ios", notch: "notch", font: "font-sans", nav: "home_indicator", width: "375px", height: "812px" },
+  iphone_modern: { os: "ios", notch: "dynamic_island", font: "font-roboto", nav: "home_indicator", width: "390px", height: "844px" },
+  iphone_classic: { os: "ios", notch: "notch", font: "font-roboto", nav: "home_indicator", width: "375px", height: "812px" },
   samsung: { os: "android", notch: "punch_center", font: "font-roboto", nav: "buttons", width: "360px", height: "800px" },
   generic_android: { os: "android", notch: "punch_left", font: "font-roboto", nav: "buttons", width: "360px", height: "780px" },
   test_accuracy: { os: "android", notch: "punch_left", font: "font-roboto", nav: "buttons", width: "360px", height: "780px" },
@@ -321,27 +322,66 @@ const IosAlarm = () => (
   </svg>
 );
 
+// iOS Location Arrow (SF Symbols style)
+const IosLocationArrow = () => (
+  <svg width="9" height="9" viewBox="0 0 12 12" fill="none" aria-label="Location">
+    <path d="M10.7 1.2 2.5 5a.6.6 0 0 0 0 1l3 1.3 1.3 3a.6.6 0 0 0 1 0L11.6 2a.8.8 0 0 0-.9-.8Z" fill="#000" />
+  </svg>
+);
+
+// iOS Personal Hotspot indicator
+const IosHotspot = () => (
+  <svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-label="Hotspot">
+    <path d="M5.4 10.4a2.7 2.7 0 0 1 0-3.8L6.8 5.2a2.7 2.7 0 1 1 3.8 3.8l-1 1" stroke="#000" strokeWidth="1.3" strokeLinecap="round" />
+    <path d="M10.4 5.6a2.7 2.7 0 0 1 0 3.8L9.2 10.8a2.7 2.7 0 1 1-3.8-3.8l1.2-1.2" stroke="#000" strokeWidth="1.3" strokeLinecap="round" />
+  </svg>
+);
+
+const IosDataLabel = () => (
+  <span
+    style={{
+      fontFamily: '-apple-system, "SF Pro Text", "Helvetica Neue", sans-serif',
+      fontWeight: 700,
+      fontSize: "10px",
+      lineHeight: 1,
+      letterSpacing: "-0.2px",
+      color: "#000",
+      transform: "translateY(-0.2px)",
+      display: "inline-block",
+    }}
+  >
+    5G
+  </span>
+);
+
 /* ─── Carousel Dots (Ring style) ─── */
 const CarouselDots = ({
   total = 5,
   active = 0,
+  dotSize = 7,
+  gap = 4.25,
 }: {
   total?: number;
   active?: number;
+  dotSize?: number;
+  gap?: number;
 }) => (
-  <div className="flex justify-center items-center gap-[4.25px] w-[52px]">
+  <div className="flex justify-center items-center w-full" style={{ gap: `${gap}px` }}>
     {Array.from({ length: total }).map((_, i) => {
       const isActive = i === active;
+      const stroke = Math.max(0.6, dotSize * 0.1143);
+      const outerRadius = Math.max(0.8, dotSize / 2 - stroke / 2);
+      const innerRadius = Math.max(0.7, dotSize * 0.2643);
       return (
-        <div key={i} className="flex items-center justify-center w-[7px] h-[7px]">
+        <div key={i} className="flex items-center justify-center" style={{ width: `${dotSize}px`, height: `${dotSize}px` }}>
           {isActive ? (
-            <svg width="7" height="7" viewBox="0 0 7 7">
-              <circle cx="3.5" cy="3.5" r="3.1" stroke="#8dc73f" strokeWidth="0.8" fill="white" />
-              <circle cx="3.5" cy="3.5" r="1.85" fill="#8dc73f" />
+            <svg width={dotSize} height={dotSize} viewBox={`0 0 ${dotSize} ${dotSize}`}>
+              <circle cx={dotSize / 2} cy={dotSize / 2} r={outerRadius} stroke="#8dc73f" strokeWidth={stroke} fill="white" />
+              <circle cx={dotSize / 2} cy={dotSize / 2} r={innerRadius} fill="#8dc73f" />
             </svg>
           ) : (
-            <svg width="7" height="7" viewBox="0 0 7 7">
-              <circle cx="3.5" cy="3.5" r="3.1" stroke="#8dc73f" strokeWidth="0.8" fill="none" />
+            <svg width={dotSize} height={dotSize} viewBox={`0 0 ${dotSize} ${dotSize}`}>
+              <circle cx={dotSize / 2} cy={dotSize / 2} r={outerRadius} stroke="#8dc73f" strokeWidth={stroke} fill="none" />
             </svg>
           )}
         </div>
@@ -364,6 +404,8 @@ export const TelebirrReceipt = ({
   const { width, height } = config;
   const canvasWidth = Number.parseInt(width, 10);
   const canvasHeight = Number.parseInt(height, 10);
+  const uiScale = canvasWidth / REFERENCE_WIDTH;
+  const scaleUi = (value: number) => Number((value * uiScale).toFixed(3));
 
   const notchType = data.cameraHoleOverride === "default"
     ? config.notch
@@ -408,6 +450,14 @@ export const TelebirrReceipt = ({
   const batteryNum = parseInt(data.battery) || 48;
   const signalFilled = data.airplaneMode ? 0 : (data.signalStrength ?? 4);
   const wifiStrength = data.wifiStrength ?? 3;
+  const iosStatusExtras = (
+    [
+      data.showMobileData && !data.airplaneMode ? <IosDataLabel key="ios-data" /> : null,
+      data.showAlarm ? <IosAlarm key="ios-alarm" /> : null,
+      data.showBluetooth && !data.airplaneMode ? <IosBluetooth key="ios-bt" /> : null,
+      data.showHotspot && !data.airplaneMode ? <IosHotspot key="ios-hotspot" /> : null,
+    ].filter(Boolean) as JSX.Element[]
+  ).slice(0, notchType === "dynamic_island" ? 2 : 3);
 
   // Parse amount: extract sign, integer part, decimal part
   const rawAmount = data.amount.toString().trim();
@@ -481,23 +531,27 @@ export const TelebirrReceipt = ({
       {/* iOS Status Bar — SF Pro Display Semibold, correct icon geometry */}
       {os === "ios" && (
         <div className={cn(
-          "h-[48px] w-full flex items-center justify-between px-[20px] shrink-0 z-10 bg-white",
-          notchType === "dynamic_island" ? "pt-[14px]" : "pt-[10px]"
+          "h-[48px] w-full flex items-center justify-between shrink-0 z-10 bg-white",
+          notchType === "dynamic_island" ? "px-[24px] pt-[14px]" : "px-[20px] pt-[10px]"
         )}>
-          <div
-            style={{
-              fontFamily: '-apple-system, "SF Pro Display", "Helvetica Neue", sans-serif',
-              fontWeight: 600,
-              fontSize: '15px',
-              letterSpacing: '-0.3px',
-              color: '#000',
-            }}
-          >
-            {data.time}
+          <div className="flex items-center gap-[4px]">
+            <div
+              style={{
+                fontFamily: '-apple-system, "SF Pro Display", "Helvetica Neue", sans-serif',
+                fontWeight: 600,
+                fontSize: '15px',
+                letterSpacing: '-0.3px',
+                color: '#000',
+                fontVariantNumeric: "tabular-nums",
+                fontFeatureSettings: '"tnum" 1',
+              }}
+            >
+              {data.time}
+            </div>
+            {data.showLocation && <IosLocationArrow />}
           </div>
-          <div className="flex items-center gap-[5px]">
-            {data.showAlarm && <IosAlarm />}
-            {data.showBluetooth && <IosBluetooth />}
+          <div className="flex items-center gap-[4px]">
+            {iosStatusExtras}
             {data.airplaneMode
               ? <IosAirplane />
               : <IosSignalBars filled={signalFilled} />
@@ -511,26 +565,38 @@ export const TelebirrReceipt = ({
       <div className="flex-1 w-full h-full flex flex-col relative overflow-hidden pointer-events-none">
 
         {/* Top Header Actions */}
-        <div style={sectionStyle(sectionLayout.topActions)} className="flex justify-between items-center px-[9px]">
-          <div className="flex items-center gap-1.5 text-[#8dc73f]">
+        <div
+          style={{
+            ...sectionStyle(sectionLayout.topActions),
+            paddingLeft: `${scaleUi(9)}px`,
+            paddingRight: `${scaleUi(9)}px`,
+          }}
+          className="flex justify-between items-center"
+        >
+          <div className="flex items-center text-[#8dc73f]" style={{ gap: `${scaleUi(6)}px` }}>
             <Download
-              size={data.downloadIconSize ?? 16}
-              strokeWidth={1.6}
-              style={{ transform: `translate(${data.downloadIconX ?? 0}px, ${data.downloadIconY ?? 0}px)` }}
+              size={scaleUi(data.downloadIconSize ?? 16)}
+              strokeWidth={scaleUi(1.6)}
+              style={{ transform: `translate(${scaleUi(data.downloadIconX ?? 0)}px, ${scaleUi(data.downloadIconY ?? 0)}px)` }}
             />
-            <span className="text-[13.5px] font-normal tracking-tight leading-none mt-0.5">Download</span>
+            <span
+              className="font-normal tracking-tight leading-none"
+              style={{ fontSize: `${scaleUi(13.5)}px`, marginTop: `${scaleUi(2)}px` }}
+            >
+              Download
+            </span>
           </div>
-          <div className="flex items-center gap-1.5 text-[#8dc73f]">
+          <div className="flex items-center text-[#8dc73f]" style={{ gap: `${scaleUi(6)}px` }}>
             <svg
-              width={data.shareIconSize ?? 16}
-              height={data.shareIconSize ?? 16}
+              width={scaleUi(data.shareIconSize ?? 16)}
+              height={scaleUi(data.shareIconSize ?? 16)}
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.6"
+              strokeWidth={scaleUi(1.6)}
               strokeLinecap="round"
               strokeLinejoin="round"
-              style={{ transform: `translate(${data.shareIconX ?? 0}px, ${data.shareIconY ?? 0}px)` }}
+              style={{ transform: `translate(${scaleUi(data.shareIconX ?? 0)}px, ${scaleUi(data.shareIconY ?? 0)}px)` }}
             >
               <circle cx="18" cy="5" r="3" />
               <circle cx="6" cy="12" r="3" />
@@ -538,14 +604,32 @@ export const TelebirrReceipt = ({
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
               <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
             </svg>
-            <span className="text-[13.5px] font-normal tracking-tight leading-none mt-0.5">Share</span>
+            <span
+              className="font-normal tracking-tight leading-none"
+              style={{ fontSize: `${scaleUi(13.5)}px`, marginTop: `${scaleUi(2)}px` }}
+            >
+              Share
+            </span>
           </div>
         </div>
 
         {/* Success Circle */}
         <div style={sectionStyle(sectionLayout.successBadge)} className="flex items-center justify-center">
-          <div className="w-[44px] h-[44px] aspect-square flex-none bg-[#8dc73f] rounded-full flex items-center justify-center">
-            <svg width={data.checkmarkSize ?? 22} height={Math.round((data.checkmarkSize ?? 22) * 0.743)} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={data.checkmarkStroke ?? 2.5} strokeLinecap="round" strokeLinejoin="round" style={{ transform: `translate(${data.checkmarkIconX ?? 0}px, ${data.checkmarkIconY ?? 0}px)` }}>
+          <div
+            className="aspect-square flex-none bg-[#8dc73f] rounded-full flex items-center justify-center"
+            style={{ width: `${scaleUi(44)}px`, height: `${scaleUi(44)}px` }}
+          >
+            <svg
+              width={scaleUi(data.checkmarkSize ?? 22)}
+              height={scaleUi(Math.round((data.checkmarkSize ?? 22) * 0.743))}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth={scaleUi(data.checkmarkStroke ?? 2.5)}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ transform: `translate(${scaleUi(data.checkmarkIconX ?? 0)}px, ${scaleUi(data.checkmarkIconY ?? 0)}px)` }}
+            >
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
@@ -553,7 +637,9 @@ export const TelebirrReceipt = ({
 
         {/* Success Text */}
         <div style={sectionStyle(sectionLayout.successText)} className="flex items-center justify-center">
-          <span className="text-[#8dc73f] text-[13.5px] font-[410] tracking-[-0.21px] leading-none">Successful</span>
+          <span className="text-[#8dc73f] font-[410] tracking-[-0.21px] leading-none" style={{ fontSize: `${scaleUi(13.5)}px` }}>
+            Successful
+          </span>
         </div>
 
         {/* Amount */}
@@ -564,20 +650,35 @@ export const TelebirrReceipt = ({
           >
             <span
               className="font-normal text-[#111] tracking-normal leading-none"
-              style={{ fontSize: `${data.amountFontSize ?? 31.5}px`, WebkitTextStroke: `${data.amountStroke ?? 1.1}px currentColor`, transform: "translateX(2.0px) translateY(-0.3px)", display: "inline-block" }}
+              style={{
+                fontSize: `${scaleUi(data.amountFontSize ?? 31.5)}px`,
+                WebkitTextStroke: `${scaleUi(data.amountStroke ?? 1.1)}px currentColor`,
+                transform: `translateX(${scaleUi(2)}px) translateY(${scaleUi(-0.3)}px)`,
+                display: "inline-block",
+              }}
             >
               {displayAmount}
             </span>
             <span
               className="font-normal text-[#111] tracking-normal leading-none"
-              style={{ fontSize: `${data.amountFontSize ?? 31.5}px`, WebkitTextStroke: `${data.amountStroke ?? 1.1}px currentColor`, transform: "translateX(0.8px) translateY(-0.2px)", display: "inline-block" }}
+              style={{
+                fontSize: `${scaleUi(data.amountFontSize ?? 31.5)}px`,
+                WebkitTextStroke: `${scaleUi(data.amountStroke ?? 1.1)}px currentColor`,
+                transform: `translateX(${scaleUi(0.8)}px) translateY(${scaleUi(-0.2)}px)`,
+                display: "inline-block",
+              }}
             >
               {decPart}
             </span>
           </div>
           <span
-            className="text-[11px] font-normal text-[#111] leading-none"
-            style={{ WebkitTextStroke: "0.55px currentColor", transform: "translateX(-0.7px) translateY(-0.5px)", display: "inline-block" }}
+            className="font-normal text-[#111] leading-none"
+            style={{
+              fontSize: `${scaleUi(11)}px`,
+              WebkitTextStroke: `${scaleUi(0.55)}px currentColor`,
+              transform: `translateX(${scaleUi(-0.7)}px) translateY(${scaleUi(-0.5)}px)`,
+              display: "inline-block",
+            }}
           >
             (ETB)
           </span>
@@ -587,25 +688,117 @@ export const TelebirrReceipt = ({
         <div style={sectionStyle(sectionLayout.divider)} className="bg-[#e6e6e6] opacity-60" />
 
         {/* Transaction Table Rows */}
-        <div style={sectionStyle(sectionLayout.tableBlock)} className="flex flex-col gap-[12px]" >
+        <div style={{ ...sectionStyle(sectionLayout.tableBlock), gap: `${scaleUi(12)}px` }} className="flex flex-col" >
           <div className="w-full flex justify-between items-center">
-            <span className="text-[#8f8f8f] tracking-[-0.2px] whitespace-nowrap" style={{ fontSize: `${data.tableKeySize ?? 11}px`, fontWeight: data.tableKeyWeight ?? 600, WebkitTextStroke: `${data.tableKeyStroke ?? 0.1}px currentColor`, transform: `translate(${data.tableKeyColumnX ?? 0}px, ${data.tableKeyColumnY ?? 0}px)`, display: "inline-block" }}>Transaction Time:</span>
-            <span className="text-[#111] tracking-[-0.12px] whitespace-nowrap text-right w-[132px]" style={{ fontSize: `${data.tableValSize ?? 11.2}px`, fontWeight: data.tableValWeight ?? 400, WebkitTextStroke: `${data.tableValStroke ?? 0}px currentColor`, transform: `translate(${data.tableValColumnX ?? 0}px, ${0.8 + (data.tableValColumnY ?? 0)}px)`, display: "inline-block" }}>{data.transactionTime}</span>
+            <span
+              className="text-[#8f8f8f] tracking-[-0.2px] whitespace-nowrap"
+              style={{
+                fontSize: `${scaleUi(data.tableKeySize ?? 11)}px`,
+                fontWeight: data.tableKeyWeight ?? 600,
+                WebkitTextStroke: `${scaleUi(data.tableKeyStroke ?? 0.1)}px currentColor`,
+                transform: `translate(${scaleUi(data.tableKeyColumnX ?? 0)}px, ${scaleUi(data.tableKeyColumnY ?? 0)}px)`,
+                display: "inline-block",
+              }}
+            >
+              Transaction Time:
+            </span>
+            <span
+              className="text-[#111] tracking-[-0.12px] whitespace-nowrap text-right"
+              style={{
+                width: `${scaleUi(132)}px`,
+                fontSize: `${scaleUi(data.tableValSize ?? 11.2)}px`,
+                fontWeight: data.tableValWeight ?? 400,
+                WebkitTextStroke: `${scaleUi(data.tableValStroke ?? 0)}px currentColor`,
+                transform: `translate(${scaleUi(data.tableValColumnX ?? 0)}px, ${scaleUi(0.8 + (data.tableValColumnY ?? 0))}px)`,
+                display: "inline-block",
+              }}
+            >
+              {data.transactionTime}
+            </span>
           </div>
 
           <div className="w-full flex justify-between items-center">
-            <span className="text-[#8f8f8f] tracking-[-0.2px] whitespace-nowrap" style={{ fontSize: `${data.tableKeySize ?? 11}px`, fontWeight: data.tableKeyWeight ?? 600, WebkitTextStroke: `${data.tableKeyStroke ?? 0.1}px currentColor`, transform: `translate(${data.tableKeyColumnX ?? 0}px, ${data.tableKeyColumnY ?? 0}px)`, display: "inline-block" }}>Transaction Type:</span>
-            <span className="text-[#111] tracking-[-0.12px] whitespace-nowrap text-right w-[132px]" style={{ fontSize: `${data.tableValSize ?? 11.2}px`, fontWeight: data.tableValWeight ?? 400, WebkitTextStroke: `${data.tableValStroke ?? 0}px currentColor`, transform: `translate(${data.tableValColumnX ?? 0}px, ${0.8 + (data.tableValColumnY ?? 0)}px)`, display: "inline-block" }}>{data.transactionType}</span>
+            <span
+              className="text-[#8f8f8f] tracking-[-0.2px] whitespace-nowrap"
+              style={{
+                fontSize: `${scaleUi(data.tableKeySize ?? 11)}px`,
+                fontWeight: data.tableKeyWeight ?? 600,
+                WebkitTextStroke: `${scaleUi(data.tableKeyStroke ?? 0.1)}px currentColor`,
+                transform: `translate(${scaleUi(data.tableKeyColumnX ?? 0)}px, ${scaleUi(data.tableKeyColumnY ?? 0)}px)`,
+                display: "inline-block",
+              }}
+            >
+              Transaction Type:
+            </span>
+            <span
+              className="text-[#111] tracking-[-0.12px] whitespace-nowrap text-right"
+              style={{
+                width: `${scaleUi(132)}px`,
+                fontSize: `${scaleUi(data.tableValSize ?? 11.2)}px`,
+                fontWeight: data.tableValWeight ?? 400,
+                WebkitTextStroke: `${scaleUi(data.tableValStroke ?? 0)}px currentColor`,
+                transform: `translate(${scaleUi(data.tableValColumnX ?? 0)}px, ${scaleUi(0.8 + (data.tableValColumnY ?? 0))}px)`,
+                display: "inline-block",
+              }}
+            >
+              {data.transactionType}
+            </span>
           </div>
 
           <div className="w-full flex justify-between items-center">
-            <span className="text-[#8f8f8f] tracking-[-0.2px] whitespace-nowrap" style={{ fontSize: `${data.tableKeySize ?? 11}px`, fontWeight: data.tableKeyWeight ?? 600, WebkitTextStroke: `${data.tableKeyStroke ?? 0.1}px currentColor`, transform: `translate(${data.tableKeyColumnX ?? 0}px, ${data.tableKeyColumnY ?? 0}px)`, display: "inline-block" }}>Transaction To:</span>
-            <span className="text-[#111] tracking-[-0.12px] whitespace-nowrap text-right w-[132px]" style={{ fontSize: `${data.tableValSize ?? 11.2}px`, fontWeight: data.tableValWeight ?? 400, WebkitTextStroke: `${data.tableValStroke ?? 0}px currentColor`, transform: `translate(${data.tableValColumnX ?? 0}px, ${0.8 + (data.tableValColumnY ?? 0)}px)`, display: "inline-block" }}>{data.transactionTo}</span>
+            <span
+              className="text-[#8f8f8f] tracking-[-0.2px] whitespace-nowrap"
+              style={{
+                fontSize: `${scaleUi(data.tableKeySize ?? 11)}px`,
+                fontWeight: data.tableKeyWeight ?? 600,
+                WebkitTextStroke: `${scaleUi(data.tableKeyStroke ?? 0.1)}px currentColor`,
+                transform: `translate(${scaleUi(data.tableKeyColumnX ?? 0)}px, ${scaleUi(data.tableKeyColumnY ?? 0)}px)`,
+                display: "inline-block",
+              }}
+            >
+              Transaction To:
+            </span>
+            <span
+              className="text-[#111] tracking-[-0.12px] whitespace-nowrap text-right"
+              style={{
+                width: `${scaleUi(132)}px`,
+                fontSize: `${scaleUi(data.tableValSize ?? 11.2)}px`,
+                fontWeight: data.tableValWeight ?? 400,
+                WebkitTextStroke: `${scaleUi(data.tableValStroke ?? 0)}px currentColor`,
+                transform: `translate(${scaleUi(data.tableValColumnX ?? 0)}px, ${scaleUi(0.8 + (data.tableValColumnY ?? 0))}px)`,
+                display: "inline-block",
+              }}
+            >
+              {data.transactionTo}
+            </span>
           </div>
 
           <div className="w-full flex justify-between items-center">
-            <span className="text-[#8f8f8f] tracking-[-0.2px] whitespace-nowrap" style={{ fontSize: `${data.tableKeySize ?? 11}px`, fontWeight: data.tableKeyWeight ?? 600, WebkitTextStroke: `${data.tableKeyStroke ?? 0.1}px currentColor`, transform: `translate(${data.tableKeyColumnX ?? 0}px, ${data.tableKeyColumnY ?? 0}px)`, display: "inline-block" }}>Transaction Number:</span>
-            <span className="text-[#111] tracking-[-0.12px] whitespace-nowrap text-right w-[132px]" style={{ fontSize: `${data.tableValSize ?? 11.2}px`, fontWeight: data.tableValWeight ?? 400, WebkitTextStroke: `${data.tableValStroke ?? 0}px currentColor`, transform: `translate(${data.tableValColumnX ?? 0}px, ${0.8 + (data.tableValColumnY ?? 0)}px)`, display: "inline-block" }}>{data.transactionNumber}</span>
+            <span
+              className="text-[#8f8f8f] tracking-[-0.2px] whitespace-nowrap"
+              style={{
+                fontSize: `${scaleUi(data.tableKeySize ?? 11)}px`,
+                fontWeight: data.tableKeyWeight ?? 600,
+                WebkitTextStroke: `${scaleUi(data.tableKeyStroke ?? 0.1)}px currentColor`,
+                transform: `translate(${scaleUi(data.tableKeyColumnX ?? 0)}px, ${scaleUi(data.tableKeyColumnY ?? 0)}px)`,
+                display: "inline-block",
+              }}
+            >
+              Transaction Number:
+            </span>
+            <span
+              className="text-[#111] tracking-[-0.12px] whitespace-nowrap text-right"
+              style={{
+                width: `${scaleUi(132)}px`,
+                fontSize: `${scaleUi(data.tableValSize ?? 11.2)}px`,
+                fontWeight: data.tableValWeight ?? 400,
+                WebkitTextStroke: `${scaleUi(data.tableValStroke ?? 0)}px currentColor`,
+                transform: `translate(${scaleUi(data.tableValColumnX ?? 0)}px, ${scaleUi(0.8 + (data.tableValColumnY ?? 0))}px)`,
+                display: "inline-block",
+              }}
+            >
+              {data.transactionNumber}
+            </span>
           </div>
         </div>
 
@@ -613,15 +806,15 @@ export const TelebirrReceipt = ({
           {/* Arrow */}
           <div
             style={{
-              width: `${data.qrArrowWidth ?? 14.5}px`,
-              height: `${data.qrArrowHeight ?? 19}px`,
+              width: `${scaleUi(data.qrArrowWidth ?? 14.5)}px`,
+              height: `${scaleUi(data.qrArrowHeight ?? 19)}px`,
               position: "absolute",
               right: "0px",
               top: "50%",
               transform: `translateY(-50%) translate(${subElements.qrArrow.x}px, ${subElements.qrArrow.y}px)`,
             }}
           >
-            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth={data.qrArrowStroke ?? 2.4} strokeLinecap="square" strokeLinejoin="miter" preserveAspectRatio="none" style={{ overflow: "visible" }}>
+            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth={scaleUi(data.qrArrowStroke ?? 2.4)} strokeLinecap="square" strokeLinejoin="miter" preserveAspectRatio="none" style={{ overflow: "visible" }}>
               <polyline points="0 0 100 50 0 100" vectorEffect="non-scaling-stroke" />
             </svg>
           </div>
@@ -629,11 +822,11 @@ export const TelebirrReceipt = ({
           <span
             className="tracking-[-0.3px] leading-none whitespace-nowrap"
             style={{
-              fontSize: `${data.qrFontSize ?? 14.2}px`,
+              fontSize: `${scaleUi(data.qrFontSize ?? 14.2)}px`,
               fontWeight: data.qrTextWeight ?? 600,
-              WebkitTextStroke: `${data.qrTextStroke ?? 0}px currentColor`,
+              WebkitTextStroke: `${scaleUi(data.qrTextStroke ?? 0)}px currentColor`,
               position: "absolute",
-              right: "24px",
+              right: `${scaleUi(24)}px`,
               top: "50%",
               transform: `translateY(-50%) translate(${subElements.qrText.x}px, ${subElements.qrText.y}px)`,
             }}
@@ -643,10 +836,10 @@ export const TelebirrReceipt = ({
             src="/Asset/qr code icon.svg"
             alt="QR Code Icon"
             style={{
-              width: `${data.qrIconWidth ?? 24}px`,
-              height: `${data.qrIconHeight ?? 28}px`,
+              width: `${scaleUi(data.qrIconWidth ?? 24)}px`,
+              height: `${scaleUi(data.qrIconHeight ?? 28)}px`,
               position: "absolute",
-              right: "88px",
+              right: `${scaleUi(88)}px`,
               top: "50%",
               transform: `translateY(-50%) translate(${subElements.qrIcon.x}px, ${subElements.qrIcon.y}px)`,
               maxWidth: "none",
@@ -667,13 +860,20 @@ export const TelebirrReceipt = ({
 
         {/* Dots */}
         <div style={sectionStyle(sectionLayout.dots)} className="flex justify-center items-center">
-          <CarouselDots active={Math.max(0, data.bannerIndex - 1)} total={5} />
+          <CarouselDots active={Math.max(0, data.bannerIndex - 1)} total={5} dotSize={scaleUi(data.dotSize ?? 7.5)} gap={scaleUi(4.25)} />
         </div>
 
         {/* Finished Button */}
         <div style={sectionStyle(sectionLayout.finishedButton)} className="flex justify-center">
-          <div className="w-[160px] h-[35px] bg-[#8dc73f] text-white rounded-[8px] font-semibold tracking-wide flex items-center justify-center">
-            <span style={{ fontSize: `${data.finishedTextSize ?? 13}px`, lineHeight: 1, display: "inline-block" }}>Finished</span>
+          <div
+            className="bg-[#8dc73f] text-white font-semibold tracking-wide flex items-center justify-center"
+            style={{
+              width: `${scaleUi(160)}px`,
+              height: `${scaleUi(35)}px`,
+              borderRadius: `${scaleUi(8)}px`,
+            }}
+          >
+            <span style={{ fontSize: `${scaleUi(data.finishedTextSize ?? 13)}px`, lineHeight: 1, display: "inline-block" }}>Finished</span>
           </div>
         </div>
       </div>
@@ -745,7 +945,7 @@ export const TelebirrReceipt = ({
 
   /* ─── Preview Wrapper with Phone Frame ─── */
   const isIos = os === "ios";
-  const frameScale = isIos ? 0.75 : 0.8;
+  const frameScale = 0.8;
 
   return (
     <div className="relative w-full h-full bg-gray-100 flex items-center justify-center overflow-hidden p-4 md:p-6">

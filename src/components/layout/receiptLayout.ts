@@ -178,27 +178,30 @@ export const applyTweaks = (
   ctx: ReceiptLayoutContext,
 ) => {
   const twins = ctx.tweaks ?? {};
+  const tweakScale = ctx.canvasWidth / RECEIPT_LAYOUT_SPEC.reference.width;
+  const scaleX = (value?: number) => (value ?? 0) * tweakScale;
+  const raw = (value?: number) => value ?? 0;
 
   const sections: Record<SectionName, SectionLayout> = { ...layout };
 
   // Apply section-level translations
-  if (twins.topActions) sections.topActions.transform = `translate(${twins.topActions.x ?? 0}px, ${twins.topActions.y ?? 0}px)`;
-  if (twins.successBadge) sections.successBadge.transform = `translate(${twins.successBadge.x ?? 0}px, ${twins.successBadge.y ?? 0}px)`;
-  if (twins.successText) sections.successText.transform = `translate(${twins.successText.x ?? 0}px, ${twins.successText.y ?? 0}px)`;
-  if (twins.amountBlock) sections.amountBlock.transform = `translate(${twins.amountBlock.x ?? 0}px, ${twins.amountBlock.y ?? 0}px)`;
-  if (twins.divider) sections.divider.transform = `translate(${twins.divider.x ?? 0}px, ${twins.divider.y ?? 0}px)`;
-  if (twins.table) sections.tableBlock.transform = `translate(${twins.table.x ?? 0}px, ${twins.table.y ?? 0}px)`;
-  if (twins.qr) sections.qrRow.transform = `translate(${twins.qr.x ?? 0}px, ${twins.qr.y ?? 0}px)`;
-  if (twins.banner) sections.banner.transform = `translate(${twins.banner.x ?? 0}px, ${twins.banner.y ?? 0}px)`;
-  if (twins.dots) sections.dots.transform = `translate(${twins.dots.x ?? 0}px, ${twins.dots.y ?? 0}px)`;
-  if (twins.finishedButton) sections.finishedButton.transform = `translate(${twins.finishedButton.x ?? 0}px, ${twins.finishedButton.y ?? 0}px)`;
+  if (twins.topActions) sections.topActions.transform = `translate(${scaleX(twins.topActions.x)}px, ${raw(twins.topActions.y)}px)`;
+  if (twins.successBadge) sections.successBadge.transform = `translate(${scaleX(twins.successBadge.x)}px, ${raw(twins.successBadge.y)}px)`;
+  if (twins.successText) sections.successText.transform = `translate(${scaleX(twins.successText.x)}px, ${raw(twins.successText.y)}px)`;
+  if (twins.amountBlock) sections.amountBlock.transform = `translate(${scaleX(twins.amountBlock.x)}px, ${raw(twins.amountBlock.y)}px)`;
+  if (twins.divider) sections.divider.transform = `translate(${scaleX(twins.divider.x)}px, ${raw(twins.divider.y)}px)`;
+  if (twins.table) sections.tableBlock.transform = `translate(${scaleX(twins.table.x)}px, ${raw(twins.table.y)}px)`;
+  if (twins.qr) sections.qrRow.transform = `translate(${scaleX(twins.qr.x)}px, ${raw(twins.qr.y)}px)`;
+  if (twins.banner) sections.banner.transform = `translate(${scaleX(twins.banner.x)}px, ${raw(twins.banner.y)}px)`;
+  if (twins.dots) sections.dots.transform = `translate(${scaleX(twins.dots.x)}px, ${raw(twins.dots.y)}px)`;
+  if (twins.finishedButton) sections.finishedButton.transform = `translate(${scaleX(twins.finishedButton.x)}px, ${raw(twins.finishedButton.y)}px)`;
 
   // Specific sub-element overrides (not relative to parent row transform, used as absolute nudges)
   const subElements = {
-    checkmarkIcon: { x: twins.checkmarkIcon?.x || 0, y: twins.checkmarkIcon?.y || 0 },
-    qrIcon: { x: twins.qrIcon?.x || 0, y: twins.qrIcon?.y || 0 },
-    qrText: { x: twins.qrText?.x || 0, y: twins.qrText?.y || 0 },
-    qrArrow: { x: twins.qrArrow?.x || 0, y: twins.qrArrow?.y || 0 },
+    checkmarkIcon: { x: scaleX(twins.checkmarkIcon?.x), y: raw(twins.checkmarkIcon?.y) },
+    qrIcon: { x: scaleX(twins.qrIcon?.x), y: raw(twins.qrIcon?.y) },
+    qrText: { x: scaleX(twins.qrText?.x), y: raw(twins.qrText?.y) },
+    qrArrow: { x: scaleX(twins.qrArrow?.x), y: raw(twins.qrArrow?.y) },
   };
 
   return { sections, subElements };
