@@ -229,6 +229,7 @@ export function App() {
     bottomNavHeight: 42.5,
     bottomNavIconsX: 0,
     bottomNavIconsY: 0,
+    iphoneContentNudgeY: -14.5,
     time: "11:43",
     battery: "48",
     batteryCharging: false,
@@ -345,6 +346,7 @@ export function App() {
       bottomNavHeight: 42.5,
       bottomNavIconsX: 0,
       bottomNavIconsY: 0,
+      iphoneContentNudgeY: -14.5,
     });
 
   const generateRandomTransactionNumber = () => {
@@ -718,6 +720,18 @@ export function App() {
             </div>
             <div className="bg-white border border-[#e8f0eb] p-5 rounded-2xl space-y-5 shadow-sm">
               <XYTweakSlider label="Download / Share Row" value={{ x: data.layoutTweaks?.topActions?.x ?? 0, y: data.layoutTweaks?.topActions?.y ?? -2 }} onChange={(v) => setTweak("topActions", v)} onReset={() => setTweak("topActions", { x: 0, y: -2 })} />
+              {isIos && (
+                <ValueTweakSlider
+                  label="iPhone Whole Y Nudge"
+                  value={data.iphoneContentNudgeY}
+                  min={-80}
+                  max={80}
+                  step={0.5}
+                  onChange={(v) => set({ iphoneContentNudgeY: Number(v.toFixed(1)) })}
+                  onReset={() => set({ iphoneContentNudgeY: -14.5 })}
+                  format={(v) => `${v.toFixed(1)}px`}
+                />
+              )}
               <XYTweakSlider label="Download Icon (Only)" value={{ x: data.downloadIconX, y: data.downloadIconY }} onChange={(v) => set({ downloadIconX: v.x, downloadIconY: v.y })} onReset={() => set({ downloadIconX: 1, downloadIconY: 0 })} />
               <XYTweakSlider label="Share Icon (Only)" value={{ x: data.shareIconX, y: data.shareIconY }} onChange={(v) => set({ shareIconX: v.x, shareIconY: v.y })} onReset={() => set({ shareIconX: 0, shareIconY: 0 })} />
               <XYTweakSlider label="Checkmark Badge" value={{ x: data.layoutTweaks?.successBadge?.x ?? 0.5, y: data.layoutTweaks?.successBadge?.y ?? -4.5 }} onChange={(v) => setTweak("successBadge", v)} onReset={() => setTweak("successBadge", { x: 0.5, y: -4.5 })} />
@@ -794,6 +808,7 @@ export function App() {
                     `showMobileData: ${data.showMobileData}`,
                     `showHotspot: ${data.showHotspot}`,
                     `showNfc: ${data.showNfc}`,
+                    `iphoneContentNudgeY: ${data.iphoneContentNudgeY}`,
                     `topActions:    x:${t.topActions?.x ?? 0} y:${t.topActions?.y ?? -2}`,
                     `successBadge:  x:${t.successBadge?.x ?? 0.5} y:${t.successBadge?.y ?? -4.5}`,
                     `successText:   x:${t.successText?.x ?? 0} y:${t.successText?.y ?? -5}`,

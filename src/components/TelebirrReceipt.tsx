@@ -70,6 +70,7 @@ export interface ReceiptData {
   bottomNavHeight: number;     // px, default 42.5 (buttons nav)
   bottomNavIconsX: number;     // px, default 0
   bottomNavIconsY: number;     // px, default 0
+  iphoneContentNudgeY: number; // px, whole-content vertical nudge (iOS only)
   time: string;
   battery: string;
   batteryCharging: boolean;
@@ -415,6 +416,7 @@ export const TelebirrReceipt = ({
   const navType = data.navBarOverride === "default"
     ? config.nav
     : data.navBarOverride;
+  const globalContentShiftY = os === "ios" ? (data.iphoneContentNudgeY ?? 0) : 0;
   // Keep receipt content anchored even when visual bottom-nav height is adjusted via slider.
   const layoutNavButtonsHeight = 42.5;
 
@@ -562,7 +564,10 @@ export const TelebirrReceipt = ({
         </div>
       )}
 
-      <div className="flex-1 w-full h-full flex flex-col relative overflow-hidden pointer-events-none">
+      <div
+        className="flex-1 w-full h-full flex flex-col relative overflow-hidden pointer-events-none"
+        style={globalContentShiftY !== 0 ? { transform: `translateY(${globalContentShiftY}px)` } : undefined}
+      >
 
         {/* Top Header Actions */}
         <div
