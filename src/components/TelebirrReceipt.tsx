@@ -38,8 +38,8 @@ export const devicePresets = {
     notch: "dynamic_island",
     font: "font-roboto",
     nav: "home_indicator",
-    width: "390px",
-    height: "844px",
+    width: "393px",
+    height: "852px",
     safeAreaBottom: 34,
     safeAreaPadding: 16,
   },
@@ -270,14 +270,9 @@ const IosBattery = ({
   const textX = bodyStartX + bodyWidth / 2;
   const textLength = digits === 3 ? 12 : undefined;
   const showInsideBolt = isCharging;
+  const boltColor = systemFg;
   const renderForeground = (color: string) => (
     <>
-      {showInsideBolt && (
-        <path
-          d="M8.64134 8.1664H12.0477L10.2663 12.7633C10.0095 13.4262 10.7075 13.7714 11.1598 13.24L16.6658 6.68159C16.7775 6.5501 16.8334 6.4186 16.8334 6.27615C16.8334 6.02411 16.6323 5.83783 16.3587 5.83783H12.9523L14.7281 1.23546C14.985 0.577982 14.287 0.227325 13.8402 0.758789L8.32863 7.31716C8.21694 7.45413 8.16669 7.58015 8.16669 7.7226C8.16669 7.98012 8.36772 8.1664 8.64134 8.1664Z"
-          fill={color}
-        />
-      )}
       {showPercent && (
         <text
           x={textX}
@@ -333,8 +328,27 @@ const IosBattery = ({
         <rect x={bodyStartX} y={bodyStartY} width={fillWidth} height={bodyHeight} rx={bodyRadius} fill={fillColor} />
       </g>
 
-      {/* Dynamic contrast: render bolt/text twice, split by fill vs empty */}
-      {(showInsideBolt || showPercent) && (
+      {/* Bolt renders once (no split/clip by fill), text keeps dynamic contrast */}
+      {showInsideBolt && (
+        <g clipPath={`url(#${clipBodyId})`}>
+          {/* White offset stroke behind bolt */}
+          <path
+            d="M8.64134 8.1664H12.0477L10.2663 12.7633C10.0095 13.4262 10.7075 13.7714 11.1598 13.24L16.6658 6.68159C16.7775 6.5501 16.8334 6.4186 16.8334 6.27615C16.8334 6.02411 16.6323 5.83783 16.3587 5.83783H12.9523L14.7281 1.23546C14.985 0.577982 14.287 0.227325 13.8402 0.758789L8.32863 7.31716C8.21694 7.45413 8.16669 7.58015 8.16669 7.7226C8.16669 7.98012 8.36772 8.1664 8.64134 8.1664Z"
+            fill="none"
+            stroke="#FFFFFF"
+            strokeWidth="1.2"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+          {/* Black bolt on top */}
+          <path
+            d="M8.64134 8.1664H12.0477L10.2663 12.7633C10.0095 13.4262 10.7075 13.7714 11.1598 13.24L16.6658 6.68159C16.7775 6.5501 16.8334 6.4186 16.8334 6.27615C16.8334 6.02411 16.6323 5.83783 16.3587 5.83783H12.9523L14.7281 1.23546C14.985 0.577982 14.287 0.227325 13.8402 0.758789L8.32863 7.31716C8.21694 7.45413 8.16669 7.58015 8.16669 7.7226C8.16669 7.98012 8.36772 8.1664 8.64134 8.1664Z"
+            fill={boltColor}
+          />
+        </g>
+      )}
+      {/* Dynamic contrast: render text twice, split by fill vs empty */}
+      {showPercent && (
         <g clipPath={`url(#${clipBodyId})`}>
           <g clipPath={`url(#${clipFillId})`}>{renderForeground(contrastOnFill)}</g>
           <g clipPath={`url(#${clipEmptyId})`}>{renderForeground(systemFg)}</g>
@@ -413,6 +427,8 @@ export const TelebirrReceipt = ({
   isPreview?: boolean;
   captureId?: string;
 }) => {
+  const IOS_TIME_BASE_SIZE = 17 * (REFERENCE_WIDTH / 393);
+  const IOS_TIME_BASE_TRACKING = -0.34 * (REFERENCE_WIDTH / 393);
   const config = devicePresets[data.preset] || devicePresets.test_accuracy;
   const os = config.os;
   const { width, height } = config;
@@ -686,13 +702,15 @@ export const TelebirrReceipt = ({
           <div className="flex items-center gap-[4px]">
             <div
               style={{
-                fontFamily: '-apple-system, "SF Pro Display", "Helvetica Neue", sans-serif',
-                fontWeight: 600,
-                fontSize: '15px',
-                letterSpacing: '-0.3px',
+                fontFamily: '-apple-system, "SF Pro Text", "Helvetica Neue", sans-serif',
+                fontWeight: 500,
+                fontSize: `${scaleUi(IOS_TIME_BASE_SIZE)}px`,
+                letterSpacing: `${scaleUi(IOS_TIME_BASE_TRACKING)}px`,
+                lineHeight: 1,
+                fontKerning: "normal",
                 color: '#000',
-                fontVariantNumeric: "tabular-nums",
-                fontFeatureSettings: '"tnum" 1',
+                fontVariantNumeric: "proportional-nums",
+                fontFeatureSettings: '"pnum" 1, "case" 1, "frac" 1',
               }}
             >
               {data.time}
@@ -1112,8 +1130,15 @@ export const TelebirrReceipt = ({
           )}
 
           {navType === "home_indicator" && (
-            <div className="h-[24px] w-full flex justify-center py-[10px] bg-white">
-              <div className="w-[130px] h-[5px] bg-black/10 rounded-full" />
+            <div
+              className="w-full flex justify-center bg-white box-border"
+              style={{
+                height: `${os === "ios" ? ((config as typeof devicePresets.iphone_modern).safeAreaBottom ?? 34) : 24}px`,
+                paddingBottom: "8px",
+                alignItems: "flex-end",
+              }}
+            >
+              <div className="w-[144px] h-[5px] bg-black rounded-full" />
             </div>
           )}
 
@@ -1131,16 +1156,19 @@ export const TelebirrReceipt = ({
 
   /* ─── Preview Wrapper with Phone Frame ─── */
   const isIos = os === "ios";
-  const frameScale = 0.8;
+  const frameScale = 0.75;
+  const framePad = isIos ? 24 : 20;
+  const frameWidth = `calc(${width} + ${framePad}px)`;
+  const frameHeight = `calc(${height} + ${framePad}px)`;
 
   return (
-    <div className="relative w-full h-full bg-gray-100 flex items-center justify-center overflow-hidden p-4 md:p-6">
+    <div className="relative w-full h-full flex items-center justify-center">
       <div
         className="flex items-center justify-center origin-center transition-transform duration-300"
         style={{
           transform: `scale(${frameScale})`,
-          width: width,
-          height: height,
+          width: frameWidth,
+          height: frameHeight,
         }}
       >
         <div
