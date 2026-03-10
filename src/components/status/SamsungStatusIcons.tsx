@@ -1,175 +1,232 @@
-import type { CSSProperties } from "react";
+import React, { useEffect, useState } from "react";
+import { getProcessedSamsungBadge } from "../../utils/samsungBadgeExtract";
 
-export const SAMSUNG_STATUS_COLORS = {
-  active: "#1C1C1E",
-  tint: "rgba(0, 0, 0, 0.35)",
-  low: "#FF4444",
+export const SAMSUNG_FONT_STACK =
+  '"One UI Sans","SamsungOne","Samsung One","SamsungSharpSans",Roboto,sans-serif';
+
+export type SamsungIconColorMode = "auto" | "dark" | "light";
+
+export const SAMSUNG_NETWORK_TYPE_ICON_FILES = [
+  "3g.jpg",
+  "4g.jpg",
+  "5g.jpg",
+  "hspa_plus.jpg",
+  "lte.jpg",
+] as const;
+
+export const SAMSUNG_SIGNAL_ICON_FILES = [
+  "signal_strength.jpg",
+  "no_signal.jpg",
+] as const;
+
+export const SAMSUNG_WIFI_ICON_FILES = [
+  "wifi.jpg",
+] as const;
+
+export const SAMSUNG_BATTERY_ICON_FILES = [
+  "battery_level.jpg",
+  "battery_charging.jpg",
+] as const;
+
+export const SAMSUNG_SYSTEM_TOGGLE_ICON_FILES = [
+  "airplane_mode.jpg",
+  "alarm.jpg",
+  "bluetooth.jpg",
+  "casting-activated.jpeg",
+  "location.jpg",
+  "mobile-hotspot-enabled.jpeg",
+  "mute.jpg",
+  "vpn-service-connected.jpeg",
+] as const;
+
+export type SamsungNetworkTypeIconFile = (typeof SAMSUNG_NETWORK_TYPE_ICON_FILES)[number];
+export type SamsungSignalIconFile = (typeof SAMSUNG_SIGNAL_ICON_FILES)[number];
+export type SamsungWifiIconFile = (typeof SAMSUNG_WIFI_ICON_FILES)[number];
+export type SamsungBatteryIconFile = (typeof SAMSUNG_BATTERY_ICON_FILES)[number];
+export type SamsungSystemToggleIconFile = (typeof SAMSUNG_SYSTEM_TOGGLE_ICON_FILES)[number];
+
+export type SamsungStatusIconFile =
+  | SamsungNetworkTypeIconFile
+  | SamsungSignalIconFile
+  | SamsungWifiIconFile
+  | SamsungBatteryIconFile
+  | SamsungSystemToggleIconFile;
+
+export const SAMSUNG_STATUS_ICON_CATEGORIES = {
+  networkType: SAMSUNG_NETWORK_TYPE_ICON_FILES,
+  signal: SAMSUNG_SIGNAL_ICON_FILES,
+  wifi: SAMSUNG_WIFI_ICON_FILES,
+  battery: SAMSUNG_BATTERY_ICON_FILES,
+  system: SAMSUNG_SYSTEM_TOGGLE_ICON_FILES,
 } as const;
 
-export const SAMSUNG_FONT_STACK = '"SamsungOne", "SamsungSharpSans", Roboto, sans-serif';
+export const SAMSUNG_ALL_STATUS_ICONS: readonly SamsungStatusIconFile[] = [
+  ...SAMSUNG_NETWORK_TYPE_ICON_FILES,
+  ...SAMSUNG_SIGNAL_ICON_FILES,
+  ...SAMSUNG_WIFI_ICON_FILES,
+  ...SAMSUNG_BATTERY_ICON_FILES,
+  ...SAMSUNG_SYSTEM_TOGGLE_ICON_FILES,
+];
 
-const ICON = {
-  airplane: "/icons/airplane.svg",
-  alarm: "/icons/alarm.svg",
-  batteryShell: "/icons/battery-shell.svg",
-  batteryBolt: "/icons/battery-bolt.svg",
-  bluetooth: "/icons/bluetooth.svg",
-  cast: "/icons/cast.svg",
-  dataArrows: "/icons/data-arrows.svg",
-  dataSaver: "/icons/data-saver.svg",
-  dnd: "/icons/dnd.svg",
-  hotspot: "/icons/hotspot.svg",
-  location: "/icons/location.svg",
-  nfc: "/icons/nfc.svg",
-  powerSave: "/icons/power-save.svg",
-  rotationLock: "/icons/rotation-lock.svg",
-  silent: "/icons/silent.svg",
-  vpn: "/icons/vpn.svg",
-  signal: {
-    0: "/icons/signal-0.svg",
-    1: "/icons/signal-1.svg",
-    2: "/icons/signal-2.svg",
-    3: "/icons/signal-3.svg",
-    4: "/icons/signal-4.svg",
-  },
-  wifi: {
-    0: "/icons/wifi-0.svg",
-    1: "/icons/wifi-1.svg",
-    2: "/icons/wifi-2.svg",
-    3: "/icons/wifi-3.svg",
-  },
-} as const;
+export const SAMSUNG_STATUS_ICON_LABELS: Record<SamsungStatusIconFile, string> = {
+  "3g.jpg": "3G",
+  "4g.jpg": "4G",
+  "5g.jpg": "5G",
+  "hspa_plus.jpg": "H+",
+  "lte.jpg": "LTE",
+  "signal_strength.jpg": "Signal",
+  "no_signal.jpg": "No Signal",
+  "wifi.jpg": "Wi-Fi",
+  "battery_level.jpg": "Battery",
+  "battery_charging.jpg": "Charging",
+  "airplane_mode.jpg": "Airplane",
+  "alarm.jpg": "Alarm",
+  "bluetooth.jpg": "Bluetooth",
+  "casting-activated.jpeg": "Cast",
+  "location.jpg": "Location",
+  "mobile-hotspot-enabled.jpeg": "Hotspot",
+  "mute.jpg": "Mute",
+  "vpn-service-connected.jpeg": "VPN",
+};
 
-const maskStyle = (src: string, width: number, height: number, color: string): CSSProperties => ({
-  display: "inline-block",
-  width: `${width}px`,
-  height: `${height}px`,
-  backgroundColor: color,
-  WebkitMaskImage: `url(${src})`,
-  maskImage: `url(${src})`,
-  WebkitMaskRepeat: "no-repeat",
-  maskRepeat: "no-repeat",
-  WebkitMaskPosition: "center",
-  maskPosition: "center",
-  WebkitMaskSize: "contain",
-  maskSize: "contain",
-});
+const STATUS_DARK = "#1C1C1E";
+const STATUS_LIGHT = "#FFFFFF";
 
-const MonoMaskIcon = ({
-  src,
+const parseRgb = (value: string): [number, number, number] | null => {
+  const trimmed = value.trim();
+  const hex = trimmed.replace(/^#/, "");
+  if (hex.length === 3) {
+    return [
+      parseInt(hex[0] + hex[0], 16),
+      parseInt(hex[1] + hex[1], 16),
+      parseInt(hex[2] + hex[2], 16),
+    ];
+  }
+  if (hex.length === 6) {
+    return [
+      parseInt(hex.slice(0, 2), 16),
+      parseInt(hex.slice(2, 4), 16),
+      parseInt(hex.slice(4, 6), 16),
+    ];
+  }
+  const rgbMatch = trimmed.match(
+    /^rgba?\(\s*(\d{1,3})[\s,]+(\d{1,3})[\s,]+(\d{1,3})(?:[\s,/]+[\d.]+)?\s*\)$/i,
+  );
+  if (!rgbMatch) return null;
+  return [
+    Math.max(0, Math.min(255, Number(rgbMatch[1]))),
+    Math.max(0, Math.min(255, Number(rgbMatch[2]))),
+    Math.max(0, Math.min(255, Number(rgbMatch[3]))),
+  ];
+};
+
+const colorLuminance = (color: string) => {
+  const parsed = parseRgb(color);
+  if (!parsed) return 255;
+  const [r, g, b] = parsed;
+  return (0.2126 * r) + (0.7152 * g) + (0.0722 * b);
+};
+
+export const resolveSamsungStatusColor = (
+  mode: SamsungIconColorMode,
+  backgroundColor = "#FFFFFF",
+) => {
+  if (mode === "dark") return STATUS_DARK;
+  if (mode === "light") return STATUS_LIGHT;
+  return colorLuminance(backgroundColor) < 140 ? STATUS_LIGHT : STATUS_DARK;
+};
+
+export const SamsungStatusText = ({
+  children,
+  color,
+  fontSize,
+  fontWeight = 600,
+  letterSpacing = "-0.2px",
+}: {
+  children: React.ReactNode;
+  color: string;
+  fontSize: string;
+  fontWeight?: number;
+  letterSpacing?: string;
+}) => (
+  <span
+    style={{
+      color,
+      fontFamily: SAMSUNG_FONT_STACK,
+      fontWeight,
+      fontSize,
+      lineHeight: 1,
+      letterSpacing,
+      fontVariantNumeric: "tabular-nums",
+      display: "inline-block",
+    }}
+  >
+    {children}
+  </span>
+);
+
+const SAMSUNG_STATUS_ICON_BASE = "/status/samsung/";
+
+export const SamsungFolderIcon = ({
+  file,
+  color,
   width,
   height,
-  color = SAMSUNG_STATUS_COLORS.active,
+  style,
+  alt = "",
 }: {
-  src: string;
+  file: SamsungStatusIconFile;
+  color: string;
   width: number;
   height: number;
-  color?: string;
-}) => <span aria-hidden="true" style={maskStyle(src, width, height, color)} />;
-
-export const SamsungSignalIcon = ({ level = 4 }: { level?: number }) => {
-  const clamped = Math.max(0, Math.min(4, level));
-  const src = ICON.signal[clamped as 0 | 1 | 2 | 3 | 4];
-  return <MonoMaskIcon src={src} width={18} height={18} />;
-};
-
-export const SamsungWifiIcon = ({ strength = 3 }: { strength?: number }) => {
-  const clamped = Math.max(0, Math.min(3, strength));
-  const src = ICON.wifi[clamped as 0 | 1 | 2 | 3];
-  return <MonoMaskIcon src={src} width={16} height={14} />;
-};
-
-export const SamsungDataArrowsIcon = () => <MonoMaskIcon src={ICON.dataArrows} width={6} height={10} />;
-
-export const SamsungBatteryIcon = ({
-  percent,
-  charging = false,
-}: {
-  percent: number;
-  charging?: boolean;
+  style?: React.CSSProperties;
+  alt?: string;
 }) => {
-  const pct = Math.max(0, Math.min(100, percent));
-  const isLow = pct <= 20;
-  const shellColor = isLow ? SAMSUNG_STATUS_COLORS.low : SAMSUNG_STATUS_COLORS.tint;
-  const fillColor = isLow ? SAMSUNG_STATUS_COLORS.low : SAMSUNG_STATUS_COLORS.active;
+  const [processedSrc, setProcessedSrc] = useState<string | null>(null);
 
-  const width = 12;
-  const height = 22;
-  const innerTop = 5;
-  const innerBottom = 3;
-  const innerLeft = 3;
-  const innerWidth = 6;
-  const trackHeight = height - innerTop - innerBottom;
-  const fillHeight = Math.max(0.8, (trackHeight * pct) / 100);
-  const fillTop = innerTop + (trackHeight - fillHeight);
+  useEffect(() => {
+    let active = true;
+    setProcessedSrc(null);
+    getProcessedSamsungBadge(file, color)
+      .then((src) => {
+        if (active) setProcessedSrc(src);
+      })
+      .catch(() => {
+        if (active) setProcessedSrc(`${SAMSUNG_STATUS_ICON_BASE}${file}`);
+      });
 
-  return (
-    <span style={{ position: "relative", display: "inline-block", width: `${width}px`, height: `${height}px` }}>
-      <span aria-hidden="true" style={maskStyle(ICON.batteryShell, width, height, shellColor)} />
+    return () => {
+      active = false;
+    };
+  }, [file, color]);
+
+  if (!processedSrc) {
+    return (
       <span
         aria-hidden="true"
         style={{
-          position: "absolute",
-          left: `${innerLeft}px`,
-          top: `${fillTop}px`,
-          width: `${innerWidth}px`,
-          height: `${fillHeight}px`,
-          borderRadius: "1px",
-          backgroundColor: fillColor,
+          display: "inline-block",
+          width: `${width}px`,
+          height: `${height}px`,
+          flexShrink: 0,
+          ...style,
         }}
       />
-      {charging && (
-        <span
-          aria-hidden="true"
-          style={{
-            ...maskStyle(ICON.batteryBolt, 6.5, 9.5, "#ffffff"),
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        />
-      )}
-    </span>
+    );
+  }
+
+  return (
+    <img
+      src={processedSrc}
+      alt={alt}
+      style={{
+        display: "block",
+        width: `${width}px`,
+        height: `${height}px`,
+        objectFit: "contain",
+        flexShrink: 0,
+        ...style,
+      }}
+    />
   );
 };
-
-export const SamsungAirplaneIcon = () => <MonoMaskIcon src={ICON.airplane} width={13} height={13} />;
-export const SamsungBluetoothIcon = () => <MonoMaskIcon src={ICON.bluetooth} width={10} height={11} />;
-export const SamsungAlarmIcon = () => <MonoMaskIcon src={ICON.alarm} width={12} height={12} />;
-export const SamsungSilentIcon = () => <MonoMaskIcon src={ICON.silent} width={12} height={12} />;
-export const SamsungLocationIcon = () => <MonoMaskIcon src={ICON.location} width={11} height={11} />;
-export const SamsungNfcIcon = () => <MonoMaskIcon src={ICON.nfc} width={10} height={10} />;
-export const SamsungHotspotIcon = () => <MonoMaskIcon src={ICON.hotspot} width={12} height={12} />;
-
-export const SamsungNetworkLabel = ({ label }: { label: string }) => (
-  <span
-    style={{
-      color: SAMSUNG_STATUS_COLORS.active,
-      fontFamily: SAMSUNG_FONT_STACK,
-      fontWeight: 700,
-      fontSize: "12px",
-      lineHeight: 1,
-      letterSpacing: "0.02em",
-      display: "inline-block",
-    }}
-  >
-    {label}
-  </span>
-);
-
-export const SamsungVolteLabel = () => (
-  <span
-    style={{
-      fontFamily: SAMSUNG_FONT_STACK,
-      color: SAMSUNG_STATUS_COLORS.active,
-      fontWeight: 700,
-      fontSize: "9px",
-      lineHeight: 1,
-      letterSpacing: "-0.2px",
-      display: "inline-block",
-    }}
-  >
-    VoLTE
-  </span>
-);

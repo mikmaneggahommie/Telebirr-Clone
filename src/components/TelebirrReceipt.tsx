@@ -7,6 +7,17 @@ import {
   ReceiptLayoutTweaks,
   SectionLayout,
 } from "./layout/receiptLayout";
+import {
+  SAMSUNG_SYSTEM_TOGGLE_ICON_FILES,
+  SamsungBatteryIconFile,
+  SamsungFolderIcon,
+  SamsungNetworkTypeIconFile,
+  SamsungSignalIconFile,
+  SamsungStatusIconFile,
+  SamsungStatusText,
+  SamsungSystemToggleIconFile,
+  SamsungWifiIconFile,
+} from "./status/SamsungStatusIcons";
 
 export const BANNER_SLOTS = [1, 2, 3, 4, 5] as const;
 
@@ -22,9 +33,7 @@ export const getBannerSrc = (index: number): string | undefined => BANNER_IMAGE_
 
 export const devicePresets = {
   iphone_modern: { os: "ios", notch: "dynamic_island", font: "font-roboto", nav: "home_indicator", width: "390px", height: "844px" },
-  iphone_classic: { os: "ios", notch: "notch", font: "font-roboto", nav: "home_indicator", width: "375px", height: "812px" },
   samsung: { os: "android", notch: "punch_center", font: "font-roboto", nav: "buttons", width: "360px", height: "800px" },
-  generic_android: { os: "android", notch: "punch_left", font: "font-roboto", nav: "buttons", width: "360px", height: "780px" },
   test_accuracy: { os: "android", notch: "punch_left", font: "font-roboto", nav: "buttons", width: "360px", height: "780px" },
 } as const;
 
@@ -88,161 +97,46 @@ export interface ReceiptData {
   showLocation: boolean;
   showVolte: boolean;
   showMobileData: boolean;
+  iosNetworkType: "5G" | "5G+" | "LTE" | "4G" | "3G" | "E";
   airplaneMode: boolean;
   showAlarm: boolean;
   showNfc: boolean;
   showHotspot: boolean;
   use12HourFormat: boolean;
+  samsungOneUiEra: "oneui6" | "oneui8plus";
+  samsungNotificationMode: "all" | "recent3" | "number" | "none";
+  samsungShowBatteryPercent: boolean;
+  samsungShowNetworkLabel: boolean;
+  samsungShowWifi: boolean;
+  samsungShowSignal: boolean;
+  samsungShowSim2Signal: boolean;
+  samsungNetworkTypeSim1: "5G" | "LTE" | "4G" | "H+" | "H" | "3G" | "E";
+  samsungNetworkTypeSim2: "5G" | "LTE" | "4G" | "H+" | "H" | "3G" | "E";
+  samsungActiveDataSim: 1 | 2;
+  samsungNotifMessages: boolean;
+  samsungNotifPhone: boolean;
+  samsungNotifWhatsApp: boolean;
+  samsungNotifGmail: boolean;
+  samsungNotifDownload: boolean;
+  samsungNotifPlayStore: boolean;
+  samsungNotifUsb: boolean;
+  samsungSoundMode: "sound" | "vibrate" | "mute";
+  samsungShowDnd: boolean;
+  samsungShowRotationLock: boolean;
+  samsungShowBluetooth: boolean;
+  samsungShowAirplane: boolean;
+  samsungShowAlarm: boolean;
+  samsungShowLocation: boolean;
+  samsungShowHotspot: boolean;
+  samsungShowVpn: boolean;
+  samsungShowNfc: boolean;
+  samsungIconEnabled: Record<SamsungStatusIconFile, boolean>;
+  samsungNetworkTypeIcon: SamsungNetworkTypeIconFile;
+  samsungSignalIcon: SamsungSignalIconFile;
+  samsungWifiIcon: SamsungWifiIconFile;
+  samsungBatteryIcon: SamsungBatteryIconFile;
   layoutTweaks?: ReceiptLayoutTweaks;
 }
-
-// Samsung One UI status bar icon color — matches the dark gray in the real screenshot
-const SB = '#636363';
-
-// ─── Samsung One UI Status Bar Icons ───
-// Every path below is extracted from github.com/OneUIProject/oneui-icons
-
-// Signal bars (ic_oui_mobile_data.xml paths — 4 rounded vertical bars)
-const SBSignal = ({ filled = 4 }: { filled?: number }) => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-    <path fill={SB} fillOpacity={filled >= 1 ? 1 : 0.3} fillRule="evenodd" d="M5.613 16.097c.553 0 1 .455 1 1.017v2.244c0 .562-.447 1.017-1 1.017s-1-.455-1-1.017v-2.244c0-.562.448-1.017 1-1.017Z" />
-    <path fill={SB} fillOpacity={filled >= 2 ? 1 : 0.3} fillRule="evenodd" d="M9.871 12.27c.552 0 1 .456 1 1.016v6.072c0 .561-.448 1.017-1 1.017-.553 0-1-.456-1-1.017v-6.072c0-.56.447-1.016 1-1.016Z" />
-    <path fill={SB} fillOpacity={filled >= 3 ? 1 : 0.3} fillRule="evenodd" d="M14.129 7.693c.552 0 1 .455 1 1.016v10.649c0 .561-.448 1.017-1 1.017-.553 0-1-.456-1-1.017V8.709c0-.56.447-1.016 1-1.016Z" />
-    <path fill={SB} fillOpacity={filled >= 4 ? 1 : 0.3} fillRule="evenodd" d="M18.387 3.625c.551 0 1 .455 1 1.017v14.716c0 .561-.449 1.017-1 1.017-.554 0-1-.456-1-1.017V4.642c0-.562.446-1.017 1-1.017Z" />
-  </svg>
-);
-
-// WiFi icon (ic_oui_wifi.xml) — 4 arcs + dot, with data activity arrows beside it
-const SBWifi = ({ strength = 3 }: { strength?: number }) => (
-  <div className="flex items-center" style={{ gap: '0px' }}>
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-      {/* Outermost arc */}
-      <path fill={SB} fillOpacity={strength >= 4 ? 1 : 0.3} fillRule="evenodd" d="M2.137 8.582c5.438-5.438 14.289-5.438 19.727 0a.75.75 0 0 1-1.061 1.06c-4.854-4.853-12.752-4.853-17.605 0a.75.75 0 1 1-1.06-1.06Z" />
-      {/* 2nd arc */}
-      <path fill={SB} fillOpacity={strength >= 3 ? 1 : 0.3} fillRule="evenodd" d="M12 8.605a9.42 9.42 0 0 1 6.957 2.882.75.75 0 1 1-1.06 1.06 7.926 7.926 0 0 0-11.794 0 .75.75 0 0 1-1.06-1.06A9.42 9.42 0 0 1 12 8.605Z" />
-      {/* 3rd arc */}
-      <path fill={SB} fillOpacity={strength >= 2 ? 1 : 0.3} fillRule="evenodd" d="M8.124 14.569a5.479 5.479 0 0 1 7.752 0 .75.75 0 0 1-1.061 1.061 3.979 3.979 0 0 0-5.63 0 .75.75 0 0 1-1.06-1.061Z" />
-      {/* Center dot */}
-      <path fill={SB} fillOpacity={strength >= 1 ? 1 : 0.3} fillRule="evenodd" d="M12 17.163a1.167 1.167 0 1 1 0 2.334 1.167 1.167 0 0 1 0-2.334Z" />
-    </svg>
-    {/* Data activity arrows ▲▼ — Samsung shows these next to WiFi */}
-    <svg width="5" height="11" viewBox="0 0 5 11" fill="none" style={{ marginLeft: '-1px' }}>
-      <polygon points="0.8,4.5 2.5,1 4.2,4.5" fill={SB} />
-      <polygon points="0.8,6.5 2.5,10 4.2,6.5" fill={SB} />
-    </svg>
-  </div>
-);
-
-// Battery — Samsung horizontal style (body left-to-right, nub on right)
-const SBBattery = ({ percent, charging = false }: { percent: number; charging?: boolean }) => {
-  const isLow = percent <= 15;
-  const c = isLow ? '#e53935' : SB;
-  // body: 16 wide × 9 tall, nub 2 wide on the right
-  const bodyW = 16, bodyH = 9, nubW = 2, nubH = 4;
-  const fillW = (bodyW - 2.4) * (percent / 100); // inner fill
-  return (
-    <div className="relative flex items-center">
-      <svg width="13" height="10" viewBox={`0 0 ${bodyW + nubW + 1} ${bodyH + 2}`} fill="none">
-        {/* Battery body outline */}
-        <rect x="0.8" y="1" width={bodyW} height={bodyH} rx="1.8" ry="1.8"
-          stroke={c} strokeWidth="1.4" fill="none" />
-        {/* Nub / cap on right */}
-        <rect x={bodyW + 0.8} y={(bodyH + 2 - nubH) / 2} width={nubW} height={nubH} rx="0.6" ry="0.6"
-          fill={c} />
-        {/* Fill level */}
-        <rect x="2" y="2.2" width={fillW} height={bodyH - 2.4} rx="0.8" ry="0.8" fill={c} />
-      </svg>
-      {charging && (
-        <svg width="6" height="8" viewBox="0 0 12 16" fill="none"
-          className="absolute top-1/2 left-[42%] -translate-x-1/2 -translate-y-1/2 z-10">
-          <path d="M7 0L1 9h4.5L4.5 16 11 7H6.5L7 0z" fill="white" />
-          <path d="M7 0L1 9h4.5L4.5 16 11 7H6.5L7 0z" fill={c} opacity="0.9" />
-        </svg>
-      )}
-    </div>
-  );
-};
-
-// Bluetooth (ic_oui_bluetooth.xml — authentic OneUI filled path)
-const SBBluetooth = () => (
-  <svg width="10" height="11" viewBox="0 0 24 24" fill={SB} fillRule="evenodd">
-    <path d="M12.614 19.224c-.016.01-.063.047-.135.01-.07-.035-.07-.095-.07-.114V13.437l3.931 2.97c.012.01.026.02.041.03.005.003.011.007.016.01l-3.783 2.777Zm-.205-14.343c0-.02 0-.08.07-.115a.118.118 0 0 1 .061-.016c.038 0 .063.019.074.027l3.744 2.747a.08.08 0 0 1 .034.029l-3.983 3.01V4.881Zm5.566 11.461c-.024-.31-.174-.76-.75-1.145l-4.23-3.197 4.351-3.288a.754.754 0 0 0 .05-.041c.331-.298.513-.75.485-1.205-.029-.469-.269-.894-.648-1.161l-3.731-2.737a1.204 1.204 0 0 0-1.7.263 1.207 1.207 0 0 0-.497-.597 1.202 1.202 0 0 0-.893 1.453v5.543L6.323 6.958a.75.75 0 0 0-1.05.147.751.751 0 0 0 .146 1.05l5.088 3.844-5.088 3.845a.751.751 0 0 0 .452 1.352.746.746 0 0 0 .452-.153l4.586-3.464v5.543c0 .617.342 1.173.893 1.453.234.119.486.177.737.177.34 0 .677-.107.963-.317l3.881-2.847c.02-.015.041-.032.059-.049.484-.439.557-.892.533-1.195Z" />
-  </svg>
-);
-
-// Airplane mode (ic_oui_airplane_mode.xml)
-const SBAirplane = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={SB} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M10.661 17.014l-.267-3.439-5.958 2.535a.249.249 0 0 1-.321-.346v-1.248c0-.243.117-.471.315-.611l5.919-4.211-.222-2.567-.02-.284v-.52C10.107 5.169 11.162 3.75 12.2 3.75c1.037 0 2.092 1.419 2.092 2.573v.513l-.003.056-.012.198-.226 2.604 5.917 4.214c.199.14.316.368.316.61v1.248a.249.249 0 0 1-.522.105l-5.955-2.537-.266 3.441a.738.738 0 0 0 .151.513l1.604 2.104a.288.288 0 0 1-.458.568l-2.319-1.093a.497.497 0 0 0-.639 0l-2.319 1.093a.288.288 0 0 1-.458-.568l1.607-2.105a.738.738 0 0 0 .151-.514Z" />
-  </svg>
-);
-
-// Alarm (ic_oui_alarm.xml)
-const SBAlarm = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill={SB} fillRule="evenodd">
-    <path d="M12 4.538c4.232 0 7.675 3.444 7.675 7.676 0 2.298-1.017 4.362-2.622 5.77l1.158 1.398a.75.75 0 1 1-1.156.757l-1.224-1.48A7.63 7.63 0 0 1 12 19.889a7.63 7.63 0 0 1-3.832-1.03l-1.224 1.48a.75.75 0 1 1-1.155-.758l1.157-1.397c-1.605-1.408-2.622-3.472-2.622-5.77C4.324 7.982 7.768 4.538 12 4.538Zm-.278 2.761a.75.75 0 0 0-.75.75v3.437c0 .666.542 1.208 1.208 1.208h2.573a.75.75 0 0 0 0-1.5h-2.281V8.049a.75.75 0 0 0-.75-.75ZM5.588 3.609a.75.75 0 0 1 1.06 0 .75.75 0 0 1 0 1.061l-2.77 2.77a.75.75 0 0 1-1.062-1.06l2.772-2.771Zm11.764 0a.75.75 0 0 1 1.061 0l2.77 2.771a.75.75 0 1 1-1.06 1.06l-2.771-2.77a.75.75 0 0 1 0-1.06Z" />
-  </svg>
-);
-
-// NFC (generic — not in OneUI icons repo, using standard NFC icon)
-const SBNfc = () => (
-  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={SB} strokeWidth="2.2" strokeLinecap="round">
-    <path d="M20 7a9 9 0 0 1 0 10" /><path d="M4 7a9 9 0 0 0 0 10" />
-    <path d="M17 9.5a5 5 0 0 1 0 5" /><path d="M7 9.5a5 5 0 0 0 0 5" />
-    <circle cx="12" cy="12" r="1.5" fill={SB} stroke="none" />
-  </svg>
-);
-
-// Silent / Mute (ic_oui_sound_mute.xml)
-const SBSilent = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill={SB}>
-    <path d="M5.6442,5.0994C5.8682,4.8754 6.1982,4.8234 6.4722,4.9414C6.4972,4.9774 6.5242,5.0134 6.5562,5.0444L6.5562,5.0444L19.3392,17.8284C19.4402,18.0954 19.3842,18.4084 19.1702,18.6234C19.0232,18.7704 18.8312,18.8434 18.6392,18.8434C18.4472,18.8434 18.2552,18.7704 18.1092,18.6234L18.1092,18.6234L15.7042,16.2184L15.7042,18.8144C15.7042,19.7454 15.1382,19.9974 14.4452,19.3754L14.4452,19.3754L9.3142,14.7474C9.2662,14.7514 9.2192,14.7554 9.1712,14.7554L9.1712,14.7554L6.3622,14.7554C5.4002,14.7554 4.6122,13.9684 4.6122,13.0054L4.6122,13.0054L4.6122,10.7394C4.6122,9.7764 5.4002,8.9894 6.3622,8.9894L6.3622,8.9894L8.4742,8.9894L5.6442,6.1594C5.3512,5.8664 5.3512,5.3914 5.6442,5.0994ZM14.4459,4.6243C15.1379,4.0023 15.7039,4.2553 15.7039,5.1853L15.7039,5.1853L15.7039,12.0713L10.8579,7.2263Z" />
-  </svg>
-);
-
-// Hotspot (ic_oui_mobile_hotspot.xml — authentic path)
-const SBHotspot = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-    <path fill={SB} d="M9.222 15.828a.875.875 0 1 0-1.237-1.237.875.875 0 0 0 1.237 1.237Z" />
-    <path stroke={SB} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M16.5 20.25H7.5C6.12 20.25 5 19.131 5 17.75V6.25C5 4.869 6.12 3.75 7.5 3.75h9c1.381 0 2.5 1.119 2.5 2.5v11.5c0 1.381-1.119 2.5-2.5 2.5ZM12.169 15.272c0-2.004-1.625-3.628-3.628-3.628M15.51 15.272c0-3.849-3.12-6.969-6.969-6.969" />
-  </svg>
-);
-
-// Location (ic_oui_location.xml)
-const SBLocation = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill={SB} fillRule="evenodd">
-    <path d="M12,13.169C10.343,13.169 9,11.826 9,10.167C9,8.512 10.343,7.169 12,7.169C13.656,7.169 15,8.512 15,10.167C15,11.826 13.656,13.169 12,13.169M12,3.027C8.02,3.027 4.784,6.263 4.784,10.24C4.784,12.995 6.88,15.315 6.962,15.403L10.86,20.45C11.46,21.148 12.54,21.148 13.138,20.449L17.028,15.412C17.118,15.315 19.216,12.995 19.216,10.24C19.216,6.263 15.978,3.027 12,3.027" />
-  </svg>
-);
-
-// LTE / 4G (Samsung style — text in a tiny box)
-const SBLte = () => (
-  <div style={{
-    border: `1px solid ${SB}`,
-    borderRadius: '1.2px',
-    padding: '0 1.2px',
-    fontSize: '6.5px',
-    fontWeight: 900,
-    color: SB,
-    lineHeight: 1,
-    height: '9px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transform: 'translateY(-0.5px)',
-    fontFamily: 'system-ui, sans-serif',
-    letterSpacing: '-0.1px'
-  }}>
-    LTE
-  </div>
-);
-
-// VoLTE (Samsung renders this as bold small text)
-const SBVolte = () => (
-  <div style={{ fontSize: '9px', fontWeight: 900, color: SB, letterSpacing: '-0.3px', lineHeight: 1, fontFamily: '"SamsungOne", Roboto, sans-serif', transform: 'translateY(-0.2px)' }}>
-    VoLTE
-  </div>
-);
 
 // ─── iOS Status Icons (SF Symbols geometry, San Francisco font) ───
 
@@ -338,7 +232,7 @@ const IosHotspot = () => (
   </svg>
 );
 
-const IosDataLabel = () => (
+const IosDataLabel = ({ type = "5G" }: { type?: string }) => (
   <span
     style={{
       fontFamily: '-apple-system, "SF Pro Text", "Helvetica Neue", sans-serif',
@@ -351,7 +245,7 @@ const IosDataLabel = () => (
       display: "inline-block",
     }}
   >
-    5G
+    {type}
   </span>
 );
 
@@ -416,6 +310,7 @@ export const TelebirrReceipt = ({
   const navType = data.navBarOverride === "default"
     ? config.nav
     : data.navBarOverride;
+  const layoutNavType = navType === "hidden" ? config.nav : navType;
   const globalContentShiftY = os === "ios" ? (data.iphoneContentNudgeY ?? 0) : 0;
   // Keep receipt content anchored even when visual bottom-nav height is adjusted via slider.
   const layoutNavButtonsHeight = 42.5;
@@ -423,7 +318,7 @@ export const TelebirrReceipt = ({
   const { sections: sectionLayout, subElements } = applyTweaks(
     computeReceiptLayout({
       os,
-      navType,
+      navType: layoutNavType,
       canvasWidth,
       canvasHeight,
       navButtonsHeight: layoutNavButtonsHeight,
@@ -431,7 +326,7 @@ export const TelebirrReceipt = ({
     }),
     {
       os,
-      navType,
+      navType: layoutNavType,
       canvasWidth,
       canvasHeight,
       navButtonsHeight: layoutNavButtonsHeight,
@@ -452,14 +347,87 @@ export const TelebirrReceipt = ({
   const batteryNum = parseInt(data.battery) || 48;
   const signalFilled = data.airplaneMode ? 0 : (data.signalStrength ?? 4);
   const wifiStrength = data.wifiStrength ?? 3;
+  const iosShowDataLabel = data.showMobileData && !data.airplaneMode && (data.wifiStrength ?? 0) === 0;
   const iosStatusExtras = (
     [
-      data.showMobileData && !data.airplaneMode ? <IosDataLabel key="ios-data" /> : null,
+      iosShowDataLabel ? <IosDataLabel key="ios-data" type={data.iosNetworkType} /> : null,
       data.showAlarm ? <IosAlarm key="ios-alarm" /> : null,
       data.showBluetooth && !data.airplaneMode ? <IosBluetooth key="ios-bt" /> : null,
       data.showHotspot && !data.airplaneMode ? <IosHotspot key="ios-hotspot" /> : null,
     ].filter(Boolean) as JSX.Element[]
   ).slice(0, notchType === "dynamic_island" ? 2 : 3);
+  const samsungStatusBackground = "#FFFFFF";
+  const samsungStatusColor = "#1C1C1E";
+
+  const samsungIconEnabled = data.samsungIconEnabled ?? ({} as Record<SamsungStatusIconFile, boolean>);
+  const samsungAirplaneEnabled = Boolean(samsungIconEnabled["airplane_mode.jpg"]);
+  const samsungShowWifi = data.samsungShowWifi ?? true;
+  const samsungShowNetworkLabel = data.samsungShowNetworkLabel ?? true;
+  const samsungShowSignal = data.samsungShowSignal ?? true;
+  const samsungBatteryFile: SamsungBatteryIconFile = data.batteryCharging
+    ? "battery_charging.jpg"
+    : data.samsungBatteryIcon;
+  const samsungStatusGap = 3;
+  const systemGroupMargin = 2;
+  const samsungRightMaxWidth = Math.round(
+    canvasWidth * (notchType === "punch_center" ? 0.4 : notchType === "none" ? 0.6 : 0.55),
+  );
+  const samsungWifiStrength = data.wifiStrength ?? 3;
+  const showWifiIcon = samsungShowWifi && !samsungAirplaneEnabled && samsungWifiStrength > 0;
+  const showNetworkLabel = samsungShowNetworkLabel && !samsungAirplaneEnabled && !showWifiIcon;
+  const showSignalIcon = samsungShowSignal && !samsungAirplaneEnabled;
+  const batteryLabel = `${batteryNum}%`;
+  const batteryLabelWidth = Math.max(18, batteryLabel.length * 6.2);
+  const batteryColor = samsungStatusColor;
+  const baseIconWidths: number[] = [];
+  if (showWifiIcon) baseIconWidths.push(14);
+  if (showNetworkLabel) baseIconWidths.push(16);
+  if (showSignalIcon) baseIconWidths.push(12);
+  if (data.samsungShowBatteryPercent) baseIconWidths.push(batteryLabelWidth);
+  baseIconWidths.push(12);
+  const baseWidth = baseIconWidths.reduce(
+    (sum, w, idx) => sum + w + (idx > 0 ? samsungStatusGap : 0),
+    0,
+  );
+
+  const samsungSystemIconSize: Record<SamsungSystemToggleIconFile, { width: number; height: number }> = {
+    "airplane_mode.jpg": { width: 12, height: 12 },
+    "alarm.jpg": { width: 12, height: 12 },
+    "bluetooth.jpg": { width: 11, height: 12 },
+    "casting-activated.jpeg": { width: 12, height: 12 },
+    "location.jpg": { width: 11, height: 12 },
+    "mobile-hotspot-enabled.jpeg": { width: 12, height: 12 },
+    "mute.jpg": { width: 12, height: 12 },
+    "vpn-service-connected.jpeg": { width: 12, height: 12 },
+  };
+
+  const samsungSystemCandidates = SAMSUNG_SYSTEM_TOGGLE_ICON_FILES
+    .filter((file) => samsungIconEnabled[file])
+    .map((file) => ({
+      file,
+      width: samsungSystemIconSize[file].width,
+      height: samsungSystemIconSize[file].height,
+    }));
+  const maxSystemIconsByNotch = notchType === "punch_center" ? 3 : notchType === "punch_left" ? 4 : 5;
+  let systemWidth = 0;
+  const visibleSystemCandidates: typeof samsungSystemCandidates = [];
+  for (const candidate of samsungSystemCandidates) {
+    if (visibleSystemCandidates.length >= maxSystemIconsByNotch) break;
+    const nextWidth = systemWidth + (visibleSystemCandidates.length > 0 ? samsungStatusGap : 0) + candidate.width;
+    const totalWidth = baseWidth + (nextWidth > 0 ? systemGroupMargin : 0) + nextWidth;
+    if (totalWidth > samsungRightMaxWidth) break;
+    visibleSystemCandidates.push(candidate);
+    systemWidth = nextWidth;
+  }
+  const samsungSystemItems = visibleSystemCandidates.map((candidate) => (
+    <SamsungFolderIcon
+      key={`s-system-${candidate.file}`}
+      file={candidate.file}
+      color={samsungStatusColor}
+      width={candidate.width}
+      height={candidate.height}
+    />
+  ));
 
   // Parse amount: extract sign, integer part, decimal part
   const rawAmount = data.amount.toString().trim();
@@ -478,54 +446,112 @@ export const TelebirrReceipt = ({
         config.font === "font-roboto" ? "font-['Roboto',sans-serif]" : "font-sans"
       )}
     >
-      {/* Android Status Bar — Samsung One UI style */}
+      {/* Samsung OneUI 6.1 Status Bar (folder-driven icons) */}
       {os === "android" && (
-        <div className="h-[32px] w-full flex items-center justify-between px-[14px] pt-[16px] shrink-0 z-10 bg-white">
+        <div
+          style={{
+            height: "32px",
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingLeft: "12px",
+            paddingRight: "12px",
+            paddingTop: "4px",
+            boxSizing: "border-box",
+            flexShrink: 0,
+            zIndex: 10,
+            backgroundColor: samsungStatusBackground,
+            position: "relative",
+          }}
+        >
           <div
-            className={cn(
-              "leading-none shrink-0",
-              notchType === "punch_left" ? "ml-[36.5px]" : "ml-[4px]"
-            )}
             style={{
-              fontFamily: '"SamsungOne", Roboto, sans-serif',
-              fontWeight: 600,
-              fontSize: '13.5px',
-              letterSpacing: '0.1px',
-              color: SB,
+              display: "flex",
+              alignItems: "center",
+              flexShrink: 0,
+              marginLeft: notchType === "punch_left" ? "26px" : "2px",
             }}
           >
-            {data.time}
+            <SamsungStatusText
+              color={samsungStatusColor}
+              fontSize="13px"
+              fontWeight={600}
+              letterSpacing="-0.2px"
+            >
+              {data.time}
+            </SamsungStatusText>
           </div>
-          <div className="flex items-center gap-[4.5px] shrink-0">
-            {data.showNfc && <SBNfc />}
-            {data.showAlarm && <SBAlarm />}
-            {data.silentMode && <SBSilent />}
-            {data.showLocation && <SBLocation />}
-            {!data.airplaneMode && data.showBluetooth && <SBBluetooth />}
-            {data.airplaneMode && <SBAirplane />}
-            {wifiStrength > 0 && <SBWifi strength={wifiStrength} />}
-            {data.showHotspot && <SBHotspot />}
-            {data.showMobileData && !data.airplaneMode && <SBLte />}
-            {data.showVolte && !data.airplaneMode && <SBVolte />}
-            {data.simCount === 2 && (
-              <SBSignal filled={Math.max(0, signalFilled - 1)} />
+
+          {notchType === "punch_center" && (
+            <div style={{ flexGrow: 1, minWidth: "32px" }} />
+          )}
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: `${samsungStatusGap}px`,
+              flexShrink: 1,
+              minWidth: 0,
+              maxWidth: `${samsungRightMaxWidth}px`,
+              overflow: "hidden",
+              justifyContent: "flex-end",
+              marginLeft: notchType === "punch_center" ? "0" : "auto",
+            }}
+          >
+            {samsungSystemItems.length > 0 && (
+              <div style={{ display: "flex", alignItems: "center", gap: `${samsungStatusGap}px`, marginRight: `${systemGroupMargin}px` }}>
+                {samsungSystemItems}
+              </div>
             )}
-            <SBSignal filled={signalFilled} />
-            <div className="flex items-center" style={{ gap: '2.5px', marginLeft: '1px' }}>
-              <span
-                style={{
-                  fontFamily: '"SamsungOne", Roboto, sans-serif',
-                  fontWeight: 600,
-                  fontSize: '13.5px',
-                  letterSpacing: '-0.2px',
-                  lineHeight: '1',
-                  color: SB,
-                }}
+
+            {!samsungAirplaneEnabled && (
+              <>
+                {showWifiIcon && (
+                  <SamsungFolderIcon
+                    file={data.samsungWifiIcon}
+                    color={samsungStatusColor}
+                    width={14}
+                    height={10}
+                  />
+                )}
+                {showNetworkLabel && (
+                  <SamsungFolderIcon
+                    file={data.samsungNetworkTypeIcon}
+                    color={samsungStatusColor}
+                    width={16}
+                    height={10}
+                  />
+                )}
+                {showSignalIcon && (
+                  <SamsungFolderIcon
+                    file={data.samsungSignalIcon}
+                    color={samsungStatusColor}
+                    width={12}
+                    height={10}
+                  />
+                )}
+              </>
+            )}
+
+            {data.samsungShowBatteryPercent && (
+              <SamsungStatusText
+                color={samsungStatusColor}
+                fontSize="11px"
+                fontWeight={600}
+                letterSpacing="-0.1px"
               >
-                {data.battery}%
-              </span>
-              <SBBattery percent={batteryNum} charging={data.batteryCharging} />
-            </div>
+                {batteryLabel}
+              </SamsungStatusText>
+            )}
+
+            <SamsungFolderIcon
+              file={samsungBatteryFile}
+              color={batteryColor}
+              width={12}
+              height={12}
+            />
           </div>
         </div>
       )}

@@ -3,16 +3,35 @@ import { toPng } from "html-to-image";
 import { Download, RefreshCcw, Clock, ChevronDown, Check } from "lucide-react";
 import { TelebirrReceipt, ReceiptData, devicePresets, PresetKey, getBannerSrc, BANNER_SLOTS } from "./components/TelebirrReceipt";
 import { ReceiptLayoutTweaks } from "./components/layout/receiptLayout";
+import {
+  SAMSUNG_ALL_STATUS_ICONS,
+  SAMSUNG_BATTERY_ICON_FILES,
+  SAMSUNG_NETWORK_TYPE_ICON_FILES,
+  SAMSUNG_SIGNAL_ICON_FILES,
+  SAMSUNG_STATUS_ICON_LABELS,
+  SAMSUNG_SYSTEM_TOGGLE_ICON_FILES,
+  SAMSUNG_WIFI_ICON_FILES,
+  SamsungBatteryIconFile,
+  SamsungNetworkTypeIconFile,
+  SamsungSignalIconFile,
+  SamsungStatusIconFile,
+  SamsungSystemToggleIconFile,
+  SamsungWifiIconFile,
+} from "./components/status/SamsungStatusIcons";
 
 const PRESET_OPTIONS: { value: PresetKey; label: string }[] = [
-  { value: "iphone_modern", label: "iPhone (Modern — Dynamic Island)" },
-  { value: "iphone_classic", label: "iPhone (Classic — Notch)" },
+  { value: "iphone_modern", label: "iPhone" },
   { value: "samsung", label: "Samsung" },
-  { value: "generic_android", label: "Generic Android" },
   { value: "test_accuracy", label: "Test Accuracy Mode (720×1560)" },
 ];
 
 const EXPORT_SCREEN_ID = "receipt-export-screen";
+
+const createSamsungIconEnabledState = (): Record<SamsungStatusIconFile, boolean> =>
+  SAMSUNG_ALL_STATUS_ICONS.reduce((acc, file) => {
+    acc[file] = false;
+    return acc;
+  }, {} as Record<SamsungStatusIconFile, boolean>);
 
 const nextFrame = () =>
   new Promise<void>((resolve) => {
@@ -247,10 +266,50 @@ export function App() {
     showLocation: true,
     showVolte: false,
     showMobileData: false,
+    iosNetworkType: "5G",
     showHotspot: false,
     airplaneMode: false,
     showAlarm: false,
     showNfc: false,
+    samsungOneUiEra: "oneui6",
+    samsungNetworkTypeSim1: "LTE",
+    samsungNetworkTypeSim2: "LTE",
+    samsungShowNetworkLabel: true,
+    samsungShowWifi: true,
+    samsungShowSignal: true,
+    samsungShowSim2Signal: false,
+    samsungActiveDataSim: 1,
+    samsungShowBatteryPercent: true,
+    samsungShowBluetooth: false,
+    samsungShowAirplane: false,
+    samsungShowAlarm: true,
+    samsungShowLocation: false,
+    samsungShowHotspot: false,
+    samsungShowVpn: false,
+    samsungShowNfc: false,
+    samsungNotificationMode: "none",
+    samsungNotifMessages: false,
+    samsungNotifPhone: false,
+    samsungNotifWhatsApp: false,
+    samsungNotifGmail: false,
+    samsungNotifDownload: false,
+    samsungNotifPlayStore: false,
+    samsungNotifUsb: false,
+    samsungSoundMode: "vibrate",
+    samsungShowDnd: false,
+    samsungShowRotationLock: false,
+    samsungIconEnabled: {
+      ...createSamsungIconEnabledState(),
+      "alarm.jpg": true,
+      "lte.jpg": true,
+      "signal_strength.jpg": true,
+      "wifi.jpg": true,
+      "battery_level.jpg": true,
+    },
+    samsungNetworkTypeIcon: "lte.jpg",
+    samsungSignalIcon: "signal_strength.jpg",
+    samsungWifiIcon: "wifi.jpg",
+    samsungBatteryIcon: "battery_level.jpg",
     use12HourFormat: false,
     layoutTweaks: {
       topActions: { x: 0, y: -2 },
@@ -270,6 +329,39 @@ export function App() {
   });
 
   const set = (patch: Partial<ReceiptData>) => setData(prev => ({ ...prev, ...patch }));
+
+  const setSamsungCategoryIcon = <
+    K extends "samsungNetworkTypeIcon" | "samsungSignalIcon" | "samsungWifiIcon" | "samsungBatteryIcon",
+    F extends SamsungNetworkTypeIconFile | SamsungSignalIconFile | SamsungWifiIconFile | SamsungBatteryIconFile,
+  >(
+    key: K,
+    file: F,
+    categoryFiles: readonly F[],
+  ) => {
+    setData((prev) => {
+      const nextEnabled = { ...prev.samsungIconEnabled };
+      categoryFiles.forEach((candidate) => {
+        nextEnabled[candidate] = false;
+      });
+      nextEnabled[file] = true;
+
+      return {
+        ...prev,
+        [key]: file,
+        samsungIconEnabled: nextEnabled,
+      };
+    });
+  };
+
+  const toggleSamsungSystemIcon = (file: SamsungSystemToggleIconFile) => {
+    setData((prev) => ({
+      ...prev,
+      samsungIconEnabled: {
+        ...prev.samsungIconEnabled,
+        [file]: !prev.samsungIconEnabled[file],
+      },
+    }));
+  };
 
   const setTweak = (key: keyof ReceiptLayoutTweaks, val: { x: number; y: number }) =>
     set({
@@ -384,6 +476,7 @@ export function App() {
   const activePreset = currentPreset || devicePresets.test_accuracy;
   const currentOs = currentPreset?.os || "android";
   const isIos = currentOs === "ios";
+  const isSamsungMode = data.preset === "samsung" || data.preset === "test_accuracy";
 
   const handlePresetChange = (newPreset: PresetKey) => {
     set({ preset: newPreset, cameraHoleOverride: "default", navBarOverride: "default" });
@@ -555,64 +648,238 @@ export function App() {
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <StepSlider
-                  label="Signal Strength"
-                  value={data.airplaneMode ? 0 : data.signalStrength}
-                  min={0} max={4}
-                  disabled={data.airplaneMode}
-                  onChange={(v) => set({ signalStrength: v as 0 | 1 | 2 | 3 | 4 })}
-                  format={(v) => data.airplaneMode ? "No Signal" : signalLabels[v]}
-                />
-                <StepSlider
-                  label="WiFi Strength"
-                  value={data.wifiStrength}
-                  min={0} max={3}
-                  disabled={data.airplaneMode}
-                  onChange={(v) => set({ wifiStrength: v as 0 | 1 | 2 | 3 })}
-                  format={(v) => data.airplaneMode ? "Off" : wifiLabels[v]}
-                />
-              </div>
+              {!isSamsungMode && (
+                <div className="space-y-4">
+                  <StepSlider
+                    label="Signal Strength"
+                    value={data.airplaneMode ? 0 : data.signalStrength}
+                    min={0} max={4}
+                    disabled={data.airplaneMode}
+                    onChange={(v) => set({ signalStrength: v as 0 | 1 | 2 | 3 | 4 })}
+                    format={(v) => data.airplaneMode ? "No Signal" : signalLabels[v]}
+                  />
+                  <StepSlider
+                    label="WiFi Strength"
+                    value={data.wifiStrength}
+                    min={0} max={3}
+                    disabled={data.airplaneMode}
+                    onChange={(v) => set({ wifiStrength: v as 0 | 1 | 2 | 3 })}
+                    format={(v) => data.airplaneMode ? "Off" : wifiLabels[v]}
+                  />
+                </div>
+              )}
 
-              <div className="grid grid-cols-4 gap-3 pt-2">
-                <PremiumToggle label="Plane" enabled={data.airplaneMode} onClick={() => set({ airplaneMode: !data.airplaneMode })} />
-                <PremiumToggle label="Charge" enabled={data.batteryCharging} onClick={() => set({ batteryCharging: !data.batteryCharging })} />
-                <PremiumToggle label="BT" enabled={data.showBluetooth} onClick={() => set({ showBluetooth: !data.showBluetooth })} />
-                <PremiumToggle label="Alarm" enabled={data.showAlarm} onClick={() => set({ showAlarm: !data.showAlarm })} />
-                {isIos && (
-                  <>
-                    <PremiumToggle label="Loc" enabled={data.showLocation} onClick={() => set({ showLocation: !data.showLocation })} />
-                    <PremiumToggle label="Data" enabled={data.showMobileData} onClick={() => set({ showMobileData: !data.showMobileData })} />
-                    <PremiumToggle label="Spot" enabled={data.showHotspot} onClick={() => set({ showHotspot: !data.showHotspot })} />
-                  </>
-                )}
-                {!isIos && (
-                  <>
-                    <PremiumToggle label="Slnt" enabled={data.silentMode} onClick={() => set({ silentMode: !data.silentMode })} />
-                    <PremiumToggle label="Loc" enabled={data.showLocation} onClick={() => set({ showLocation: !data.showLocation })} />
-                    <PremiumToggle label="LTE" enabled={data.showVolte} onClick={() => set({ showVolte: !data.showVolte })} />
-                    <PremiumToggle label="Data" enabled={data.showMobileData} onClick={() => set({ showMobileData: !data.showMobileData })} />
-                    <PremiumToggle label="Spot" enabled={data.showHotspot} onClick={() => set({ showHotspot: !data.showHotspot })} />
-                    <PremiumToggle label="NFC" enabled={data.showNfc} onClick={() => set({ showNfc: !data.showNfc })} />
-                  </>
-                )}
-              </div>
+              {!isSamsungMode && (
+                <>
+                  <div className="grid grid-cols-4 gap-3 pt-2">
+                    <PremiumToggle label="Plane" enabled={data.airplaneMode} onClick={() => set({ airplaneMode: !data.airplaneMode })} />
+                    <PremiumToggle label="Charge" enabled={data.batteryCharging} onClick={() => set({ batteryCharging: !data.batteryCharging })} />
+                    <PremiumToggle label="BT" enabled={data.showBluetooth} onClick={() => set({ showBluetooth: !data.showBluetooth })} />
+                    <PremiumToggle label="Alarm" enabled={data.showAlarm} onClick={() => set({ showAlarm: !data.showAlarm })} />
+                    {isIos && (
+                      <>
+                        <PremiumToggle label="Loc" enabled={data.showLocation} onClick={() => set({ showLocation: !data.showLocation })} />
+                        <PremiumToggle label="Data" enabled={data.showMobileData} onClick={() => set({ showMobileData: !data.showMobileData })} />
+                        <PremiumToggle label="Spot" enabled={data.showHotspot} onClick={() => set({ showHotspot: !data.showHotspot })} />
+                      </>
+                    )}
+                    {!isIos && (
+                      <>
+                        <PremiumToggle label="Slnt" enabled={data.silentMode} onClick={() => set({ silentMode: !data.silentMode })} />
+                        <PremiumToggle label="Loc" enabled={data.showLocation} onClick={() => set({ showLocation: !data.showLocation })} />
+                        <PremiumToggle label="LTE" enabled={data.showVolte} onClick={() => set({ showVolte: !data.showVolte })} />
+                        <PremiumToggle label="Data" enabled={data.showMobileData} onClick={() => set({ showMobileData: !data.showMobileData })} />
+                        <PremiumToggle label="Spot" enabled={data.showHotspot} onClick={() => set({ showHotspot: !data.showHotspot })} />
+                        <PremiumToggle label="NFC" enabled={data.showNfc} onClick={() => set({ showNfc: !data.showNfc })} />
+                      </>
+                    )}
+                  </div>
 
-              {!isIos && (
-                <div className="pt-2">
-                  <div className="flex items-center justify-between px-1">
-                    <label className="text-[10px] font-bold text-[#8c948a] uppercase tracking-wider">Sim Configuration</label>
-                    <div className="flex bg-[#f3f7f4] p-1 rounded-lg gap-1">
-                      <button
-                        onClick={() => set({ simCount: 1 })}
-                        className={`px-3 py-1 text-[10px] font-black rounded-md transition-all ${data.simCount === 1 ? 'bg-white shadow-sm text-[#8dc73f]' : 'text-gray-400'}`}
-                      >Single</button>
-                      <button
-                        onClick={() => set({ simCount: 2 })}
-                        className={`px-3 py-1 text-[10px] font-black rounded-md transition-all ${data.simCount === 2 ? 'bg-white shadow-sm text-[#8dc73f]' : 'text-gray-400'}`}
-                      >Dual</button>
+                  {isIos && (
+                    <div className="pt-2 space-y-1.5">
+                      <label className="text-[10px] font-bold text-[#8c948a] uppercase tracking-wider ml-1">iOS Data Label</label>
+                      <div className="relative">
+                        <select
+                          value={data.iosNetworkType}
+                          onChange={(e) => set({ iosNetworkType: e.target.value as ReceiptData["iosNetworkType"] })}
+                          className="tele-select w-full min-w-0 appearance-none px-3 pr-9 py-2 bg-[#f3f7f4] border-transparent rounded-xl text-[11px] font-bold text-[#2c312b] focus:ring-2 focus:ring-[#8dc73f] focus:outline-none transition-all"
+                        >
+                          <option value="5G">5G</option>
+                          <option value="5G+">5G+</option>
+                          <option value="LTE">LTE</option>
+                          <option value="4G">4G</option>
+                          <option value="3G">3G</option>
+                          <option value="E">E</option>
+                        </select>
+                        <ChevronDown size={14} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8c948a]" />
+                      </div>
+                    </div>
+                  )}
+
+                  {!isIos && (
+                    <div className="pt-2">
+                      <div className="flex items-center justify-between px-1">
+                        <label className="text-[10px] font-bold text-[#8c948a] uppercase tracking-wider">Sim Configuration</label>
+                        <div className="flex bg-[#f3f7f4] p-1 rounded-lg gap-1">
+                          <button
+                            onClick={() => set({ simCount: 1 })}
+                            className={`px-3 py-1 text-[10px] font-black rounded-md transition-all ${data.simCount === 1 ? 'bg-white shadow-sm text-[#8dc73f]' : 'text-gray-400'}`}
+                          >Single</button>
+                          <button
+                            onClick={() => set({ simCount: 2 })}
+                            className={`px-3 py-1 text-[10px] font-black rounded-md transition-all ${data.simCount === 2 ? 'bg-white shadow-sm text-[#8dc73f]' : 'text-gray-400'}`}
+                          >Dual</button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {isSamsungMode && (
+                <div className="space-y-5">
+                  <StepSlider
+                    label="WiFi Strength"
+                    value={data.wifiStrength}
+                    min={0}
+                    max={3}
+                    onChange={(v) => set({ wifiStrength: v as 0 | 1 | 2 | 3 })}
+                    format={(v) => wifiLabels[v]}
+                  />
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-[#8c948a] uppercase tracking-wider ml-1">Status Bar Icons</label>
+                    <div className="grid grid-cols-4 gap-3">
+                      <PremiumToggle
+                        label="WiFi"
+                        enabled={data.samsungShowWifi}
+                        onClick={() =>
+                          setData((prev) => {
+                            const nextWifi = !prev.samsungShowWifi;
+                            return {
+                              ...prev,
+                              samsungShowWifi: nextWifi,
+                              samsungShowNetworkLabel: nextWifi ? false : prev.samsungShowNetworkLabel,
+                            };
+                          })
+                        }
+                      />
+                      <PremiumToggle
+                        label="Data"
+                        enabled={data.samsungShowNetworkLabel}
+                        onClick={() =>
+                          setData((prev) => {
+                            const nextData = !prev.samsungShowNetworkLabel;
+                            return {
+                              ...prev,
+                              samsungShowNetworkLabel: nextData,
+                              samsungShowWifi: nextData ? false : prev.samsungShowWifi,
+                            };
+                          })
+                        }
+                      />
+                      <PremiumToggle
+                        label="Signal"
+                        enabled={data.samsungShowSignal}
+                        onClick={() => set({ samsungShowSignal: !data.samsungShowSignal })}
+                      />
+                      <PremiumToggle
+                        label="Bat%"
+                        enabled={data.samsungShowBatteryPercent}
+                        onClick={() => set({ samsungShowBatteryPercent: !data.samsungShowBatteryPercent })}
+                      />
+                      <PremiumToggle
+                        label="Charge"
+                        enabled={data.batteryCharging}
+                        onClick={() => set({ batteryCharging: !data.batteryCharging })}
+                      />
+                      {SAMSUNG_SYSTEM_TOGGLE_ICON_FILES.map((file) => (
+                        <PremiumToggle
+                          key={file}
+                          label={SAMSUNG_STATUS_ICON_LABELS[file]}
+                          enabled={Boolean(data.samsungIconEnabled[file])}
+                          onClick={() => toggleSamsungSystemIcon(file)}
+                        />
+                      ))}
                     </div>
                   </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-[#8c948a] uppercase tracking-wider ml-1">Network Type (Single Active)</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {SAMSUNG_NETWORK_TYPE_ICON_FILES.map((file) => (
+                        <button
+                          key={file}
+                          onClick={() => setSamsungCategoryIcon("samsungNetworkTypeIcon", file, SAMSUNG_NETWORK_TYPE_ICON_FILES)}
+                          className={`px-2 py-2 rounded-lg text-[10px] font-black transition-all ${
+                            data.samsungNetworkTypeIcon === file
+                              ? "bg-[#8dc73f] text-white"
+                              : "bg-[#f3f7f4] text-[#586057] hover:bg-[#ebf2ee]"
+                          }`}
+                        >
+                          {SAMSUNG_STATUS_ICON_LABELS[file]}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-[#8c948a] uppercase tracking-wider ml-1">Signal (Single Active)</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {SAMSUNG_SIGNAL_ICON_FILES.map((file) => (
+                        <button
+                          key={file}
+                          onClick={() => setSamsungCategoryIcon("samsungSignalIcon", file, SAMSUNG_SIGNAL_ICON_FILES)}
+                          className={`px-2 py-2 rounded-lg text-[10px] font-black transition-all ${
+                            data.samsungSignalIcon === file
+                              ? "bg-[#8dc73f] text-white"
+                              : "bg-[#f3f7f4] text-[#586057] hover:bg-[#ebf2ee]"
+                          }`}
+                        >
+                          {SAMSUNG_STATUS_ICON_LABELS[file]}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-[#8c948a] uppercase tracking-wider ml-1">Wi-Fi (Single Active)</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {SAMSUNG_WIFI_ICON_FILES.map((file) => (
+                        <button
+                          key={file}
+                          onClick={() => setSamsungCategoryIcon("samsungWifiIcon", file, SAMSUNG_WIFI_ICON_FILES)}
+                          className={`px-2 py-2 rounded-lg text-[10px] font-black transition-all ${
+                            data.samsungWifiIcon === file
+                              ? "bg-[#8dc73f] text-white"
+                              : "bg-[#f3f7f4] text-[#586057] hover:bg-[#ebf2ee]"
+                          }`}
+                        >
+                          {SAMSUNG_STATUS_ICON_LABELS[file]}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-[#8c948a] uppercase tracking-wider ml-1">Battery Icon (Single Active)</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {SAMSUNG_BATTERY_ICON_FILES.map((file) => (
+                        <button
+                          key={file}
+                          onClick={() => setSamsungCategoryIcon("samsungBatteryIcon", file, SAMSUNG_BATTERY_ICON_FILES)}
+                          className={`px-2 py-2 rounded-lg text-[10px] font-black transition-all ${
+                            data.samsungBatteryIcon === file
+                              ? "bg-[#8dc73f] text-white"
+                              : "bg-[#f3f7f4] text-[#586057] hover:bg-[#ebf2ee]"
+                          }`}
+                        >
+                          {SAMSUNG_STATUS_ICON_LABELS[file]}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* System toggles are consolidated into the Status Bar Icons block above */}
                 </div>
               )}
             </div>
@@ -806,8 +1073,41 @@ export function App() {
                     `showLocation: ${data.showLocation}`,
                     `showVolte: ${data.showVolte}`,
                     `showMobileData: ${data.showMobileData}`,
+                    `iosNetworkType: ${data.iosNetworkType}`,
                     `showHotspot: ${data.showHotspot}`,
                     `showNfc: ${data.showNfc}`,
+                    `samsungOneUiEra: ${data.samsungOneUiEra}`,
+                    `samsungNetworkTypeSim1: ${data.samsungNetworkTypeSim1}`,
+                    `samsungNetworkTypeSim2: ${data.samsungNetworkTypeSim2}`,
+                    `samsungShowWifi: ${data.samsungShowWifi}`,
+                    `samsungShowSignal: ${data.samsungShowSignal}`,
+                    `samsungShowNetworkLabel: ${data.samsungShowNetworkLabel}`,
+                    `samsungShowSim2Signal: ${data.samsungShowSim2Signal}`,
+                    `samsungActiveDataSim: ${data.samsungActiveDataSim}`,
+                    `samsungShowBatteryPercent: ${data.samsungShowBatteryPercent}`,
+                    `samsungShowBluetooth: ${data.samsungShowBluetooth}`,
+                    `samsungShowAirplane: ${data.samsungShowAirplane}`,
+                    `samsungShowAlarm: ${data.samsungShowAlarm}`,
+                    `samsungShowLocation: ${data.samsungShowLocation}`,
+                    `samsungShowHotspot: ${data.samsungShowHotspot}`,
+                    `samsungShowVpn: ${data.samsungShowVpn}`,
+                    `samsungShowNfc: ${data.samsungShowNfc}`,
+                    `samsungNetworkTypeIcon: ${data.samsungNetworkTypeIcon}`,
+                    `samsungSignalIcon: ${data.samsungSignalIcon}`,
+                    `samsungWifiIcon: ${data.samsungWifiIcon}`,
+                    `samsungBatteryIcon: ${data.samsungBatteryIcon}`,
+                    `samsungIconEnabled: ${JSON.stringify(data.samsungIconEnabled)}`,
+                    `samsungNotificationMode: ${data.samsungNotificationMode}`,
+                    `samsungNotifMessages: ${data.samsungNotifMessages}`,
+                    `samsungNotifPhone: ${data.samsungNotifPhone}`,
+                    `samsungNotifWhatsApp: ${data.samsungNotifWhatsApp}`,
+                    `samsungNotifGmail: ${data.samsungNotifGmail}`,
+                    `samsungNotifDownload: ${data.samsungNotifDownload}`,
+                    `samsungNotifPlayStore: ${data.samsungNotifPlayStore}`,
+                    `samsungNotifUsb: ${data.samsungNotifUsb}`,
+                    `samsungSoundMode: ${data.samsungSoundMode}`,
+                    `samsungShowDnd: ${data.samsungShowDnd}`,
+                    `samsungShowRotationLock: ${data.samsungShowRotationLock}`,
                     `iphoneContentNudgeY: ${data.iphoneContentNudgeY}`,
                     `topActions:    x:${t.topActions?.x ?? 0} y:${t.topActions?.y ?? -2}`,
                     `successBadge:  x:${t.successBadge?.x ?? 0.5} y:${t.successBadge?.y ?? -4.5}`,
