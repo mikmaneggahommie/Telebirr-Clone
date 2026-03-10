@@ -1,0 +1,15 @@
+airplane
+alarm
+cellularbars
+wifi
+battery.0percent
+battery.25percent
+battery.50percent
+battery.75percent
+battery.100percent
+battery.100percent.bolt
+personalhotspot
+location.north.fill
+moon.fill
+lock.rotation
+network
