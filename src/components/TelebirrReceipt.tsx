@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { cn } from "../utils/cn";
 import { Download } from "lucide-react";
 import {
@@ -32,7 +33,16 @@ export const BANNER_IMAGE_MAP: Partial<Record<(typeof BANNER_SLOTS)[number], str
 export const getBannerSrc = (index: number): string | undefined => BANNER_IMAGE_MAP[index as (typeof BANNER_SLOTS)[number]];
 
 export const devicePresets = {
-  iphone_modern: { os: "ios", notch: "dynamic_island", font: "font-roboto", nav: "home_indicator", width: "390px", height: "844px" },
+  iphone_modern: {
+    os: "ios",
+    notch: "dynamic_island",
+    font: "font-roboto",
+    nav: "home_indicator",
+    width: "390px",
+    height: "844px",
+    safeAreaBottom: 34,
+    safeAreaPadding: 16,
+  },
   samsung: { os: "android", notch: "punch_center", font: "font-roboto", nav: "buttons", width: "360px", height: "800px" },
   test_accuracy: { os: "android", notch: "punch_left", font: "font-roboto", nav: "buttons", width: "360px", height: "780px" },
 } as const;
@@ -92,16 +102,20 @@ export interface ReceiptData {
   simCount: 1 | 2;
   signalStrength: 0 | 1 | 2 | 3 | 4;  // 0 = no signal, 4 = full
   wifiStrength: 0 | 1 | 2 | 3;         // 0 = off, 3 = full
+  iosWifiEnabled: boolean;
   showBluetooth: boolean;
   silentMode: boolean;
   showLocation: boolean;
   showVolte: boolean;
   showMobileData: boolean;
-  iosNetworkType: "5G" | "5G+" | "LTE" | "4G" | "3G" | "E";
+  iosNetworkType: "5G" | "LTE" | "4G" | "3G" | "E";
+  iosBatteryPercent: boolean;   // show % number inside battery outline
+  iosLowPowerMode: boolean;     // yellow battery
+  iosDndMode: boolean;          // show DnD moon on left side
+  iosShowVpn: boolean;          // show VPN badge on right side
   airplaneMode: boolean;
   showAlarm: boolean;
   showNfc: boolean;
-  showHotspot: boolean;
   use12HourFormat: boolean;
   samsungOneUiEra: "oneui6" | "oneui8plus";
   samsungNotificationMode: "all" | "recent3" | "number" | "none";
@@ -109,10 +123,8 @@ export interface ReceiptData {
   samsungShowNetworkLabel: boolean;
   samsungShowWifi: boolean;
   samsungShowSignal: boolean;
-  samsungShowSim2Signal: boolean;
   samsungNetworkTypeSim1: "5G" | "LTE" | "4G" | "H+" | "H" | "3G" | "E";
   samsungNetworkTypeSim2: "5G" | "LTE" | "4G" | "H+" | "H" | "3G" | "E";
-  samsungActiveDataSim: 1 | 2;
   samsungNotifMessages: boolean;
   samsungNotifPhone: boolean;
   samsungNotifWhatsApp: boolean;
@@ -140,114 +152,221 @@ export interface ReceiptData {
 
 // ─── iOS Status Icons (SF Symbols geometry, San Francisco font) ───
 
-// iOS signal bars: filled solid rects, inactive = 30% opacity (NOT outlines)
-const IosSignalBars = ({ filled = 4 }: { filled?: number }) => (
-  <svg width="17" height="12" viewBox="0 0 17 12" fill="none">
-    <rect x="0" y="9" width="3" height="3" rx="0.75" fill="#000" opacity={filled >= 1 ? 1 : 0.3} />
-    <rect x="4.7" y="6.5" width="3" height="5.5" rx="0.75" fill="#000" opacity={filled >= 2 ? 1 : 0.3} />
-    <rect x="9.3" y="3.5" width="3" height="8.5" rx="0.75" fill="#000" opacity={filled >= 3 ? 1 : 0.3} />
-    <rect x="14" y="0" width="3" height="12" rx="0.75" fill="#000" opacity={filled >= 4 ? 1 : 0.3} />
-  </svg>
-);
-
-// iOS WiFi: 3 stroke arcs + dot, inactive arcs at 25% opacity
-const IosWifiIcon = ({ strength = 3 }: { strength?: number }) => (
-  <svg width="16" height="13" viewBox="0 -1 20 16" fill="none">
-    <circle cx="10" cy="14" r="1.5" fill="#000" />
-    <path d="M6.8 10.8C7.9 9.6 8.9 9 10 9s2.1 0.6 3.2 1.8"
-      stroke="#000" strokeWidth="1.8" strokeLinecap="round" fill="none"
-      opacity={strength >= 1 ? 1 : 0.25} />
-    <path d="M3.8 7.6C5.6 5.5 7.7 4.4 10 4.4s4.4 1.1 6.2 3.2"
-      stroke="#000" strokeWidth="1.8" strokeLinecap="round" fill="none"
-      opacity={strength >= 2 ? 1 : 0.25} />
-    <path d="M0.8 4.4C3.5 1.3 6.6 0 10 0s6.5 1.3 9.2 4.4"
-      stroke="#000" strokeWidth="1.8" strokeLinecap="round" fill="none"
-      opacity={strength >= 3 ? 1 : 0.25} />
-  </svg>
-);
-
-// iOS Battery — horizontal, outlined body, filled level, right nub, charging bolt
-const IosBattery = ({ percent, charging = false }: { percent: number; charging?: boolean }) => {
-  const pct = Math.min(100, Math.max(0, percent));
-  const fillColor = pct <= 20 ? '#ff3b30' : '#000';
-  const fillW = Math.round((pct / 100) * 19);
+// iOS WiFi: spec assets for 3/2/1/0 strength
+const IosWifiIcon = ({ strength = 3 }: { strength?: number }) => {
+  const clamped = Math.min(3, Math.max(0, strength));
   return (
-    <svg width="27" height="13" viewBox="0 0 27 13" fill="none">
-      {/* body outline */}
-      <rect x="0.75" y="0.75" width="22.5" height="11.5" rx="3.25"
-        stroke="#000" strokeWidth="1" strokeOpacity="0.35" />
-      {/* terminal nub */}
-      <rect x="23.75" y="4" width="2.5" height="5" rx="1.25"
-        fill="#000" fillOpacity="0.4" />
-      {/* fill level */}
-      <rect x="2" y="2" width={fillW} height="9" rx="2" fill={fillColor} />
-      {charging && (
-        <path d="M12.5 2.5L9.5 7h3l-1.5 3.5L15 6h-3l1.5-3.5z" fill="white" />
+    <img
+      src={`/ios-status/ios_wifi_${clamped}.svg`}
+      width={20}
+      height={12}
+      alt="Wi-Fi"
+      style={{ display: "block" }}
+    />
+  );
+};
+
+const IosSignalZero = () => (
+  <img
+    src="/ios-status/ios_signal_zero.svg"
+    width={20}
+    height={14}
+    alt="No Signal"
+    style={{ display: "block" }}
+  />
+);
+
+const IosSignalSingle = () => (
+  <img
+    src="/ios-status/ios_signal_single.svg"
+    width={20}
+    height={14}
+    alt="Signal"
+    style={{ display: "block" }}
+  />
+);
+
+const IosSignalDual = () => (
+  <img
+    src="/ios-status/ios_signal_dual.svg"
+    width={20}
+    height={14}
+    alt="Dual SIM Signal"
+    style={{ display: "block" }}
+  />
+);
+
+const IOS_NETWORK_ICON_MAP: Partial<Record<ReceiptData["iosNetworkType"], string>> = {
+  "LTE": "/ios-status/ios_lte.svg",
+  "4G": "/ios-status/ios_4g.svg",
+  "5G": "/ios-status/ios_5g.svg",
+  "3G": "/ios-status/ios_3g.svg",
+  "E": undefined,
+};
+
+const IosNetworkIcon = ({ type }: { type: ReceiptData["iosNetworkType"] }) => {
+  const src = IOS_NETWORK_ICON_MAP[type];
+  if (!src) {
+    return (
+      <span
+        style={{
+          fontFamily: '-apple-system, "SF Pro Text", "Helvetica Neue", sans-serif',
+          fontWeight: 700,
+          fontSize: "10px",
+          lineHeight: 1,
+          letterSpacing: "-0.2px",
+          color: "#000",
+          transform: "translateY(-0.2px)",
+          display: "inline-block",
+        }}
+      >
+        {type}
+      </span>
+    );
+  }
+  return <img src={src} width={20} height={12} alt={type} style={{ display: "block" }} />;
+};
+
+// iOS Battery — spec-accurate: charging=green, LPM=yellow, ≤20%=red, else black
+const IosBattery = ({
+  percent,
+  charging = false,
+  lowPowerMode = false,
+  showPercent = false,
+}: {
+  percent: number;
+  charging?: boolean;
+  lowPowerMode?: boolean;
+  showPercent?: boolean;
+}) => {
+  const pct = Math.min(100, Math.max(0, percent));
+  const clipBase = useId().replace(/:/g, "");
+  const clipBodyId = `${clipBase}-body`;
+  const clipFillId = `${clipBase}-fill`;
+  const clipEmptyId = `${clipBase}-empty`;
+  const isCritical = pct <= 20;
+  const isLowPower = lowPowerMode;
+  const isCharging = charging;
+  const systemFg = "#000000"; // light mode only
+  const systemPrimary = systemFg;
+  const fillColor = isLowPower
+    ? "#F9D649"
+    : isCharging
+      ? "#34C759"
+      : isCritical
+        ? "#FF3B30"
+        : systemPrimary;
+  const contrastOnFill = isLowPower ? "#000000" : "#FFFFFF";
+  const bodyStartX = 2;
+  const bodyStartY = 2.5;
+  const bodyWidth = 21;
+  const bodyHeight = 9;
+  const bodyRadius = 1.33;
+  const fillWidth = Math.max(0, Math.min(bodyWidth, (pct / 100) * bodyWidth));
+  const emptyWidth = Math.max(0, bodyWidth - fillWidth);
+  const displayValue = Math.round(pct);
+  const digits = displayValue.toString().length;
+  const fontSize = digits === 3 ? 8.2 : digits === 2 ? 9.2 : 10.0;
+  const textX = bodyStartX + bodyWidth / 2;
+  const textLength = digits === 3 ? 12 : undefined;
+  const showInsideBolt = isCharging;
+  const renderForeground = (color: string) => (
+    <>
+      {showInsideBolt && (
+        <path
+          d="M8.64134 8.1664H12.0477L10.2663 12.7633C10.0095 13.4262 10.7075 13.7714 11.1598 13.24L16.6658 6.68159C16.7775 6.5501 16.8334 6.4186 16.8334 6.27615C16.8334 6.02411 16.6323 5.83783 16.3587 5.83783H12.9523L14.7281 1.23546C14.985 0.577982 14.287 0.227325 13.8402 0.758789L8.32863 7.31716C8.21694 7.45413 8.16669 7.58015 8.16669 7.7226C8.16669 7.98012 8.36772 8.1664 8.64134 8.1664Z"
+          fill={color}
+        />
+      )}
+      {showPercent && (
+        <text
+          x={textX}
+          y="7"
+          fill={color}
+          fontFamily='-apple-system, "SF Pro Text", "Helvetica Neue", sans-serif'
+          fontWeight={700}
+          fontSize={fontSize}
+          textAnchor="middle"
+          dominantBaseline="central"
+          textLength={textLength}
+          lengthAdjust={textLength ? "spacingAndGlyphs" : undefined}
+          style={{
+            letterSpacing: digits === 3 ? "-0.2px" : "-0.15px",
+            fontVariantNumeric: "tabular-nums",
+            fontFeatureSettings: '"tnum" 1',
+          }}
+        >
+          {displayValue}
+        </text>
+      )}
+    </>
+  );
+
+  return (
+    <svg width="28" height="14" viewBox="0 0 28 14" fill="none" aria-label="Battery">
+      <defs>
+        <clipPath id={clipBodyId}>
+          <rect x={bodyStartX} y={bodyStartY} width={bodyWidth} height={bodyHeight} rx={bodyRadius} />
+        </clipPath>
+        <clipPath id={clipFillId}>
+          <rect x={bodyStartX} y={bodyStartY} width={fillWidth} height={bodyHeight} rx={bodyRadius} />
+        </clipPath>
+        <clipPath id={clipEmptyId}>
+          <rect x={bodyStartX + fillWidth} y={bodyStartY} width={emptyWidth} height={bodyHeight} rx={bodyRadius} />
+        </clipPath>
+      </defs>
+
+      {/* Outline */}
+      <path
+        opacity="0.4"
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M5.6 1.5H19.4C20.3966 1.5 21.0839 1.50078 21.6174 1.54436C22.1392 1.587 22.4251 1.66555 22.635 1.77248C23.1054 2.01217 23.4878 2.39462 23.7275 2.86502C23.8345 3.0749 23.913 3.36085 23.9556 3.88264C23.9992 4.4161 24 5.10341 24 6.1V7.9C24 8.89659 23.9992 9.5839 23.9556 10.1174C23.913 10.6392 23.8345 10.9251 23.7275 11.135C23.4878 11.6054 23.1054 11.9878 22.635 12.2275C22.4251 12.3345 22.1392 12.413 21.6174 12.4556C21.0839 12.4992 20.3966 12.5 19.4 12.5H5.6C4.60341 12.5 3.9161 12.4992 3.38264 12.4556C2.86085 12.413 2.5749 12.3345 2.36502 12.2275C1.89462 11.9878 1.51217 11.6054 1.27248 11.135C1.16555 10.9251 1.087 10.6392 1.04436 10.1174C1.00078 9.5839 1 8.89659 1 7.9V6.1C1 5.10341 1.00078 4.4161 1.04436 3.88264C1.087 3.36085 1.16555 3.0749 1.27248 2.86502C1.51217 2.39462 1.89462 2.01217 2.36502 1.77248C2.5749 1.66555 2.86085 1.587 3.38264 1.54436C3.9161 1.50078 4.60341 1.5 5.6 1.5ZM0 6.1C0 4.13982 0 3.15972 0.381477 2.41103C0.717034 1.75247 1.25247 1.21703 1.91103 0.881477C2.65972 0.5 3.63982 0.5 5.6 0.5H19.4C21.3602 0.5 22.3403 0.5 23.089 0.881477C23.7475 1.21703 24.283 1.75247 24.6185 2.41103C25 3.15972 25 4.13982 25 6.1V7.9C25 9.86018 25 10.8403 24.6185 11.589C24.283 12.2475 23.7475 12.783 23.089 13.1185C22.3403 13.5 21.3602 13.5 19.4 13.5H5.6C3.63982 13.5 2.65972 13.5 1.91103 13.1185C1.25247 12.783 0.717034 12.2475 0.381477 11.589C0 10.8403 0 9.86018 0 7.9V6.1ZM26 9C26.8284 8.8 27.5 8.10457 27.5 7C27.5 5.89543 26.8284 5.2 26 5L26 7L26 9Z"
+        fill="#000"
+      />
+
+      {/* Body background */}
+      <rect x={bodyStartX} y={bodyStartY} width={bodyWidth} height={bodyHeight} rx={bodyRadius} fill="#DFDFDF" />
+
+      {/* Fill */}
+      <g clipPath={`url(#${clipBodyId})`}>
+        <rect x={bodyStartX} y={bodyStartY} width={fillWidth} height={bodyHeight} rx={bodyRadius} fill={fillColor} />
+      </g>
+
+      {/* Dynamic contrast: render bolt/text twice, split by fill vs empty */}
+      {(showInsideBolt || showPercent) && (
+        <g clipPath={`url(#${clipBodyId})`}>
+          <g clipPath={`url(#${clipFillId})`}>{renderForeground(contrastOnFill)}</g>
+          <g clipPath={`url(#${clipEmptyId})`}>{renderForeground(systemFg)}</g>
+        </g>
       )}
     </svg>
   );
 };
 
-// iOS Bluetooth — SF Symbols style (native-like spine + crossing chevrons)
-const IosBluetooth = () => (
-  <svg width="10" height="14" viewBox="0 0 12 16" fill="none"
-    stroke="#000" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-label="Bluetooth">
-    <path d="M6 1.2V14.8" />
-    <path d="M6 8L2.4 4.9" />
-    <path d="M6 8L2.4 11.1" />
-    <path d="M6 8L9.6 4.6L6 1.6" />
-    <path d="M6 8L9.6 11.4L6 14.4" />
-  </svg>
-);
-
-// iOS Airplane — SF Symbols filled plane silhouette, 45° tilt
+// iOS Airplane — spec asset
 const IosAirplane = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="#000">
-    <path d="M21 16v-2l-8-5V3.5C13 2.67 12.33 2 11.5 2S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" />
-  </svg>
+  <img
+    src="/ios-status/ios_airplane.svg"
+    width={20}
+    height={14}
+    alt="Airplane"
+    style={{ display: "block" }}
+  />
 );
 
-// iOS Alarm — SF Symbols clock/alarm filled style
-const IosAlarm = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="13" r="8" fill="#000" />
-    <path d="M12 9v4.5l2.5 2.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M6.5 3.5L4 6" stroke="#000" strokeWidth="1.8" strokeLinecap="round" />
-    <path d="M17.5 3.5L20 6" stroke="#000" strokeWidth="1.8" strokeLinecap="round" />
-  </svg>
-);
-
-// iOS Location Arrow (SF Symbols style)
-const IosLocationArrow = () => (
-  <svg width="9" height="9" viewBox="0 0 12 12" fill="none" aria-label="Location">
-    <path d="M10.7 1.2 2.5 5a.6.6 0 0 0 0 1l3 1.3 1.3 3a.6.6 0 0 0 1 0L11.6 2a.8.8 0 0 0-.9-.8Z" fill="#000" />
-  </svg>
-);
-
-// iOS Personal Hotspot indicator
-const IosHotspot = () => (
-  <svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-label="Hotspot">
-    <path d="M5.4 10.4a2.7 2.7 0 0 1 0-3.8L6.8 5.2a2.7 2.7 0 1 1 3.8 3.8l-1 1" stroke="#000" strokeWidth="1.3" strokeLinecap="round" />
-    <path d="M10.4 5.6a2.7 2.7 0 0 1 0 3.8L9.2 10.8a2.7 2.7 0 1 1-3.8-3.8l1.2-1.2" stroke="#000" strokeWidth="1.3" strokeLinecap="round" />
-  </svg>
-);
-
-const IosDataLabel = ({ type = "5G" }: { type?: string }) => (
-  <span
-    style={{
-      fontFamily: '-apple-system, "SF Pro Text", "Helvetica Neue", sans-serif',
-      fontWeight: 700,
-      fontSize: "10px",
-      lineHeight: 1,
-      letterSpacing: "-0.2px",
-      color: "#000",
-      transform: "translateY(-0.2px)",
-      display: "inline-block",
-    }}
-  >
-    {type}
-  </span>
-);
+const IosLocationIcon = ({ enabled }: { enabled: boolean }) => {
+  if (!enabled) return null;
+  return (
+    <img
+      src="/ios-status/ios_location_1.svg"
+      width={11}
+      height={11}
+      alt="Location"
+      style={{ display: "block" }}
+    />
+  );
+};
 
 /* ─── Carousel Dots (Ring style) ─── */
 const CarouselDots = ({
@@ -322,6 +441,8 @@ export const TelebirrReceipt = ({
       canvasWidth,
       canvasHeight,
       navButtonsHeight: layoutNavButtonsHeight,
+      safeAreaBottom: os === "ios" && layoutNavType === "home_indicator" ? (config as typeof devicePresets.iphone_modern).safeAreaBottom ?? 34 : 0,
+      safeAreaPadding: os === "ios" && layoutNavType === "home_indicator" ? (config as typeof devicePresets.iphone_modern).safeAreaPadding ?? 16 : 0,
       tweaks: data.layoutTweaks,
     }),
     {
@@ -330,6 +451,8 @@ export const TelebirrReceipt = ({
       canvasWidth,
       canvasHeight,
       navButtonsHeight: layoutNavButtonsHeight,
+      safeAreaBottom: os === "ios" && layoutNavType === "home_indicator" ? (config as typeof devicePresets.iphone_modern).safeAreaBottom ?? 34 : 0,
+      safeAreaPadding: os === "ios" && layoutNavType === "home_indicator" ? (config as typeof devicePresets.iphone_modern).safeAreaPadding ?? 16 : 0,
       tweaks: data.layoutTweaks,
     },
   );
@@ -347,15 +470,12 @@ export const TelebirrReceipt = ({
   const batteryNum = parseInt(data.battery) || 48;
   const signalFilled = data.airplaneMode ? 0 : (data.signalStrength ?? 4);
   const wifiStrength = data.wifiStrength ?? 3;
-  const iosShowDataLabel = data.showMobileData && !data.airplaneMode && (data.wifiStrength ?? 0) === 0;
-  const iosStatusExtras = (
-    [
-      iosShowDataLabel ? <IosDataLabel key="ios-data" type={data.iosNetworkType} /> : null,
-      data.showAlarm ? <IosAlarm key="ios-alarm" /> : null,
-      data.showBluetooth && !data.airplaneMode ? <IosBluetooth key="ios-bt" /> : null,
-      data.showHotspot && !data.airplaneMode ? <IosHotspot key="ios-hotspot" /> : null,
-    ].filter(Boolean) as JSX.Element[]
-  ).slice(0, notchType === "dynamic_island" ? 2 : 3);
+  const iosWifiEnabled = data.iosWifiEnabled ?? true;
+  const iosShowWifi = !data.airplaneMode && iosWifiEnabled && !data.showMobileData;
+  // Data label: shown on RIGHT side when mobile data is on, NOT airplane mode, and wifi is OFF
+  const iosShowDataLabel = data.showMobileData && !data.airplaneMode;
+  // iOS LEFT side extras (after time): Focus (DnD moon), then Location arrow
+  // iOS RIGHT side extras (between data/signal and wifi/battery): VPN badge only
   const samsungStatusBackground = "#FFFFFF";
   const samsungStatusColor = "#1C1C1E";
 
@@ -556,12 +676,13 @@ export const TelebirrReceipt = ({
         </div>
       )}
 
-      {/* iOS Status Bar — SF Pro Display Semibold, correct icon geometry */}
+      {/* iOS Status Bar — SF Pro Display, correct L/R ear layout per spec */}
       {os === "ios" && (
         <div className={cn(
           "h-[48px] w-full flex items-center justify-between shrink-0 z-10 bg-white",
           notchType === "dynamic_island" ? "px-[24px] pt-[14px]" : "px-[20px] pt-[10px]"
         )}>
+          {/* LEFT EAR: Time → Focus (DnD) → Location */}
           <div className="flex items-center gap-[4px]">
             <div
               style={{
@@ -576,16 +697,50 @@ export const TelebirrReceipt = ({
             >
               {data.time}
             </div>
-            {data.showLocation && <IosLocationArrow />}
+            {/* Focus mode (DnD moon) — left of location, right of time */}
+            {(data.iosDndMode ?? false) && (
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="#000" aria-label="Do Not Disturb">
+                <path d="M14.38 3.36C19.49 3.36 23.63 0.28 25.46-3.64C25.86-4.46 25.34-5.02 24.55-4.77C23.68-4.48 22.25-4.20 20.93-4.20C13.90-4.20 9.87-8.23 9.87-15.27C9.87-16.59 10.16-18.08 10.58-19.15C10.92-20.02 10.32-20.54 9.49-20.18C5.29-18.35 2.10-14.05 2.10-8.92C2.10-2.13 7.61 3.36 14.38 3.36Z" transform="matrix(0.845 0 0 0.845 0.29 19.16)" />
+              </svg>
+            )}
+            {/* Location arrow */}
+            <IosLocationIcon enabled={data.showLocation} />
           </div>
+          {/* RIGHT EAR: [VPN] [Signal/✈] [Dual SIM] [Wi-Fi] [Data] [Battery] — battery is rightmost */}
           <div className="flex items-center gap-[4px]">
-            {iosStatusExtras}
+            {/* VPN badge */}
+            {false && (data.iosShowVpn ?? false) && !data.airplaneMode && (
+              <div style={{
+                border: '1px solid #000',
+                borderRadius: '2px',
+                padding: '0 2px',
+                height: '11px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '7px',
+                fontWeight: 700,
+                letterSpacing: '-0.1px',
+                color: '#000',
+                fontFamily: '-apple-system, "SF Pro Text", "Helvetica Neue", sans-serif',
+              }}>VPN</div>
+            )}
+            {/* Signal bars or Airplane icon */}
             {data.airplaneMode
               ? <IosAirplane />
-              : <IosSignalBars filled={signalFilled} />
+              : signalFilled <= 0 ? <IosSignalZero /> : (data.simCount === 2 ? <IosSignalDual /> : <IosSignalSingle />)
             }
-            {wifiStrength > 0 && !data.airplaneMode && <IosWifiIcon strength={wifiStrength} />}
-            <IosBattery percent={batteryNum} charging={data.batteryCharging} />
+            {/* Wi-Fi */}
+            {iosShowWifi && <IosWifiIcon strength={wifiStrength} />}
+            {/* Data type label — next to battery, only when wifi off and mobile data on */}
+            {iosShowDataLabel && <IosNetworkIcon type={data.iosNetworkType} />}
+            {/* Battery — rightmost */}
+            <IosBattery
+              percent={batteryNum}
+              charging={data.batteryCharging}
+              lowPowerMode={data.iosLowPowerMode ?? false}
+              showPercent={data.iosBatteryPercent ?? false}
+            />
           </div>
         </div>
       )}
@@ -1010,10 +1165,6 @@ export const TelebirrReceipt = ({
 
             {notchType === "punch_left" && (
               <div className="absolute top-[8px] left-[18px] w-[18.5px] h-[18.5px] bg-black rounded-full z-40 pointer-events-none" />
-            )}
-
-            {notchType === "notch" && (
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[166px] h-[32px] bg-black rounded-b-[24px] z-40 pointer-events-none" />
             )}
 
             {notchType === "dynamic_island" && (

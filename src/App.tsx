@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toPng } from "html-to-image";
 import { Download, RefreshCcw, Clock, ChevronDown, Check } from "lucide-react";
 import { TelebirrReceipt, ReceiptData, devicePresets, PresetKey, getBannerSrc, BANNER_SLOTS } from "./components/TelebirrReceipt";
@@ -73,6 +73,29 @@ const waitForCaptureReady = async (node: HTMLElement) => {
 const PremiumToggle = ({ enabled, onClick, label }: { enabled: boolean; onClick: () => void; label: string }) => (
   <div className="flex flex-col items-center gap-1.5 flex-1">
     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider leading-tight text-center">{label}</span>
+    <button
+      type="button"
+      onClick={onClick}
+      className={`relative w-[42px] h-[22px] rounded-full transition-all duration-300 ${enabled ? 'bg-[#8dc73f]' : 'bg-gray-200'}`}
+    >
+      <span className={`absolute top-[2px] left-[2px] w-[18px] h-[18px] bg-white rounded-full transition-transform duration-300 transform ${enabled ? 'translate-x-[20px]' : 'translate-x-0'}`} />
+    </button>
+  </div>
+);
+
+const InlineToggle = ({
+  enabled,
+  onClick,
+  label,
+  labelOffset = "",
+}: {
+  enabled: boolean;
+  onClick: () => void;
+  label: string;
+  labelOffset?: string;
+}) => (
+  <div className="grid grid-cols-[1fr_auto] items-center gap-3 w-full">
+    <span className={`text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider leading-tight ${labelOffset}`}>{label}</span>
     <button
       type="button"
       onClick={onClick}
@@ -258,16 +281,20 @@ export function App() {
     transactionTo: "MIKIYAS",
     transactionNumber: "DBK611YEXI",
     bannerIndex: 3,
-    simCount: 2,
+    simCount: 1,
     signalStrength: 4,
     wifiStrength: 3,
+    iosWifiEnabled: true,
     showBluetooth: false,
     silentMode: true,
     showLocation: true,
     showVolte: false,
     showMobileData: false,
-    iosNetworkType: "5G",
-    showHotspot: false,
+    iosNetworkType: "LTE",
+    iosBatteryPercent: false,
+    iosLowPowerMode: false,
+    iosDndMode: false,
+    iosShowVpn: false,
     airplaneMode: false,
     showAlarm: false,
     showNfc: false,
@@ -277,8 +304,6 @@ export function App() {
     samsungShowNetworkLabel: true,
     samsungShowWifi: true,
     samsungShowSignal: true,
-    samsungShowSim2Signal: false,
-    samsungActiveDataSim: 1,
     samsungShowBatteryPercent: true,
     samsungShowBluetooth: false,
     samsungShowAirplane: false,
@@ -329,6 +354,28 @@ export function App() {
   });
 
   const set = (patch: Partial<ReceiptData>) => setData(prev => ({ ...prev, ...patch }));
+
+  useEffect(() => {
+    const pct = Number.parseInt(data.battery || "0", 10);
+    if (!Number.isFinite(pct)) return;
+    if (data.batteryCharging && (data.iosLowPowerMode ?? false) && pct > 80) {
+      setData((prev) => {
+        const prevPct = Number.parseInt(prev.battery || "0", 10);
+        if (!Number.isFinite(prevPct)) return prev;
+        if (!prev.batteryCharging || !(prev.iosLowPowerMode ?? false) || prevPct <= 80) return prev;
+        return { ...prev, iosLowPowerMode: false };
+      });
+    }
+  }, [data.battery, data.batteryCharging, data.iosLowPowerMode]);
+
+  useEffect(() => {
+    if (data.showMobileData && data.iosWifiEnabled) {
+      setData((prev) => ({
+        ...prev,
+        iosWifiEnabled: false,
+      }));
+    }
+  }, [data.showMobileData, data.iosWifiEnabled]);
 
   const setSamsungCategoryIcon = <
     K extends "samsungNetworkTypeIcon" | "samsungSignalIcon" | "samsungWifiIcon" | "samsungBatteryIcon",
@@ -663,7 +710,12 @@ export function App() {
                     value={data.wifiStrength}
                     min={0} max={3}
                     disabled={data.airplaneMode}
-                    onChange={(v) => set({ wifiStrength: v as 0 | 1 | 2 | 3 })}
+                    onChange={(v) =>
+                      setData((prev) => ({
+                        ...prev,
+                        wifiStrength: v as 0 | 1 | 2 | 3,
+                      }))
+                    }
                     format={(v) => data.airplaneMode ? "Off" : wifiLabels[v]}
                   />
                 </div>
@@ -673,54 +725,97 @@ export function App() {
                 <>
                   <div className="grid grid-cols-4 gap-3 pt-2">
                     <PremiumToggle label="Plane" enabled={data.airplaneMode} onClick={() => set({ airplaneMode: !data.airplaneMode })} />
-                    <PremiumToggle label="Charge" enabled={data.batteryCharging} onClick={() => set({ batteryCharging: !data.batteryCharging })} />
-                    <PremiumToggle label="BT" enabled={data.showBluetooth} onClick={() => set({ showBluetooth: !data.showBluetooth })} />
-                    <PremiumToggle label="Alarm" enabled={data.showAlarm} onClick={() => set({ showAlarm: !data.showAlarm })} />
                     {isIos && (
                       <>
+                        <PremiumToggle label="Bat%" enabled={data.iosBatteryPercent ?? false} onClick={() => set({ iosBatteryPercent: !(data.iosBatteryPercent ?? false) })} />
+                        <PremiumToggle label="DnD" enabled={data.iosDndMode ?? false} onClick={() => set({ iosDndMode: !(data.iosDndMode ?? false) })} />
                         <PremiumToggle label="Loc" enabled={data.showLocation} onClick={() => set({ showLocation: !data.showLocation })} />
-                        <PremiumToggle label="Data" enabled={data.showMobileData} onClick={() => set({ showMobileData: !data.showMobileData })} />
-                        <PremiumToggle label="Spot" enabled={data.showHotspot} onClick={() => set({ showHotspot: !data.showHotspot })} />
+                        <PremiumToggle
+                          label="WiFi"
+                          enabled={data.iosWifiEnabled}
+                          onClick={() =>
+                            setData((prev) => {
+                              const nextWifiOn = !prev.iosWifiEnabled;
+                              return {
+                                ...prev,
+                                iosWifiEnabled: nextWifiOn,
+                                showMobileData: nextWifiOn ? false : prev.showMobileData,
+                              };
+                            })
+                          }
+                        />
+                        <PremiumToggle
+                          label="Data"
+                          enabled={data.showMobileData}
+                          onClick={() =>
+                            setData((prev) => {
+                              const nextDataOn = !prev.showMobileData;
+                              return {
+                                ...prev,
+                                showMobileData: nextDataOn,
+                                wifiStrength: nextDataOn ? 0 : prev.wifiStrength,
+                                iosWifiEnabled: nextDataOn ? false : prev.iosWifiEnabled,
+                              };
+                            })
+                          }
+                        />
                       </>
                     )}
                     {!isIos && (
                       <>
+                        <PremiumToggle label="Alarm" enabled={data.showAlarm} onClick={() => set({ showAlarm: !data.showAlarm })} />
                         <PremiumToggle label="Slnt" enabled={data.silentMode} onClick={() => set({ silentMode: !data.silentMode })} />
                         <PremiumToggle label="Loc" enabled={data.showLocation} onClick={() => set({ showLocation: !data.showLocation })} />
                         <PremiumToggle label="LTE" enabled={data.showVolte} onClick={() => set({ showVolte: !data.showVolte })} />
                         <PremiumToggle label="Data" enabled={data.showMobileData} onClick={() => set({ showMobileData: !data.showMobileData })} />
-                        <PremiumToggle label="Spot" enabled={data.showHotspot} onClick={() => set({ showHotspot: !data.showHotspot })} />
                         <PremiumToggle label="NFC" enabled={data.showNfc} onClick={() => set({ showNfc: !data.showNfc })} />
                       </>
                     )}
                   </div>
 
                   {isIos && (
-                    <div className="pt-2 space-y-1.5">
-                      <label className="text-[10px] font-bold text-[#8c948a] uppercase tracking-wider ml-1">iOS Data Label</label>
-                      <div className="relative">
-                        <select
-                          value={data.iosNetworkType}
-                          onChange={(e) => set({ iosNetworkType: e.target.value as ReceiptData["iosNetworkType"] })}
-                          className="tele-select w-full min-w-0 appearance-none px-3 pr-9 py-2 bg-[#f3f7f4] border-transparent rounded-xl text-[11px] font-bold text-[#2c312b] focus:ring-2 focus:ring-[#8dc73f] focus:outline-none transition-all"
-                        >
-                          <option value="5G">5G</option>
-                          <option value="5G+">5G+</option>
-                          <option value="LTE">LTE</option>
-                          <option value="4G">4G</option>
-                          <option value="3G">3G</option>
-                          <option value="E">E</option>
-                        </select>
-                        <ChevronDown size={14} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8c948a]" />
+                    <div className="space-y-4 pt-2">
+                      {/* iOS Battery Options */}
+                      <div className="space-y-2">
+                        <label className="block text-[10px] font-bold text-[#8c948a] uppercase tracking-wider ml-1 mb-1">Battery</label>
+                        <div className="space-y-3">
+                          <InlineToggle
+                            label="Charging"
+                            labelOffset="ml-1"
+                            enabled={data.batteryCharging}
+                            onClick={() => set({ batteryCharging: !data.batteryCharging })}
+                          />
+                          <InlineToggle
+                            label="Low Power"
+                            labelOffset="ml-1"
+                            enabled={data.iosLowPowerMode ?? false}
+                            onClick={() => set({ iosLowPowerMode: !(data.iosLowPowerMode ?? false) })}
+                          />
+                        </div>
+                        {/* Status text removed per request */}
                       </div>
-                    </div>
-                  )}
 
-                  {!isIos && (
-                    <div className="pt-2">
-                      <div className="flex items-center justify-between px-1">
-                        <label className="text-[10px] font-bold text-[#8c948a] uppercase tracking-wider">Sim Configuration</label>
-                        <div className="flex bg-[#f3f7f4] p-1 rounded-lg gap-1">
+                      {/* iOS Network Type — beautiful button selector matching Samsung */}
+                      <div className="space-y-1.5">
+                        <label className="block text-[10px] font-bold text-[#8c948a] uppercase tracking-wider ml-1">Network Type (Single Active)</label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {(['5G', 'LTE', '4G', '3G'] as const).map((type) => (
+                            <button
+                              key={type}
+                              onClick={() => set({ iosNetworkType: type, showMobileData: true, wifiStrength: 0, iosWifiEnabled: false })}
+                              className={`px-2 py-2 rounded-lg text-[10px] font-black transition-all ${
+                                data.iosNetworkType === type && data.showMobileData
+                                  ? 'bg-[#8dc73f] text-white'
+                                  : 'bg-[#f3f7f4] text-[#586057] hover:bg-[#ebf2ee]'
+                              }`}
+                            >{type}</button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="block text-[10px] font-bold text-[#8c948a] uppercase tracking-wider ml-1 mb-1">SIM</label>
+                        <div className="inline-flex w-fit bg-[#f3f7f4] p-1 rounded-lg gap-1">
                           <button
                             onClick={() => set({ simCount: 1 })}
                             className={`px-3 py-1 text-[10px] font-black rounded-md transition-all ${data.simCount === 1 ? 'bg-white shadow-sm text-[#8dc73f]' : 'text-gray-400'}`}
@@ -731,8 +826,11 @@ export function App() {
                           >Dual</button>
                         </div>
                       </div>
+
+
                     </div>
                   )}
+
                 </>
               )}
 
@@ -759,6 +857,7 @@ export function App() {
                               ...prev,
                               samsungShowWifi: nextWifi,
                               samsungShowNetworkLabel: nextWifi ? false : prev.samsungShowNetworkLabel,
+                              wifiStrength: nextWifi ? Math.max(prev.wifiStrength, 1) : prev.wifiStrength,
                             };
                           })
                         }
@@ -773,6 +872,7 @@ export function App() {
                               ...prev,
                               samsungShowNetworkLabel: nextData,
                               samsungShowWifi: nextData ? false : prev.samsungShowWifi,
+                              wifiStrength: nextData ? 0 : prev.wifiStrength,
                             };
                           })
                         }
@@ -809,7 +909,15 @@ export function App() {
                       {SAMSUNG_NETWORK_TYPE_ICON_FILES.map((file) => (
                         <button
                           key={file}
-                          onClick={() => setSamsungCategoryIcon("samsungNetworkTypeIcon", file, SAMSUNG_NETWORK_TYPE_ICON_FILES)}
+                          onClick={() => {
+                            setSamsungCategoryIcon("samsungNetworkTypeIcon", file, SAMSUNG_NETWORK_TYPE_ICON_FILES);
+                            setData((prev) => ({
+                              ...prev,
+                              samsungShowNetworkLabel: true,
+                              samsungShowWifi: false,
+                              wifiStrength: 0,
+                            }));
+                          }}
                           className={`px-2 py-2 rounded-lg text-[10px] font-black transition-all ${
                             data.samsungNetworkTypeIcon === file
                               ? "bg-[#8dc73f] text-white"
@@ -847,7 +955,15 @@ export function App() {
                       {SAMSUNG_WIFI_ICON_FILES.map((file) => (
                         <button
                           key={file}
-                          onClick={() => setSamsungCategoryIcon("samsungWifiIcon", file, SAMSUNG_WIFI_ICON_FILES)}
+                          onClick={() => {
+                            setSamsungCategoryIcon("samsungWifiIcon", file, SAMSUNG_WIFI_ICON_FILES);
+                            setData((prev) => ({
+                              ...prev,
+                              samsungShowWifi: true,
+                              samsungShowNetworkLabel: false,
+                              wifiStrength: Math.max(prev.wifiStrength, 1),
+                            }));
+                          }}
                           className={`px-2 py-2 rounded-lg text-[10px] font-black transition-all ${
                             data.samsungWifiIcon === file
                               ? "bg-[#8dc73f] text-white"
@@ -1069,12 +1185,12 @@ export function App() {
                     `use12HourFormat: ${data.use12HourFormat}`,
                     `signalStrength: ${data.signalStrength}`,
                     `wifiStrength: ${data.wifiStrength}`,
+                    `iosWifiEnabled: ${data.iosWifiEnabled}`,
                     `silentMode: ${data.silentMode}`,
                     `showLocation: ${data.showLocation}`,
                     `showVolte: ${data.showVolte}`,
                     `showMobileData: ${data.showMobileData}`,
                     `iosNetworkType: ${data.iosNetworkType}`,
-                    `showHotspot: ${data.showHotspot}`,
                     `showNfc: ${data.showNfc}`,
                     `samsungOneUiEra: ${data.samsungOneUiEra}`,
                     `samsungNetworkTypeSim1: ${data.samsungNetworkTypeSim1}`,
@@ -1082,8 +1198,6 @@ export function App() {
                     `samsungShowWifi: ${data.samsungShowWifi}`,
                     `samsungShowSignal: ${data.samsungShowSignal}`,
                     `samsungShowNetworkLabel: ${data.samsungShowNetworkLabel}`,
-                    `samsungShowSim2Signal: ${data.samsungShowSim2Signal}`,
-                    `samsungActiveDataSim: ${data.samsungActiveDataSim}`,
                     `samsungShowBatteryPercent: ${data.samsungShowBatteryPercent}`,
                     `samsungShowBluetooth: ${data.samsungShowBluetooth}`,
                     `samsungShowAirplane: ${data.samsungShowAirplane}`,

@@ -51,6 +51,8 @@ export interface ReceiptLayoutContext {
   canvasWidth: number;
   canvasHeight: number;
   navButtonsHeight?: number;
+  safeAreaBottom?: number;
+  safeAreaPadding?: number;
   tweaks?: ReceiptLayoutTweaks;
 }
 
@@ -155,7 +157,14 @@ export const computeReceiptLayout = (ctx: ReceiptLayoutContext): Record<SectionN
   const qrY = tableY + h.tableBlock * sy + a.afterTableToQr * sy;
   const bannerY = qrY + h.qrRow * sy + a.afterQrToBanner * sy;
   const dotsY = bannerY + (ctx.tweaks?.banner?.h ?? h.banner) * sy + a.afterBannerToDots * sy;
-  const finishedButtonY = dotsY + h.dots * sy + a.afterDotsToButton * sy;
+  let finishedButtonY = dotsY + h.dots * sy + a.afterDotsToButton * sy;
+  if (ctx.os === "ios" && ctx.navType === "home_indicator") {
+    const safeBottom = ctx.safeAreaBottom ?? 0;
+    const safePad = ctx.safeAreaPadding ?? 0;
+    const buttonHeight = h.finishedButton * sy;
+    const safeY = ctx.canvasHeight - safeBottom - safePad - buttonHeight;
+    finishedButtonY = Math.min(finishedButtonY, safeY);
+  }
 
   const centerX = (w: number) => (ctx.canvasWidth - w) / 2;
 
