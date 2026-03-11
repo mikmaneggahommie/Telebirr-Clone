@@ -558,14 +558,17 @@ export const TelebirrReceipt = ({
     />
   ));
 
+  const formatWithCommas = (value: string) => value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
   // Parse amount: extract sign, integer part, decimal part
   const rawAmount = data.amount.toString().trim();
   const isNegative = rawAmount.startsWith("-");
   const absAmount = rawAmount.replace(/^-/, "");
   const parts = absAmount.replace(/[^0-9.]/g, "").split(".");
   const intPart = parts[0] || "0";
+  const intPartFormatted = formatWithCommas(intPart);
   const decPart = (parts[1] || "00").slice(0, 2).padEnd(2, "0");
-  const displayAmount = `${isNegative ? "-" : ""}${intPart}.`;
+  const displayAmount = `${isNegative ? "-" : ""}${intPartFormatted}.`;
 
   const ScreenContent = (
     <div

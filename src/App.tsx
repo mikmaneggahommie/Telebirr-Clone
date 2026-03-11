@@ -136,6 +136,27 @@ const softFormatTimeInput = (value: string) => {
   return `${hourText}:${minuteRaw}`;
 };
 
+const softFormatDateTimeInput = (value: string) => {
+  const cleaned = value.replace(/[^0-9/: ]/g, "");
+  if (/[/: ]/.test(cleaned)) {
+    return cleaned;
+  }
+  const digits = cleaned.replace(/\D/g, "").slice(0, 14);
+  const y = digits.slice(0, 4);
+  const m = digits.slice(4, 6);
+  const d = digits.slice(6, 8);
+  const h = digits.slice(8, 10);
+  const min = digits.slice(10, 12);
+  const s = digits.slice(12, 14);
+  let out = y;
+  if (m) out += `/${m}`;
+  if (d) out += `/${d}`;
+  if (h) out += ` ${h}`;
+  if (min) out += `:${min}`;
+  if (s) out += `:${s}`;
+  return out;
+};
+
 const parseTimeInput = (raw: string): ParsedTime => {
   const trimmed = raw.trim();
   if (!trimmed) return { hour: 0, minute: 0, valid: false };
@@ -473,7 +494,7 @@ export function App() {
     bottomNavIconsY: 0,
     iphoneContentNudgeY: -14.5,
     time: "11:43",
-    timeMeridiem: "AM",
+    timeMeridiem: "PM",
     battery: "48",
     batteryCharging: false,
     amount: "-2.00",
@@ -701,6 +722,20 @@ export function App() {
     set({ transactionNumber: `${prefix}${suffix}` });
   };
 
+  const syncTransactionTimeFromStatus = (source: "blur" | "toggle" | "now" | "ampm") => {
+    const normalized = normalizeTime(data.time, data.use12HourFormat, data.timeMeridiem);
+    if (!normalized.valid) return;
+    const now = new Date();
+    const Y = now.getFullYear();
+    const M = String(now.getMonth() + 1).padStart(2, "0");
+    const D = String(now.getDate()).padStart(2, "0");
+    const h = String(normalized.hour24).padStart(2, "0");
+    const m = String(normalized.minute).padStart(2, "0");
+    const s = String(Math.floor(Math.random() * 60)).padStart(2, "0");
+    set({ transactionTime: `${Y}/${M}/${D} ${h}:${m}:${s}` });
+    if (errors.transactionTime) clearFieldError("transactionTime");
+  };
+
   const applyTimeFormat = (target12Hour: boolean) => {
     const normalized = normalizeTime(data.time, data.use12HourFormat, data.timeMeridiem);
     if (!normalized.valid) {
@@ -714,6 +749,7 @@ export function App() {
       timeMeridiem: formatted.meridiem,
     });
     clearFieldError("time");
+    syncTransactionTimeFromStatus("toggle");
   };
 
   const setCurrentTime = () => {
@@ -726,6 +762,7 @@ export function App() {
       timeMeridiem: formatted.meridiem,
     });
     clearFieldError("time");
+    syncTransactionTimeFromStatus("now");
   };
 
   const setCurrentTransactionTime = () => {
@@ -894,8 +931,8 @@ export function App() {
                     <input
                       type="text"
                       value={data.time}
-                      inputMode="numeric"
-                      pattern="\\d*"
+                      inputMode="text"
+                      pattern="[0-9:]*"
                       onChange={(e) => {
                         const next = softFormatTimeInput(e.target.value);
                         set({ time: next });
@@ -923,6 +960,7 @@ export function App() {
                             timeMeridiem: formatted24.meridiem,
                           });
                           clearFieldError("time");
+                          syncTransactionTimeFromStatus("blur");
                           return;
                         }
                         const normalized = normalizeTime(data.time, data.use12HourFormat, data.timeMeridiem);
@@ -939,6 +977,7 @@ export function App() {
                           timeMeridiem: formatted.meridiem,
                         });
                         clearFieldError("time");
+                        syncTransactionTimeFromStatus("blur");
                       }}
                       className={`flex-1 px-3 py-2 bg-[#f3f7f4] border-transparent rounded-xl text-sm font-bold text-[#2c312b] focus:ring-2 focus:ring-[#8dc73f] focus:outline-none min-w-0 ${errors.time ? "ring-2 ring-red-400" : ""}`}
                     />
@@ -946,6 +985,28 @@ export function App() {
                       <Clock size={16} />
                     </button>
                   </div>
+                  {data.use12HourFormat && (
+                    <div className="flex bg-[#f3f7f4] p-1 rounded-lg gap-1 mt-2 w-fit">
+                      <button
+                        onClick={() => {
+                          set({ timeMeridiem: "AM" });
+                          syncTransactionTimeFromStatus("ampm");
+                        }}
+                        className={`px-3 py-1 text-[9px] font-black rounded-md transition-all ${
+                          data.timeMeridiem === "AM" ? 'bg-white shadow-sm text-[#8dc73f]' : 'text-gray-400'
+                        }`}
+                      >AM</button>
+                      <button
+                        onClick={() => {
+                          set({ timeMeridiem: "PM" });
+                          syncTransactionTimeFromStatus("ampm");
+                        }}
+                        className={`px-3 py-1 text-[9px] font-black rounded-md transition-all ${
+                          data.timeMeridiem === "PM" ? 'bg-white shadow-sm text-[#8dc73f]' : 'text-gray-400'
+                        }`}
+                      >PM</button>
+                    </div>
+                  )}
                   {errors.time && <p className="text-[10px] font-bold text-red-500 ml-1">{errors.time}</p>}
                 </div>
                 <div className="space-y-1.5">
@@ -1331,20 +1392,20 @@ export function App() {
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold text-[#8c948a] uppercase tracking-wider ml-1">Transaction Time</label>
                 <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={data.transactionTime}
-                    inputMode="numeric"
-                    onChange={(e) => {
-                      const next = formatDateTimeInput(e.target.value);
-                      set({ transactionTime: next });
-                      if (errors.transactionTime) clearFieldError("transactionTime");
-                    }}
-                    onBlur={() => {
-                      const { value, error } = normalizeDateTimeInput(data.transactionTime);
-                      if (value !== data.transactionTime) set({ transactionTime: value });
-                      setFieldError("transactionTime", error);
-                    }}
+                    <input
+                      type="text"
+                      value={data.transactionTime}
+                      inputMode="text"
+                      onChange={(e) => {
+                        const next = softFormatDateTimeInput(e.target.value);
+                        set({ transactionTime: next });
+                        if (errors.transactionTime) clearFieldError("transactionTime");
+                      }}
+                      onBlur={() => {
+                        const { value, error } = normalizeDateTimeInput(data.transactionTime);
+                        if (value !== data.transactionTime) set({ transactionTime: value });
+                        setFieldError("transactionTime", error);
+                      }}
                     className={`flex-1 px-4 py-2.5 bg-[#f3f7f4] border-transparent rounded-xl text-xs font-bold text-[#2c312b] focus:ring-2 focus:ring-[#8dc73f] focus:outline-none ${errors.transactionTime ? "ring-2 ring-red-400" : ""}`}
                   />
                   <button onClick={setCurrentTransactionTime} className="p-2.5 bg-[#f3f7f4] text-[#8dc73f] rounded-xl hover:bg-[#ebf2ee] transition-colors" title="Now">
