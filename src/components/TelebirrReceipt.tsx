@@ -91,6 +91,7 @@ export interface ReceiptData {
   bottomNavIconsY: number;     // px, default 0
   iphoneContentNudgeY: number; // px, whole-content vertical nudge (iOS only)
   time: string;
+  timeMeridiem: "AM" | "PM";
   battery: string;
   batteryCharging: boolean;
   amount: string;
@@ -242,8 +243,6 @@ const IosBattery = ({
   const pct = Math.min(100, Math.max(0, percent));
   const clipBase = useId().replace(/:/g, "");
   const clipBodyId = `${clipBase}-body`;
-  const clipFillId = `${clipBase}-fill`;
-  const clipEmptyId = `${clipBase}-empty`;
   const isCritical = pct <= 20;
   const isLowPower = lowPowerMode;
   const isCharging = charging;
@@ -256,28 +255,28 @@ const IosBattery = ({
       : isCritical
         ? "#FF3B30"
         : systemPrimary;
-  const contrastOnFill = isLowPower ? "#000000" : "#FFFFFF";
   const bodyStartX = 2;
   const bodyStartY = 2.5;
   const bodyWidth = 21;
   const bodyHeight = 9;
   const bodyRadius = 1.33;
   const fillWidth = Math.max(0, Math.min(bodyWidth, (pct / 100) * bodyWidth));
-  const emptyWidth = Math.max(0, bodyWidth - fillWidth);
   const displayValue = Math.round(pct);
   const digits = displayValue.toString().length;
   const fontSize = digits === 3 ? 8.2 : digits === 2 ? 9.2 : 10.0;
   const textX = bodyStartX + bodyWidth / 2;
   const textLength = digits === 3 ? 12 : undefined;
-  const showInsideBolt = isCharging;
+  const showInsideBolt = isCharging && !showPercent;
+  const showPercentText = showPercent;
+  const percentTextColor = isCharging ? "#FFFFFF" : (isLowPower || isCritical ? "#000000" : "#FFFFFF");
   const boltColor = systemFg;
-  const renderForeground = (color: string) => (
+  const renderForeground = () => (
     <>
-      {showPercent && (
+      {showPercentText && (
         <text
           x={textX}
           y="7"
-          fill={color}
+          fill={percentTextColor}
           fontFamily='-apple-system, "SF Pro Text", "Helvetica Neue", sans-serif'
           fontWeight={700}
           fontSize={fontSize}
@@ -303,12 +302,6 @@ const IosBattery = ({
         <clipPath id={clipBodyId}>
           <rect x={bodyStartX} y={bodyStartY} width={bodyWidth} height={bodyHeight} rx={bodyRadius} />
         </clipPath>
-        <clipPath id={clipFillId}>
-          <rect x={bodyStartX} y={bodyStartY} width={fillWidth} height={bodyHeight} rx={bodyRadius} />
-        </clipPath>
-        <clipPath id={clipEmptyId}>
-          <rect x={bodyStartX + fillWidth} y={bodyStartY} width={emptyWidth} height={bodyHeight} rx={bodyRadius} />
-        </clipPath>
       </defs>
 
       {/* Outline */}
@@ -330,13 +323,13 @@ const IosBattery = ({
 
       {/* Bolt renders once (no split/clip by fill), text keeps dynamic contrast */}
       {showInsideBolt && (
-        <g clipPath={`url(#${clipBodyId})`}>
-          {/* White offset stroke behind bolt */}
+        <g>
+          {/* White offset stroke behind bolt (extends into battery border) */}
           <path
             d="M8.64134 8.1664H12.0477L10.2663 12.7633C10.0095 13.4262 10.7075 13.7714 11.1598 13.24L16.6658 6.68159C16.7775 6.5501 16.8334 6.4186 16.8334 6.27615C16.8334 6.02411 16.6323 5.83783 16.3587 5.83783H12.9523L14.7281 1.23546C14.985 0.577982 14.287 0.227325 13.8402 0.758789L8.32863 7.31716C8.21694 7.45413 8.16669 7.58015 8.16669 7.7226C8.16669 7.98012 8.36772 8.1664 8.64134 8.1664Z"
             fill="none"
             stroke="#FFFFFF"
-            strokeWidth="1.2"
+            strokeWidth="2"
             strokeLinejoin="round"
             strokeLinecap="round"
           />
@@ -347,11 +340,10 @@ const IosBattery = ({
           />
         </g>
       )}
-      {/* Dynamic contrast: render text twice, split by fill vs empty */}
-      {showPercent && (
+      {/* Single-color percent text (no split) */}
+      {showPercentText && (
         <g clipPath={`url(#${clipBodyId})`}>
-          <g clipPath={`url(#${clipFillId})`}>{renderForeground(contrastOnFill)}</g>
-          <g clipPath={`url(#${clipEmptyId})`}>{renderForeground(systemFg)}</g>
+          {renderForeground()}
         </g>
       )}
     </svg>
@@ -484,6 +476,7 @@ export const TelebirrReceipt = ({
   });
 
   const batteryNum = parseInt(data.battery) || 48;
+  const displayTime = data.time.replace(/^0(?=\\d:)/, "");
   const signalFilled = data.airplaneMode ? 0 : (data.signalStrength ?? 4);
   const wifiStrength = data.wifiStrength ?? 3;
   const iosWifiEnabled = data.iosWifiEnabled ?? true;
@@ -615,7 +608,7 @@ export const TelebirrReceipt = ({
               fontWeight={600}
               letterSpacing="-0.2px"
             >
-              {data.time}
+              {displayTime}
             </SamsungStatusText>
           </div>
 
@@ -713,7 +706,7 @@ export const TelebirrReceipt = ({
                 fontFeatureSettings: '"pnum" 1, "case" 1, "frac" 1',
               }}
             >
-              {data.time}
+              {displayTime}
             </div>
             {/* Focus mode (DnD moon) — left of location, right of time */}
             {(data.iosDndMode ?? false) && (

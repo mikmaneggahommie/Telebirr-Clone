@@ -70,6 +70,205 @@ const waitForCaptureReady = async (node: HTMLElement) => {
   await nextFrame();
 };
 
+type FieldErrorKey = "time" | "battery" | "amount" | "transactionTime" | "transactionNumber";
+
+const clampNumber = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+const pad2 = (value: number) => String(value).padStart(2, "0");
+
+const sanitizeIntegerInput = (value: string, maxLength?: number) => {
+  const digits = value.replace(/\D/g, "");
+  return typeof maxLength === "number" ? digits.slice(0, maxLength) : digits;
+};
+
+const sanitizeDecimalInput = (
+  value: string,
+  { allowNegative = false, maxDecimals = 2 }: { allowNegative?: boolean; maxDecimals?: number } = {},
+) => {
+  const negative = allowNegative && value.trim().startsWith("-");
+  const raw = value.replace(/[^\d.]/g, "");
+  let out = "";
+  let seenDot = false;
+  for (const ch of raw) {
+    if (ch === ".") {
+      if (!seenDot && maxDecimals > 0) {
+        seenDot = true;
+        out += ".";
+      }
+      continue;
+    }
+    out += ch;
+  }
+  if (seenDot) {
+    const [intPart, decPart = ""] = out.split(".");
+    out = `${intPart}.${decPart.slice(0, maxDecimals)}`;
+  }
+  if (negative) return out ? `-${out}` : "-";
+  return out;
+};
+
+type ParsedTime = {
+  hour: number;
+  minute: number;
+  meridiem?: "AM" | "PM";
+  valid: boolean;
+};
+
+const softFormatTimeInput = (value: string) => {
+  const cleaned = value.replace(/[^0-9:]/g, "");
+  if (cleaned.includes(":")) {
+    const [hourRaw = "", minuteRaw = ""] = cleaned.split(":");
+    const hourDigits = hourRaw.replace(/\D/g, "").slice(0, 2);
+    const minuteDigits = minuteRaw.replace(/\D/g, "").slice(0, 2);
+    const hourText = hourDigits.length === 2 && hourDigits.startsWith("0") ? hourDigits.slice(1) : hourDigits;
+    return `${hourText}:${minuteDigits}`;
+  }
+  const digits = cleaned.replace(/\D/g, "").slice(0, 4);
+  if (digits.length <= 2) {
+    return digits.length === 2 && digits.startsWith("0") ? digits.slice(1) : digits;
+  }
+  if (digits.length === 3) {
+    return `${digits.slice(0, 1)}:${digits.slice(1)}`;
+  }
+  const hourRaw = digits.slice(0, 2);
+  const minuteRaw = digits.slice(2, 4);
+  const hourText = hourRaw.startsWith("0") ? hourRaw.slice(1) : hourRaw;
+  return `${hourText}:${minuteRaw}`;
+};
+
+const parseTimeInput = (raw: string): ParsedTime => {
+  const trimmed = raw.trim();
+  if (!trimmed) return { hour: 0, minute: 0, valid: false };
+  const meridiemMatch = trimmed.match(/\b(AM|PM)\b/i);
+  const meridiem = meridiemMatch ? (meridiemMatch[1].toUpperCase() as "AM" | "PM") : undefined;
+  const cleaned = trimmed.replace(/\s*(am|pm)\s*/ig, "").trim();
+  if (cleaned.includes(":")) {
+    const [hourRaw = "", minuteRaw = ""] = cleaned.split(":");
+    if (!hourRaw || !minuteRaw) return { hour: 0, minute: 0, meridiem, valid: false };
+    const hour = Number.parseInt(hourRaw, 10);
+    const minute = Number.parseInt(minuteRaw.slice(0, 2), 10);
+    if (Number.isNaN(hour) || Number.isNaN(minute)) return { hour: 0, minute: 0, meridiem, valid: false };
+    return { hour, minute, meridiem, valid: true };
+  }
+  const digits = cleaned.replace(/\D/g, "");
+  if (digits.length === 1 || digits.length === 2) {
+    const hour = Number.parseInt(digits, 10);
+    if (Number.isNaN(hour)) return { hour: 0, minute: 0, meridiem, valid: false };
+    return { hour, minute: 0, meridiem, valid: true };
+  }
+  if (digits.length < 3) return { hour: 0, minute: 0, meridiem, valid: false };
+  const hourRaw = digits.length === 3 ? digits.slice(0, 1) : digits.slice(0, 2);
+  const minuteRaw = digits.length === 3 ? digits.slice(1, 3) : digits.slice(2, 4);
+  const hour = Number.parseInt(hourRaw, 10);
+  const minute = Number.parseInt(minuteRaw, 10);
+  if (Number.isNaN(hour) || Number.isNaN(minute)) return { hour: 0, minute: 0, meridiem, valid: false };
+  return { hour, minute, meridiem, valid: true };
+};
+
+const normalizeTime = (
+  raw: string,
+  use12HourFormat: boolean,
+  fallbackMeridiem: "AM" | "PM",
+) => {
+  const parsed = parseTimeInput(raw);
+  if (!parsed.valid) {
+    return { valid: false, error: "Enter time as HH:MM" };
+  }
+  let hour = parsed.hour;
+  const minute = clampNumber(parsed.minute, 0, 59);
+  let meridiem = parsed.meridiem ?? fallbackMeridiem;
+  if (use12HourFormat) {
+    if (hour === 0) hour = 12;
+    hour = clampNumber(hour, 1, 12);
+    if (meridiem !== "AM" && meridiem !== "PM") {
+      meridiem = fallbackMeridiem;
+    }
+    const hour24 = meridiem === "PM" ? (hour % 12) + 12 : hour % 12;
+    return { valid: true, hour24, minute, meridiem };
+  }
+  hour = clampNumber(hour, 0, 23);
+  meridiem = hour >= 12 ? "PM" : "AM";
+  return { valid: true, hour24: hour, minute, meridiem };
+};
+
+const formatDisplayTime = (
+  value: { hour24: number; minute: number },
+  use12HourFormat: boolean,
+) => {
+  if (use12HourFormat) {
+    const hour12 = value.hour24 % 12 || 12;
+    const meridiem = value.hour24 >= 12 ? "PM" : "AM";
+    return { display: `${String(hour12)}:${pad2(value.minute)}`, meridiem };
+  }
+  const hourText = String(value.hour24);
+  const meridiem = value.hour24 >= 12 ? "PM" : "AM";
+  return { display: `${hourText}:${pad2(value.minute)}`, meridiem };
+};
+
+const formatDateTimeInput = (value: string) => {
+  const digits = sanitizeIntegerInput(value, 14);
+  const y = digits.slice(0, 4);
+  const m = digits.slice(4, 6);
+  const d = digits.slice(6, 8);
+  const h = digits.slice(8, 10);
+  const min = digits.slice(10, 12);
+  const s = digits.slice(12, 14);
+  let out = y;
+  if (m) out += `/${m}`;
+  if (d) out += `/${d}`;
+  if (h) out += ` ${h}`;
+  if (min) out += `:${min}`;
+  if (s) out += `:${s}`;
+  return out;
+};
+
+const normalizeDateTimeInput = (value: string) => {
+  const digits = sanitizeIntegerInput(value, 14);
+  if (digits.length < 14) {
+    return { value: formatDateTimeInput(value), error: "Use YYYY/MM/DD HH:MM:SS" };
+  }
+  const year = Number.parseInt(digits.slice(0, 4), 10);
+  let month = Number.parseInt(digits.slice(4, 6), 10);
+  let day = Number.parseInt(digits.slice(6, 8), 10);
+  let hour = Number.parseInt(digits.slice(8, 10), 10);
+  let minute = Number.parseInt(digits.slice(10, 12), 10);
+  let second = Number.parseInt(digits.slice(12, 14), 10);
+  if ([year, month, day, hour, minute, second].some((v) => Number.isNaN(v))) {
+    return { value: formatDateTimeInput(value), error: "Use YYYY/MM/DD HH:MM:SS" };
+  }
+  month = clampNumber(month, 1, 12);
+  const maxDay = new Date(year, month, 0).getDate();
+  day = clampNumber(day, 1, maxDay);
+  hour = clampNumber(hour, 0, 23);
+  minute = clampNumber(minute, 0, 59);
+  second = clampNumber(second, 0, 59);
+  const normalized = `${year}/${pad2(month)}/${pad2(day)} ${pad2(hour)}:${pad2(minute)}:${pad2(second)}`;
+  return { value: normalized, error: undefined as string | undefined };
+};
+
+const normalizeBatteryInput = (value: string) => {
+  const digits = sanitizeIntegerInput(value, 3);
+  if (!digits) {
+    return { value: "", error: "Enter 0-100" };
+  }
+  const num = clampNumber(Number.parseInt(digits, 10), 0, 100);
+  return { value: String(num), error: undefined as string | undefined };
+};
+
+const normalizeAmountInput = (value: string) => {
+  const sanitized = sanitizeDecimalInput(value, { allowNegative: true, maxDecimals: 2 });
+  if (!sanitized || sanitized === "-" || sanitized === ".") {
+    return { value: sanitized, error: "Enter a valid amount" };
+  }
+  const num = Number(sanitized);
+  if (Number.isNaN(num)) {
+    return { value: sanitized, error: "Enter a valid amount" };
+  }
+  return { value: num.toFixed(2), error: undefined as string | undefined };
+};
+
+const sanitizeTransactionId = (value: string) => value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 20);
+
 const PremiumToggle = ({ enabled, onClick, label }: { enabled: boolean; onClick: () => void; label: string }) => (
   <div className="flex flex-col items-center gap-1.5 flex-1">
     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider leading-tight text-center">{label}</span>
@@ -231,6 +430,7 @@ const ValueTweakSlider = ({
 
 export function App() {
   const [copied, setCopied] = useState(false);
+  const [errors, setErrors] = useState<Partial<Record<FieldErrorKey, string>>>({});
   const [data, setData] = useState<ReceiptData>({
     preset: "test_accuracy",
     cameraHoleOverride: "default",
@@ -273,6 +473,7 @@ export function App() {
     bottomNavIconsY: 0,
     iphoneContentNudgeY: -14.5,
     time: "11:43",
+    timeMeridiem: "AM",
     battery: "48",
     batteryCharging: false,
     amount: "-2.00",
@@ -354,6 +555,9 @@ export function App() {
   });
 
   const set = (patch: Partial<ReceiptData>) => setData(prev => ({ ...prev, ...patch }));
+  const setFieldError = (field: FieldErrorKey, message?: string) =>
+    setErrors((prev) => ({ ...prev, [field]: message }));
+  const clearFieldError = (field: FieldErrorKey) => setFieldError(field, undefined);
 
   useEffect(() => {
     const pct = Number.parseInt(data.battery || "0", 10);
@@ -497,15 +701,31 @@ export function App() {
     set({ transactionNumber: `${prefix}${suffix}` });
   };
 
+  const applyTimeFormat = (target12Hour: boolean) => {
+    const normalized = normalizeTime(data.time, data.use12HourFormat, data.timeMeridiem);
+    if (!normalized.valid) {
+      setFieldError("time", normalized.error);
+      return;
+    }
+    const formatted = formatDisplayTime({ hour24: normalized.hour24, minute: normalized.minute }, target12Hour);
+    set({
+      use12HourFormat: target12Hour,
+      time: formatted.display,
+      timeMeridiem: formatted.meridiem,
+    });
+    clearFieldError("time");
+  };
+
   const setCurrentTime = () => {
     const now = new Date();
+    const hour24 = now.getHours();
+    const minute = now.getMinutes();
+    const formatted = formatDisplayTime({ hour24, minute }, data.use12HourFormat);
     set({
-      time: now.toLocaleTimeString('en-GB', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: data.use12HourFormat
-      }).replace(/\s?[AP]M/i, (match) => match.toUpperCase())
+      time: formatted.display,
+      timeMeridiem: formatted.meridiem,
     });
+    clearFieldError("time");
   };
 
   const setCurrentTransactionTime = () => {
@@ -517,6 +737,7 @@ export function App() {
     const m = String(now.getMinutes()).padStart(2, '0');
     const s = String(now.getSeconds()).padStart(2, '0');
     set({ transactionTime: `${Y}/${M}/${D} ${h}:${m}:${s}` });
+    clearFieldError("transactionTime");
   };
 
   const currentPreset = devicePresets[data.preset];
@@ -661,11 +882,11 @@ export function App() {
                   <label className="text-[10px] font-bold text-[#8c948a] uppercase tracking-wider ml-1">Current Time</label>
                   <div className="flex bg-[#f3f7f4] p-1 rounded-lg gap-1 mb-2">
                     <button
-                      onClick={() => set({ use12HourFormat: false })}
+                      onClick={() => applyTimeFormat(false)}
                       className={`flex-1 py-1 text-[9px] font-black rounded-md transition-all ${!data.use12HourFormat ? 'bg-white shadow-sm text-[#8dc73f]' : 'text-gray-400'}`}
                     >24 HOUR</button>
                     <button
-                      onClick={() => set({ use12HourFormat: true })}
+                      onClick={() => applyTimeFormat(true)}
                       className={`flex-1 py-1 text-[9px] font-black rounded-md transition-all ${data.use12HourFormat ? 'bg-white shadow-sm text-[#8dc73f]' : 'text-gray-400'}`}
                     >12 HOUR</button>
                   </div>
@@ -673,13 +894,59 @@ export function App() {
                     <input
                       type="text"
                       value={data.time}
-                      onChange={(e) => set({ time: e.target.value })}
-                      className="flex-1 px-3 py-2 bg-[#f3f7f4] border-transparent rounded-xl text-sm font-bold text-[#2c312b] focus:ring-2 focus:ring-[#8dc73f] focus:outline-none min-w-0"
+                      inputMode="numeric"
+                      pattern="\\d*"
+                      onChange={(e) => {
+                        const next = softFormatTimeInput(e.target.value);
+                        set({ time: next });
+                        if (errors.time) clearFieldError("time");
+                      }}
+                      onBlur={() => {
+                        const parsed = parseTimeInput(data.time);
+                        if (!parsed.valid) {
+                          setFieldError("time", "Enter time as HH:MM");
+                          return;
+                        }
+                        if (data.use12HourFormat && !parsed.meridiem && (parsed.hour === 0 || parsed.hour > 12)) {
+                          const normalized24 = normalizeTime(data.time, false, data.timeMeridiem);
+                          if (!normalized24.valid) {
+                            setFieldError("time", normalized24.error);
+                            return;
+                          }
+                          const formatted24 = formatDisplayTime(
+                            { hour24: normalized24.hour24, minute: normalized24.minute },
+                            false,
+                          );
+                          set({
+                            use12HourFormat: false,
+                            time: formatted24.display,
+                            timeMeridiem: formatted24.meridiem,
+                          });
+                          clearFieldError("time");
+                          return;
+                        }
+                        const normalized = normalizeTime(data.time, data.use12HourFormat, data.timeMeridiem);
+                        if (!normalized.valid) {
+                          setFieldError("time", normalized.error);
+                          return;
+                        }
+                        const formatted = formatDisplayTime(
+                          { hour24: normalized.hour24, minute: normalized.minute },
+                          data.use12HourFormat,
+                        );
+                        set({
+                          time: formatted.display,
+                          timeMeridiem: formatted.meridiem,
+                        });
+                        clearFieldError("time");
+                      }}
+                      className={`flex-1 px-3 py-2 bg-[#f3f7f4] border-transparent rounded-xl text-sm font-bold text-[#2c312b] focus:ring-2 focus:ring-[#8dc73f] focus:outline-none min-w-0 ${errors.time ? "ring-2 ring-red-400" : ""}`}
                     />
                     <button onClick={setCurrentTime} className="p-2 bg-[#f3f7f4] text-[#8dc73f] rounded-xl hover:bg-[#ebf2ee] transition-colors" title="Now">
                       <Clock size={16} />
                     </button>
                   </div>
+                  {errors.time && <p className="text-[10px] font-bold text-red-500 ml-1">{errors.time}</p>}
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-bold text-[#8c948a] uppercase tracking-wider ml-1">Battery Level</label>
@@ -687,11 +954,23 @@ export function App() {
                     <input
                       type="text"
                       value={data.battery}
-                      onChange={(e) => set({ battery: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#f3f7f4] border-transparent rounded-xl text-sm font-bold text-[#2c312b] focus:ring-2 focus:ring-[#8dc73f] focus:outline-none pr-7"
+                      inputMode="numeric"
+                      pattern="\\d*"
+                      onChange={(e) => {
+                        const next = sanitizeIntegerInput(e.target.value, 3);
+                        set({ battery: next });
+                        if (errors.battery) clearFieldError("battery");
+                      }}
+                      onBlur={() => {
+                        const { value, error } = normalizeBatteryInput(data.battery);
+                        if (value !== data.battery) set({ battery: value });
+                        setFieldError("battery", error);
+                      }}
+                      className={`w-full px-3 py-2 bg-[#f3f7f4] border-transparent rounded-xl text-sm font-bold text-[#2c312b] focus:ring-2 focus:ring-[#8dc73f] focus:outline-none pr-7 ${errors.battery ? "ring-2 ring-red-400" : ""}`}
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-[#8c948a]">%</span>
                   </div>
+                  {errors.battery && <p className="text-[10px] font-bold text-red-500 ml-1">{errors.battery}</p>}
                 </div>
               </div>
 
@@ -783,13 +1062,19 @@ export function App() {
                             label="Charging"
                             labelOffset="ml-1"
                             enabled={data.batteryCharging}
-                            onClick={() => set({ batteryCharging: !data.batteryCharging })}
+                            onClick={() => set({
+                              batteryCharging: !data.batteryCharging,
+                              iosLowPowerMode: false,
+                            })}
                           />
                           <InlineToggle
                             label="Low Power"
                             labelOffset="ml-1"
                             enabled={data.iosLowPowerMode ?? false}
-                            onClick={() => set({ iosLowPowerMode: !(data.iosLowPowerMode ?? false) })}
+                            onClick={() => set({
+                              iosLowPowerMode: !(data.iosLowPowerMode ?? false),
+                              batteryCharging: false,
+                            })}
                           />
                         </div>
                         {/* Status text removed per request */}
@@ -1015,10 +1300,21 @@ export function App() {
                   <input
                     type="text"
                     value={data.amount}
-                    onChange={(e) => set({ amount: e.target.value })}
-                    className="w-full pl-14 pr-4 py-3 bg-[#f3f7f4] border-transparent rounded-2xl text-xl font-black text-[#8dc73f] focus:shadow-inner focus:outline-none transition-all"
+                    inputMode="decimal"
+                    onChange={(e) => {
+                      const next = sanitizeDecimalInput(e.target.value, { allowNegative: true, maxDecimals: 2 });
+                      set({ amount: next });
+                      if (errors.amount) clearFieldError("amount");
+                    }}
+                    onBlur={() => {
+                      const { value, error } = normalizeAmountInput(data.amount);
+                      if (value !== data.amount) set({ amount: value });
+                      setFieldError("amount", error);
+                    }}
+                    className={`w-full pl-14 pr-4 py-3 bg-[#f3f7f4] border-transparent rounded-2xl text-xl font-black text-[#8dc73f] focus:shadow-inner focus:outline-none transition-all ${errors.amount ? "ring-2 ring-red-400" : ""}`}
                   />
                 </div>
+                {errors.amount && <p className="text-[10px] font-bold text-red-500 ml-1">{errors.amount}</p>}
               </div>
 
               <div className="space-y-1.5">
@@ -1038,13 +1334,24 @@ export function App() {
                   <input
                     type="text"
                     value={data.transactionTime}
-                    onChange={(e) => set({ transactionTime: e.target.value })}
-                    className="flex-1 px-4 py-2.5 bg-[#f3f7f4] border-transparent rounded-xl text-xs font-bold text-[#2c312b] focus:ring-2 focus:ring-[#8dc73f] focus:outline-none"
+                    inputMode="numeric"
+                    onChange={(e) => {
+                      const next = formatDateTimeInput(e.target.value);
+                      set({ transactionTime: next });
+                      if (errors.transactionTime) clearFieldError("transactionTime");
+                    }}
+                    onBlur={() => {
+                      const { value, error } = normalizeDateTimeInput(data.transactionTime);
+                      if (value !== data.transactionTime) set({ transactionTime: value });
+                      setFieldError("transactionTime", error);
+                    }}
+                    className={`flex-1 px-4 py-2.5 bg-[#f3f7f4] border-transparent rounded-xl text-xs font-bold text-[#2c312b] focus:ring-2 focus:ring-[#8dc73f] focus:outline-none ${errors.transactionTime ? "ring-2 ring-red-400" : ""}`}
                   />
                   <button onClick={setCurrentTransactionTime} className="p-2.5 bg-[#f3f7f4] text-[#8dc73f] rounded-xl hover:bg-[#ebf2ee] transition-colors" title="Now">
                     <Clock size={18} />
                   </button>
                 </div>
+                {errors.transactionTime && <p className="text-[10px] font-bold text-red-500 ml-1">{errors.transactionTime}</p>}
               </div>
 
               <div className="space-y-1.5">
@@ -1053,13 +1360,25 @@ export function App() {
                   <input
                     type="text"
                     value={data.transactionNumber}
-                    onChange={(e) => set({ transactionNumber: e.target.value })}
-                    className="flex-1 px-4 py-2.5 bg-[#f3f7f4] border-transparent rounded-xl text-xs font-mono font-bold text-[#2c312b] uppercase tracking-tighter focus:ring-2 focus:ring-[#8dc73f] focus:outline-none"
+                    onChange={(e) => {
+                      const next = sanitizeTransactionId(e.target.value);
+                      set({ transactionNumber: next });
+                      if (errors.transactionNumber) clearFieldError("transactionNumber");
+                    }}
+                    onBlur={() => {
+                      if (!data.transactionNumber.trim()) {
+                        setFieldError("transactionNumber", "Enter transaction ID");
+                      } else {
+                        clearFieldError("transactionNumber");
+                      }
+                    }}
+                    className={`flex-1 px-4 py-2.5 bg-[#f3f7f4] border-transparent rounded-xl text-xs font-mono font-bold text-[#2c312b] uppercase tracking-tighter focus:ring-2 focus:ring-[#8dc73f] focus:outline-none ${errors.transactionNumber ? "ring-2 ring-red-400" : ""}`}
                   />
                   <button onClick={generateRandomTransactionNumber} className="p-2.5 bg-[#f3f7f4] text-[#8dc73f] rounded-xl hover:bg-[#ebf2ee] transition-colors shadow-sm" title="Randomize">
                     <RefreshCcw size={18} />
                   </button>
                 </div>
+                {errors.transactionNumber && <p className="text-[10px] font-bold text-red-500 ml-1">{errors.transactionNumber}</p>}
               </div>
             </div>
           </section>
