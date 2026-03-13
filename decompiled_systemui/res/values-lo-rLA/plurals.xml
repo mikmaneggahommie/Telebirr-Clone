@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">ປ້ອນ PIN ບໍ່ຖືກຕ້ອງເຂົ້າໄປແລ້ວ. ທ່ານ​ຍັງ​ພະ​ຍາ​ຍາມ​ໄດ້​ອີກ %d ຄັ້ງ.</item>
+        <item quantity="one">ປ້ອນ PIN ບໍ່ຖືກຕ້ອງເຂົ້າໄປແລ້ວ. ຖ້າ​ປ້ອນ PIN ບໍ່​ຖືກ​ຕ້ອງ​ເຂົ້າ​ໄປ​ອີກ %d ຄັ້ງ, ທ່ານ​ຈະ​ຕ້ອງ​ຕິດ​ຕໍ່​ກັບ​ຜູ້​ໃຫ້​ບໍ​ລິ​ການ​ຂອງ​ທ່ານ ເພື່ອ​ປົດ​ລັອກ​ອຸ​ປະ​ກອນ​ຂອງ​ທ່ານ.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">ປ້ອນ PUK ບໍ່ຖືກຕ້ອງເຂົ້າໄປແລ້ວ. ຖ້າ​ປ້ອນ PUK ບໍ່​ຖືກ​ຕ້ອງ​ເຂົ້າ​ໄປ​ອີກ %d ຄັ້ງ, ແຜ່ນ SIM ຈະ​ຖື​ກ​ລັອກ​ຖາ​ວອນ.</item>
+        <item quantity="one">ປ້ອນ PUK ບໍ່ຖືກຕ້ອງເຂົ້າໄປແລ້ວ. ຖ້າ​ປ້ອນ PUK ບໍ່​ຖືກ​ຕ້ອງ​ເຂົ້າ​ໄປ​ອີກ %d ຄັ້ງ, ແຜ່ນ SIM ຈະ​ຖືກ​ລັອກ​ຖາ​ວອນ.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d ແອັບເມື່ອບໍ່ດົນນີ້</item>
+        <item quantity="one">ແອບບໍ່ດົນມານີ້ 1 ອັນ</item>
+    </plurals>
+</resources>

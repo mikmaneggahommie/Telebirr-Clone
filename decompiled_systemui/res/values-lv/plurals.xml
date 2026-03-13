@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Ievadīts nepareizs PIN kods. Atlikuši %d mēģinājumi.</item>
+        <item quantity="one">Ievadīts nepareizs PIN kods. Ja vēl %d reizes ievadīsit nepareizu PIN kodu, jums būs jāsazinās ar pakalpojumu sniedzēju, lai atbloķētu savu ierīci.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Ievadīts nepareizs PUK kods. Ja nepareizs PUK kods tiks ievadīts vēl %d reizes, SIM karte tiks neatgriezeniski bloķēta.</item>
+        <item quantity="one">Ievadīts nepareizs PUK kods. Ja vēl %d reizes ievadīsit nepareizu PUK kodu, SIM karte tiks neatgriezeniski bloķēta.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d nesen lietotas programmas</item>
+        <item quantity="one">1 nesen lietota programma</item>
+    </plurals>
+</resources>

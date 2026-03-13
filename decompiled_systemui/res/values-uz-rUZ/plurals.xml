@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Noto‘g‘ri PIN-kod kiritildi. %d ta urinishingiz qoldi.</item>
+        <item quantity="one">Noto‘g‘ri PIN-kod kiritildi. Agar noto‘g‘ri PIN-kod %d marta kiritilsa, qurilmangizni blokdan chiqarish uchun xizmat ta’minotchingiz bilan bog’lanishingiz shart bo’ladi.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Noto‘g‘ri PUK-kod kiritildi. Agar noto‘g‘ri PUK-kod yana %d marta kirtilsa, SIM-karta butunlay qulflanadi.</item>
+        <item quantity="one">Noto‘g‘ri PUK-kod kiritildi. Agar noto‘g‘ri PUK-kod %d marta kiritilsa, SIM-karta butunlay qulflanadi.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d oxirgi ilova</item>
+        <item quantity="one">1 oxirgi ilova</item>
+    </plurals>
+</resources>

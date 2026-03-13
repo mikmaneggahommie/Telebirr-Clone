@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Aţi introdus un cod PIN greşit. Mai aveţi %d încercări.</item>
+        <item quantity="one">S-a introdus un cod PIN greşit. Dacă un cod PIN este introdus greşit de încă %d ori, va trebui să contactaţi furnizorul de servicii pentru deblocarea dispozitivului.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Aţi introdus un cod PUK greşit. Dacă un cod PUK este introdus greşit de încă %d ori, cartela SIM va fi blocată definitiv.</item>
+        <item quantity="one">S-a introdus un cod PUK greşit. Dacă un cod PUK este introdus greşit de încă %d ori, cartela SIM va fi blocată definitiv.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d aplicaţii recente</item>
+        <item quantity="one">1 aplicaţie recentă</item>
+    </plurals>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Καταχωρίστηκε λανθασμένο PIN. Απομένουν %d προσπάθειες.</item>
+        <item quantity="one">Καταχωρίσατε λανθασμένο PIN. Αν καταχωρίσετε λανθασμένο PIN %d φορές ακόμα, θα πρέπει να επικοινωνήσετε με τον παροχέα υπηρεσιών για να ξεκλειδώσετε τη συσκευή σας.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Καταχωρίστηκε λανθασμένο PUK. Αν καταχωρίσετε λανθασμένο PUK %d ακόμα φορές, η κάρτα SIM θα κλειδωθεί οριστικά.</item>
+        <item quantity="one">Καταχωρίσατε λανθασμένο PUK. Αν καταχωρίσετε λανθασμένο PUK %d φορές ακόμα, η κάρτα SIM θα κλειδωθεί οριστικά.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d πρόσφατες εφαρμογές</item>
+        <item quantity="one">1 πρόσφατη εφαρμογή</item>
+    </plurals>
+</resources>

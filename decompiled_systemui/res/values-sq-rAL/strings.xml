@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wifi_fail_to_scan">Nuk mund të skanojë për rrjete</string>
+    <string name="wifi_security_none">Asnjë</string>
+    <string name="wifi_remembered">U ruajt</string>
+    <string name="wifi_disabled_generic">Të çaktivizuara</string>
+    <string name="wifi_disabled_network_failure">Dështim në konfigurimin e IP-së</string>
+    <string name="wifi_disabled_wifi_failure">Dështim i lidhjes WiFi</string>
+    <string name="wifi_disabled_password_failure">Problem me vërtetimin</string>
+    <string name="wifi_not_in_range">Nuk është brenda rrezes</string>
+    <string name="wifi_no_internet">Nuk u diktua qasje në internet. Lidhja nuk do të realizohet automatikisht.</string>
+    <string name="saved_network">E ruajtur nga %1$s</string>
+    <string name="connected_via_wfa">I lidhur nëpërmjet ndihmësit të Wi‑Fi</string>
+    <string name="connected_via_passpoint">E lidhur përmes %1$s</string>
+    <string name="available_via_passpoint">E mundshme përmes %1$s</string>
+    <string name="wifi_connected_no_internet">U lidh, nuk ka internet</string>
+    <string name="bluetooth_disconnected">Shkëputur</string>
+    <string name="bluetooth_disconnecting">Po shkëputet...</string>
+    <string name="bluetooth_connecting">Po lidhet...</string>
+    <string name="bluetooth_connected">U lidh</string>
+    <string name="bluetooth_pairing">Po çiftohet...</string>
+    <string name="bluetooth_connected_no_headset">U lidh (pa telefon)</string>
+    <string name="bluetooth_connected_no_a2dp">U lidh (nuk ka media)</string>
+    <string name="bluetooth_connected_no_map">U lidh (pa qasje te mesazhet)</string>
+    <string name="bluetooth_connected_no_headset_no_a2dp">I lidhur (pa telefon apo media)</string>
+    <string name="bluetooth_profile_a2dp">Audio media</string>
+    <string name="bluetooth_profile_headset">Audioja e telefonit</string>
+    <string name="bluetooth_profile_opp">Transferimi i skedarëve</string>
+    <string name="bluetooth_profile_hid">Pajisja e hyrjes</string>
+    <string name="bluetooth_profile_pan">Qasja në internet</string>
+    <string name="bluetooth_profile_pbap">Ndarja e kontakteve</string>
+    <string name="bluetooth_profile_pan_nap">Ndarja e lidhjes së internetit</string>
+    <string name="bluetooth_profile_map">Qasja në mesazhe</string>
+    <string name="bluetooth_profile_sap">Qasje në kartën SIM</string>
+    <string name="bluetooth_profile_pbap_summary">Përdore për ndarjen e kontakteve</string>
+    <string name="bluetooth_a2dp_profile_summary_connected">U lidh me audion e medias</string>
+    <string name="bluetooth_headset_profile_summary_connected">U lidh me audion e telefonit</string>
+    <string name="bluetooth_opp_profile_summary_connected">U lidh me serverin e transferimit të skedarëve</string>
+    <string name="bluetooth_map_profile_summary_connected">U lidh me hartën</string>
+    <string name="bluetooth_sap_profile_summary_connected">Lidhur me SAP</string>
+    <string name="bluetooth_opp_profile_summary_not_connected">Nuk u lidh me serverin e transferimit të skedarëve</string>
+    <string name="bluetooth_hid_profile_summary_connected">U lidh me pajisjen e hyrjes</string>
+    <string name="bluetooth_pan_user_profile_summary_connected">Lidhur me pajisjen për qasje në internet</string>
+    <string name="bluetooth_pan_nap_profile_summary_connected">Po ndan lidhjen lokale të internetit me pajisjen</string>
+    <string name="bluetooth_pan_profile_summary_use_for">Përdor për qasje në internet</string>
+    <string name="bluetooth_map_profile_summary_use_for">Përdore për hartën</string>
+    <string name="bluetooth_sap_profile_summary_use_for">Përdor për qasje në kartën SIM</string>
+    <string name="bluetooth_a2dp_profile_summary_use_for">Përdor për audion e medias</string>
+    <string name="bluetooth_headset_profile_summary_use_for">Përdor për audion e telefonit</string>
+    <string name="bluetooth_opp_profile_summary_use_for">Përdor për transferimin e skedarëve</string>
+    <string name="bluetooth_hid_profile_summary_use_for">Përdore për hyrjen</string>
+    <string name="bluetooth_pairing_accept">Çifto</string>
+    <string name="bluetooth_pairing_accept_all_caps">ÇIFTO</string>
+    <string name="bluetooth_pairing_decline">Anulo</string>
+    <string name="bluetooth_pairing_will_share_phonebook">Çiftimi lejon qasjen te kontaktet dhe historiku yt i telefonatave.</string>
+    <string name="bluetooth_pairing_error_message">Nuk mundi të çiftohej me %1$s.</string>
+    <string name="bluetooth_pairing_pin_error_message">Nuk mundi të çiftohej me %1$s për shkak të një kodi PIN ose një kodi të pasaktë.</string>
+    <string name="bluetooth_pairing_device_down_error_message">Nuk mund të komunikohet me %1$s.</string>
+    <string name="bluetooth_pairing_rejected_error_message">Çiftimi u refuzua nga %1$s.</string>
+    <string name="app_name">Mbrojtësi i tasteve</string>
+    <string name="keyguard_password_enter_pin_code">Shkruaj kodin PIN</string>
+    <string name="keyguard_password_enter_puk_code">Shkruaj PUK-un dhe PIN-in e ri</string>
+    <string name="keyguard_password_enter_puk_prompt">Kodi PUK i kartës SIM</string>
+    <string name="keyguard_password_enter_pin_prompt">PIN-i i ri i kartës SIM</string>
+    <string name="keyguard_password_entry_touch_hint"><font size="17">Prek për të shkruar fjalëkalimin</font></string>
+    <string name="keyguard_password_enter_password_code">Shkruaj fjalëkalimin për të shkyçur</string>
+    <string name="keyguard_password_enter_pin_password_code">Shkruaj PIN-in për ta shkyçur</string>
+    <string name="keyguard_password_wrong_pin_code">Kodi PIN është i pasaktë.</string>
+    <string name="keyguard_charged">I ngarkuar</string>
+    <string name="keyguard_plugged_in">Po ngarkohet</string>
+    <string name="keyguard_low_battery">Lidh ngarkuesin.</string>
+    <string name="keyguard_instructions_when_pattern_disabled">Shtyp menynë për ta shkyçur.</string>
+    <string name="keyguard_network_locked_message">Rrjeti është i kyçur</string>
+    <string name="keyguard_missing_sim_message_short">Nuk ka kartë SIM</string>
+    <string name="keyguard_missing_sim_message">Në telefon nuk ka kartë SIM.</string>
+    <string name="keyguard_missing_sim_instructions">Fut një kartë SIM.</string>
+    <string name="keyguard_missing_sim_instructions_long">Karta SIM mungon ose është e palexueshme. Fut një kartë të re SIM.</string>
+    <string name="keyguard_permanent_disabled_sim_message_short">Kartë SIM është e papërdorshme.</string>
+    <string name="keyguard_permanent_disabled_sim_instructions">"Karta jote SIM është çaktivizuar përgjithmonë.
+ Kontakto operatorin tënd të shërbimit valor për një tjetër kartë SIM."</string>
+    <string name="keyguard_sim_locked_message">Karta SIM është e kyçur.</string>
+    <string name="keyguard_sim_puk_locked_message">Karta SIM është e kyçur me PUK.</string>
+    <string name="keyguard_sim_unlock_progress_dialog_message">Po shkyç kartën SIM…</string>
+    <string name="keyguard_accessibility_pattern_unlock">Shkyçje me motiv.</string>
+    <string name="keyguard_accessibility_pin_unlock">Shkyçje me PIN.</string>
+    <string name="keyguard_accessibility_password_unlock">Shkyçja e fjalëkalimit.</string>
+    <string name="keyguard_accessibility_pattern_area">Zona e motivit.</string>
+    <string name="keyguard_accessibility_slide_area">Zonën e rrëshqitjes.</string>
+    <string name="keyguard_accessibility_pin_area">Zona PIN</string>
+    <string name="keyguard_accessibility_sim_pin_area">Zona PIN e kartës SIM</string>
+    <string name="keyguard_accessibility_sim_puk_area">Zona e PUK-ut të kartës SIM</string>
+    <string name="keyguard_accessibility_next_alarm">Alarmi tjetër i caktuar: %1$s</string>
+    <string name="keyboardview_keycode_delete">Fshi</string>
+    <string name="keyboardview_keycode_enter">Enter</string>
+    <string name="kg_forgot_pattern_button_text">Harrova motivin</string>
+    <string name="kg_wrong_pattern">Motivi është i gabuar</string>
+    <string name="kg_wrong_password">Fjalëkalim i gabuar</string>
+    <string name="kg_wrong_pin">PIN-i është i gabuar</string>
+    <string name="kg_too_many_failed_attempts_countdown">Provo sërish për %d sekonda.</string>
+    <string name="kg_pattern_instructions">Vizato motivin tënd</string>
+    <string name="kg_sim_pin_instructions">Fut PIN-in e kartës SIM</string>
+    <string name="kg_sim_pin_instructions_multi">Fut PIN-in e kartës SIM për \"%1$s\"</string>
+    <string name="kg_pin_instructions">Fut PIN-in</string>
+    <string name="kg_password_instructions">Fut fjalëkalimin</string>
+    <string name="kg_puk_enter_puk_hint">Karta SIM tani është e çaktivizuar. Fut kodin PUK për të vazhduar. Kontakto operatorin për detaje.</string>
+    <string name="kg_puk_enter_puk_hint_multi">Karta SIM \"%1$s\" tani është e çaktivizuar. Fut kodin PUK për të vazhduar. Kontakto operatorin për detaje.</string>
+    <string name="kg_puk_enter_pin_hint">Fut kodin e dëshiruar të PIN-it</string>
+    <string name="kg_enter_confirm_pin_hint">Konfirmo kodin e dëshiruar PIN</string>
+    <string name="kg_sim_unlock_progress_dialog_message">Po shkyç kartën SIM…</string>
+    <string name="kg_invalid_sim_pin_hint">Shkruaj një PIN me 4 deri në 8 numra.</string>
+    <string name="kg_invalid_sim_puk_hint">Kodi PUK duhet të jetë me 8 numra ose më shumë.</string>
+    <string name="kg_invalid_puk">Fut kodin e saktë PUK. Provat e përsëritura do ta çaktivizojnë përgjithmonë kartën SIM.</string>
+    <string name="kg_invalid_confirm_pin_hint">Kodet PIN nuk përputhen</string>
+    <string name="kg_login_too_many_attempts">Shumë tentativa për motivin</string>
+    <string name="kg_too_many_failed_pin_attempts_dialog_message" formatted="false">"E ke shkruar %d herë gabimisht PIN-in tënd.
+
+ Provo sërish për %d sekonda."</string>
+    <string name="kg_too_many_failed_password_attempts_dialog_message" formatted="false">"E ke shkruar %d herë gabimisht fjalëkalimin.
+
+Provo sërish për %d sekonda."</string>
+    <string name="kg_too_many_failed_pattern_attempts_dialog_message" formatted="false">"Ke tentuar %d herë pa sukses për të vizatuar motivin tënd. 
+
+Provo sërish për %d sekonda."</string>
+    <string name="kg_failed_attempts_almost_at_wipe" formatted="false">Ke tentuar %d herë gabimisht për ta shkyçur telefonin. Pas %d përpjekjeve të tjera të pasuksesshme, telefoni do të rivendoset dhe të gjitha të dhënat do të fshihen.</string>
+    <string name="kg_failed_attempts_now_wiping">Ke tentuar %d herë pa sukses për ta shkyçur telefonin tënd. Ky telefon do të rivendoset dhe të gjitha të dhënat në të, do të fshihen.</string>
+    <string name="kg_failed_attempts_almost_at_erase_user" formatted="false">Ke tentuar %d herë pa sukses për ta shkyçur telefonin. Pas %d tentativave të tjera të pasuksesshme, përdoruesi do të hiqet dhe të gjitha të dhënat e përdoruesit në të, do të fshihen.</string>
+    <string name="kg_failed_attempts_now_erasing_user">"Ke tentuar %d herë pa sukses për ta shkyçur telefonin. Ky përdorues do të hiqet dhe kjo do t'i fshijë të gjitha të dhënat e përdoruesit."</string>
+    <string name="kg_failed_attempts_almost_at_erase_profile" formatted="false">Ke tentuar %d herë pa sukses për ta shkyçur telefonin. Pas %d tentativave të tjera të pasuksesshme, profili i punës do të hiqet dhe të gjitha të dhënat në të do të fshihen.</string>
+    <string name="kg_failed_attempts_now_erasing_profile">Ke tentuar %d herë pa sukses për ta shkyçur telefonin. Profili i punës do të hiqet të gjitha të dhënat në të, do të fshihen.</string>
+    <string name="kg_failed_attempts_almost_at_login" formatted="false">"Ke vizatuar %d herë pa sukses motivin tënd. Pas %d tentativave të tjera të pasuksesshme, do të të duhet ta shkyçësh telefonin duke përdorur një llogari mail-i.
+
+ Provo sërish për %d sekonda."</string>
+    <string name="kg_password_wrong_pin_code_pukked">PIN-i i kartës SIM është i pasaktë. Tani duhet të kontaktosh operatorin për ta shkyçur pajisjen tënde.</string>
+    <string name="kg_password_wrong_puk_code_dead">Karta SIM është e papërdorshme. Kontakto operatorin.</string>
+    <string name="kg_password_pin_failed">Përpjekja për shkyçje të kartës përmes PIN-it dështoi!</string>
+    <string name="kg_password_puk_failed">Operacioni i PUK-ut të kartës SIM dështoi!</string>
+    <string name="kg_pin_accepted">Kodi u pranua!</string>
+    <string name="keyguard_carrier_default">Nuk ka shërbim.</string>
+    <string name="accessibility_ime_switch_button">Butoni i metodës së ndërrimit të hyrjeve.</string>
+    <string name="airplane_mode">Modaliteti i aeroplanit</string>
+    <string name="kg_prompt_reason_restart_pattern">Kërkohet motivi kur rinis pajisjen.</string>
+    <string name="kg_prompt_reason_restart_pin">Kërkohet kodi PIN kur rinis pajisjen.</string>
+    <string name="kg_prompt_reason_restart_password">Kërkohet fjalëkalimi kur rinis pajisjen.</string>
+    <string name="kg_prompt_reason_switch_profiles_pattern">Kërkohet motivi kur ndryshon profilet.</string>
+    <string name="kg_prompt_reason_switch_profiles_pin">Kërkohet kodi PIN kur ndryshon profilet.</string>
+    <string name="kg_prompt_reason_switch_profiles_password">Kërkohet fjalëkalimi kur ndryshon profilet.</string>
+    <string name="fingerprint_not_recognized">Nuk njihet</string>
+    <string name="kg_password_wrong_pin_code_maximum">Karta SIM është bllokuar. Lidhu me ofruesin e shërbimit.</string>
+    <string name="kg_fingerprints_password_unabled_instructions">Nuk mund të përdor shenjat e gishtave pas rinisjes së pajisjes. Fut fjalëkalimin.</string>
+    <string name="kg_fingerprints_password_unabled_instructions_fota">Fut fjalëkalimin rezervë në pajtim me politikën e përditësuar të sigurisë. Në qoftë se e ke harruar fjalëkalimin rezervë, trokit mbi NDRYSHO FJALËKALIMIN REZERVË.</string>
+    <string name="fingerprint_change_reset_password">Ndrysho fjk. rezervë</string>
+    <string name="fingerprint_change_reset_password_help_text">Rrëshqite gishtin mbi tastin bazë.</string>
+</resources>

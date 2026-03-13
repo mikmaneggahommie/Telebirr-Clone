@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">پین نادرست وارد شده است. ‎%d‎ تلاش باقی‌مانده است.</item>
+        <item quantity="one">پین نادرست وارد شده است. اگر کد پین ‎%d‎ مرتبه نادرست وارد شود، برای بازگشایی قفل دستگاه باید با ارائه دهنده سرویس خود تماس بگیرید.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">کد پاک نادرست وارد شده است. اگر کد پاک ‎%d‎ مرتبه نادرست وارد شود، سیم‌کارت برای همیشه قفل خواهد شد.</item>
+        <item quantity="one">کد پاک نادرست وارد شده است. اگر کد پاک ‎%d‎ مرتبه نادرست وارد شود، سیم‌کارت برای همیشه قفل خواهد شد.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d برنامه اخیر</item>
+        <item quantity="one">1 برنامه اخیر</item>
+    </plurals>
+</resources>

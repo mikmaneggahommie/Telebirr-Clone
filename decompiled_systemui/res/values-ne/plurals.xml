@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">गलत PIN प्रविष्ट गरिएको छ। तपाईसंग %d प्रयासहरू बाँकी छन्।</item>
+        <item quantity="one">एउटा गलत PIN प्रविष्ट गरियो। यदि एउटा गलत PIN %d धेरै पटक प्रविष्ट गरियो भने, तपाईले तपाईको यन्त्रलाई अनलक गर्नलाई तपाईको सेवा प्रदायकलाई सम्पर्क गर्नुपर्नेछ।</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">गलत PUK प्रविष्ट गरिएको छ। यदि %d भन्दा धेरै पटक गलत PUK प्रविष्ट गरियो भने SIM कार्ड स्थायी रूपमा लक हुनेछ।</item>
+        <item quantity="one">एउटा गलत PUK प्रविष्ट गरियो। यदि %d भन्दा धेरै पटक गलत PUK प्रविष्ट गरियो भने, SIM कार्ड स्थायी रूपमा लक हुनेछ।</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d नयाँ अनुप्रयोगहरू</item>
+        <item quantity="one">1 नयाँ अनुप्रयोगहरू</item>
+    </plurals>
+</resources>

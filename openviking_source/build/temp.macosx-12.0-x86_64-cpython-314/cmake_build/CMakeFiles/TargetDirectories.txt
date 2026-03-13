@@ -1,0 +1,10 @@
+/Users/mac2015/Downloads/Telebirr clone final/openviking_source/build/temp.macosx-12.0-x86_64-cpython-314/cmake_build/CMakeFiles/engine_impl.dir
+/Users/mac2015/Downloads/Telebirr clone final/openviking_source/build/temp.macosx-12.0-x86_64-cpython-314/cmake_build/CMakeFiles/engine.dir
+/Users/mac2015/Downloads/Telebirr clone final/openviking_source/build/temp.macosx-12.0-x86_64-cpython-314/cmake_build/CMakeFiles/edit_cache.dir
+/Users/mac2015/Downloads/Telebirr clone final/openviking_source/build/temp.macosx-12.0-x86_64-cpython-314/cmake_build/CMakeFiles/rebuild_cache.dir
+/Users/mac2015/Downloads/Telebirr clone final/openviking_source/build/temp.macosx-12.0-x86_64-cpython-314/cmake_build/leveldb_build/CMakeFiles/leveldb.dir
+/Users/mac2015/Downloads/Telebirr clone final/openviking_source/build/temp.macosx-12.0-x86_64-cpython-314/cmake_build/leveldb_build/CMakeFiles/edit_cache.dir
+/Users/mac2015/Downloads/Telebirr clone final/openviking_source/build/temp.macosx-12.0-x86_64-cpython-314/cmake_build/leveldb_build/CMakeFiles/rebuild_cache.dir
+/Users/mac2015/Downloads/Telebirr clone final/openviking_source/build/temp.macosx-12.0-x86_64-cpython-314/cmake_build/spdlog_build/CMakeFiles/spdlog.dir
+/Users/mac2015/Downloads/Telebirr clone final/openviking_source/build/temp.macosx-12.0-x86_64-cpython-314/cmake_build/spdlog_build/CMakeFiles/edit_cache.dir
+/Users/mac2015/Downloads/Telebirr clone final/openviking_source/build/temp.macosx-12.0-x86_64-cpython-314/cmake_build/spdlog_build/CMakeFiles/rebuild_cache.dir

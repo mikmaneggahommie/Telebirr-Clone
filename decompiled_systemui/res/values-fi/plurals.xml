@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">PIN-koodi on annettu väärin. %d yritystä jäljellä.</item>
+        <item quantity="one">Annettu väärä PIN-koodi. Jos PIN-koodi annetaan vielä %d kertaa väärin, sinun on otettava yhteyttä palveluntarjoajaan laitteen lukituksen poistamista varten.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">PUK-koodi on annettu väärin. Jos PUK-koodi annetaan vielä %d kertaa väärin, SIM-kortti lukitaan lopullisesti.</item>
+        <item quantity="one">Annettu väärä PUK-koodi. Jos PUK-koodi annetaan vielä %d kertaa väärin, SIM-kortti lukitaan lopullisesti.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d viimeksi käytettyä sovellusta</item>
+        <item quantity="one">1 viimeksi käytetty sovellus</item>
+    </plurals>
+</resources>

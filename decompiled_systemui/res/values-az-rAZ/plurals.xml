@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Yanlış PIN daxil edildi. Sizin %d cəhdiniz qalır.</item>
+        <item quantity="one">Yanlış PIN daxil edilmişdir. PIN %d dəfədən çox yanlış daxil edilərsə, siz cihazı kiliddən açmaq üçün xidmət təminatçınızla əlaqə saxlamalı olacaqsınız.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Yanlış PUK daxil edildi. Yanlış PUK %d dəfədən çox daxil edildikdə SIM kart həmişəlik kilidlənəcək.</item>
+        <item quantity="one">Yanlış PUK daxil edilmişdir. PUK %d dəfədən çox yanlış daxil edilərsə, SIM kart həmişəlik kilidlənəcəkdir.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d son proqram</item>
+        <item quantity="one">1 son proqram</item>
+    </plurals>
+</resources>

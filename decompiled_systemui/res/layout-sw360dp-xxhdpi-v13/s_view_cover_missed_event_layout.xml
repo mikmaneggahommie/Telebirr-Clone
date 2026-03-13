@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:gravity="center" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginBottom="60.0dip">
+        <RelativeLayout android:gravity="bottom|center|left" android:orientation="horizontal" android:background="@color/sview_cover_titlebar_bg_color" android:paddingLeft="@dimen/sview_cover_titlebar_padding_left" android:paddingTop="@dimen/sview_cover_titlebar_padding_top" android:layout_width="fill_parent" android:layout_height="@dimen/sview_cover_titlebar_height">
+            <ImageView android:gravity="center" android:id="@id/s_view_cover_missed_event_close_button" android:background="?android:actionBarItemBackground" android:padding="16.0dip" android:focusable="true" android:clickable="true" android:layout_width="@dimen/sview_cover_titlebar_button_width" android:layout_height="@dimen/sview_cover_titlebar_button_width" android:src="@drawable/tw_ic_ab_back_mtrl" android:layout_alignParentLeft="true" android:layout_alignParentBottom="true" />
+            <TextView android:textSize="@dimen/sview_cover_titlebar_text_size" android:textColor="@color/sview_cover_titlebar_text_color" android:gravity="center_vertical" android:id="@id/s_view_cover_missed_notification" android:layout_width="wrap_content" android:layout_height="@dimen/sview_cover_titlebar_button_width" android:layout_marginLeft="4.0dip" android:text="@string/volumepanel_notification" android:singleLine="true" android:layout_toRightOf="@id/s_view_cover_missed_event_close_button" android:fontFamily="sans-serif" />
+        </RelativeLayout>
+        <com.sec.android.sviewcover.SViewCoverMissedEvents android:scrollbarThumbVertical="@drawable/clear_scroll_bg" android:scrollbarStyle="insideOverlay" android:id="@id/s_view_cover_missed_event" android:scrollbars="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:listSelector="?android:selectableItemBackground" android:drawSelectorOnTop="false" android:cacheColorHint="#00000000" android:fadeScrollbars="false" />
+    </LinearLayout>
+    <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <LinearLayout android:orientation="vertical" android:id="@id/s_view_cover_missed_event_alert_popup" android:padding="5.0dip" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="21.0dip" android:layout_marginRight="21.0dip" android:layout_marginBottom="26.0dip" android:layout_alignParentBottom="true">
+            <TextView android:textSize="15.0dip" android:textColor="#fffafafa" android:id="@id/s_view_cover_missed_event_alert_popup_text" android:background="@drawable/tw_toast_frame_mtrl" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/s_view_cover_missed_event_secured_popup" style="@style/sview_text_shadow" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

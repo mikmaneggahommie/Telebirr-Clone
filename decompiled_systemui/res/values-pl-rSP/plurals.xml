@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Wprowadzono nieprawidłowy kod PIN. Pozostało prób: %d.</item>
+        <item quantity="one">Wprowadzono nieprawidłowy kod PIN. Po wprowadzeniu nieprawidłowego numeru PIN jeszcze %d razy w celu odblokowania urządzenia konieczny będzie kontakt z dostawcą usług.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Wprowadzono nieprawidłowy numer PUK. Po wprowadzeniu nieprawidłowego numeru PUK jeszcze %d razy karta SIM zostanie trwale zablokowana.</item>
+        <item quantity="one">Wprowadzono nieprawidłowy kod PUK. Po wprowadzeniu nieprawidłowego numeru PUK jeszcze %d razy karta SIM zostanie trwale zablokowana.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">Ôstatnich aplikacyji: %d</item>
+        <item quantity="one">Ôstatnich aplikacyji: 1</item>
+    </plurals>
+</resources>

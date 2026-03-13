@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Um PIN incorreto foi inserido. Você tem %d tentativas restantes.</item>
+        <item quantity="one">Um PIN incorreto foi inserido. Se um PIN incorreto for inserido mais %d vezes, você terá de entrar em contato com a sua operadora para desbloquear seu aparelho.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Um PUK incorreto foi inserido. Se um PUK incorreto for inserido mais %d vezes, o chip será bloqueado permanentemente.</item>
+        <item quantity="one">Um PUK incorreto foi inserido. Se um PUK incorreto for inserido mais %d vezes, o chip será bloqueado permanentemente.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d aplicativos recentes</item>
+        <item quantity="one">1 aplicativo recente</item>
+    </plurals>
+</resources>

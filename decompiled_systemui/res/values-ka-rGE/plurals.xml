@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">შეყვანილი PIN არასწორია. დარჩენილია %d მცდელობა.</item>
+        <item quantity="one">შეყვანილი PIN არასწორია. არასწორი PIN-ის კიდევ %d-ჯერ შეყვანის შემთხვევაში, მოწყობილობის განსაბლოკად უნდა მიმართოთ თქვენს პროვაიდერს.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">შეყვანილი PUK არასწორია. არასწორი PUK-ის კიდევ %d-ჯერ შეყვანის შემთხვევაში, სამუდამოდ დაიბლოკება SIM ბარათი.</item>
+        <item quantity="one">შეყვანილი PUK არასწორია. არასწორი PUK-ის კიდევ %d-ჯერ შეყვანის შემთხვევაში, სამუდამოდ დაიბლოკება SIM ბარათი.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d ბოლოდროინდელი პროგრამა</item>
+        <item quantity="one">1 ბოლოდროინდელი პროგრამა</item>
+    </plurals>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">ایک غلط پن درج کیا گئی ہے۔ آپ کے پاس %d کوششیں باقی ہیں۔</item>
+        <item quantity="one">ایک غلط پن درج کی گئی ہے۔ اگر ایک غلط پن مزید %d مرتبہ درج کی گئی تو، آپ کو اپنے آلہ کو انلاک کرنے کے لیے اپنے خدمت فراہم کنندہ سے رابطہ کرنے ہوگا۔</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">ایک غلط PUK درج کیا گیا ہے۔ اگر ایک غلط PUK مزید %d مرتبہ درج کیا گیا، تو آپ کا SIM کارڈ مستقل طور مقفل ہو جائے گا۔</item>
+        <item quantity="one">ایک غلط PUK درج کیا گیا۔ اگر ایک غلط PUK مزید %d مرتبہ درج کیا جاتا ہے تو، SIM کارڈ مستقل طور پر مقفل ہو جائے گا۔</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d حالیہ ایپلیکیشنز</item>
+        <item quantity="one">1 حالیہ ایپلیکیشن</item>
+    </plurals>
+</resources>

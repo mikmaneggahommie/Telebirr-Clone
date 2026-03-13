@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">PIN mícheart iontráilte. Tá %d iarracht fágtha agat.</item>
+        <item quantity="one">PIN mícheart iontráilte. Má iontráiltear PIN mícheart %d uair eile, beidh ort dul i dteagmháil le do sholáthraí seirbhíse le do ghléas a dhíghlasáil.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">PUK mícheart iontráilte. Má iontráiltear PUK mícheart %d uair eile, glasálfar an cárta SIM go buan.</item>
+        <item quantity="one">PUK mícheart iontráilte. Má iontráiltear PUK mícheart %d uair eile, glasálfar an cárta SIM go buan.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d feidhmchlár le déanaí</item>
+        <item quantity="one">1 fheidhmchlár le déanaí</item>
+    </plurals>
+</resources>

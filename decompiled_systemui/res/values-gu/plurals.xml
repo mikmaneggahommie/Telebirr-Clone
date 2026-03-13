@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">એક ખોટો PIN દાખલ કરવામાં આવ્યો છે. તમારા %d પ્રયાસો બાકી છે.</item>
+        <item quantity="one">એક ખોટો PIN દાખલ કરવામાં આવ્યો છે. જો એક ખોટો PIN %d થી વધુ વખત દાખલ કરવામાં આવશે, તો તમારું ઉપકરણ અનબ્લોક કરવા માટે તમારા સેવા પ્રદાતાનો તમારે સંપર્ક કરવાનો રહેશે.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">એક ખોટો PUK દાખલ કરવામાં આવ્યો છે. જો ખોટો PUK %d થી વધુ વખત દાખલ કરવામા આવશે, તો SIM કાર્ડ કાયમી લોક થઇ જશે.</item>
+        <item quantity="one">એક ખોટો PUK દાખલ કરવામાં આવ્યો છે. જો એક ખોટો PUK %d થી વધુ વખત દાખલ કરવામાં આવશે, SIM કાર્ડ કાયમી માટે લોક થઇ જશે.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d હાલની એપ્સ</item>
+        <item quantity="one">1 હાલની એપ</item>
+    </plurals>
+</resources>

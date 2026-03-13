@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@id/clear_all_button" android:focusable="true" android:visibility="gone" android:clickable="true" android:layout_width="wrap_content" android:layout_height="@dimen/carrier_label_height" android:contentDescription="@string/accessibility_clear_all" android:paddingEnd="@dimen/notification_side_padding"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:layout_gravity="center_vertical" android:id="@id/clear_all_drawable" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/quickpanel_ic_clear" android:scaleType="center" android:layout_marginEnd="2.0dip" />
+    <TextView android:textSize="@dimen/status_bar_expanded_notification_clear_button_text_size" android:textColor="@drawable/clear_all_button_state" android:gravity="center_vertical" android:id="@id/clear_all_button_label" android:layout_width="wrap_content" android:layout_height="@dimen/carrier_label_height" android:text="@string/status_bar_clear_all_button" android:shadowColor="@color/notification_category_text_shadow_color" android:shadowDx="1.0" android:shadowDy="2.0" android:shadowRadius="1.0" android:textAllCaps="true" />
+</LinearLayout>

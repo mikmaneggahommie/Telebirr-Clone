@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">এটা অশুদ্ধ PIN প্ৰৱিষ্ট কৰিলে৷ আপোনাৰ %d টা প্ৰয়াস বাকী আছে৷</item>
+        <item quantity="one">এটা অশুদ্ধ PIN প্ৰৱিষ্ট কৰিলে৷ যদি এটা অশুদ্ধ PIN %d বাৰ প্ৰৱেশ কৰে, আপুনি আপোনাৰ ডিভাইচ আনলক কৰিবলৈ আপোনাৰ সেৱা প্ৰদানকাৰীৰ লগত যোগাযোগ কৰিব লাগিব৷</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">"এটা অশুদ্ধ PUK প্ৰৱিষ্ট কৰিলে৷ যদি এটা অশুদ্ধ PUK %d বাৰৰ অধিক প্ৰৱিষ্ট কৰে, SIM কাৰ্ডটো স্থায়ীভাৱে লক হ'ব৷"</item>
+        <item quantity="one">"এটা অশুদ্ধ PUK প্ৰৱিষ্ট কৰিলে৷ যদি এটা অশুদ্ধ PUK %d বাৰ প্ৰৱেশ কৰে, SIM স্থায়ীভাৱে লক কৰা হ'ব৷"</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d শেহতীয়া এপ্প্‌চ</item>
+        <item quantity="one">1 টা শেহতীয়া এপ্প্‌চ</item>
+    </plurals>
+</resources>

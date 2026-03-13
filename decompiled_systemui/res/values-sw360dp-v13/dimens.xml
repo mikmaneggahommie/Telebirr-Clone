@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="keyguard_security_width">360.0dip</dimen>
+    <item type="dimen" name="recents_stack_initial_card_position">0.79</item>
+    <item type="dimen" name="recents_task_visible_area">0.915</item>
+    <item type="dimen" name="recents_stack_additional_alpha_area">0.045</item>
+</resources>

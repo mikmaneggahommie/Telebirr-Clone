@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">မမှန်သည့် PIN နံပါတ် ထည့်သွင်းထားသည်။ သင့်တွင် %d ကြိမ် ကြိုးစားရန် ကျန်သေးသည်။</item>
+        <item quantity="one">မမှန်သည့် PIN နံပါတ်တစ်ခု ထည့်သွင်းထားသည်။ မမှန်သည့် PIN နံပါတ်တစ်ခုကို နောက်ထပ် %d ကြိမ် ထည့်သွင်းလျှင် သင့်ကိရိယာ သော့ဖွင့်ရန် သင်၏ ဝန်ဆောင်မှု ပေးသူကို ဆက်သွယ်ရမည်။</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">မမှန်သည့် PUK နံပါတ် ထည့်သွင်းထားသည်။ မမှန်သည့် PUK တစ်ခုကို နောက်ထပ် %d ကြိမ် ထည့်သွင်းလျှင် SIM ကဒ်ကို ထာဝရ သော့ချသွားမည်။</item>
+        <item quantity="one">မမှန်သည့် PUK နံပါတ်တစ်ခု ထည့်သွင်းထားသည်။ မမှန်သည့် PUK နံပါတ်တစ်ခုကို နောက်ထပ် %d ကြိမ် ထည့်သွင်းလျှင် SIM ကဒ်ကို ထာဝရ ပိတ်သွားမည်။</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">မကြာသေးခင်က အပ် %d ခု</item>
+        <item quantity="one">မကြာသေးခင်က အပ် ၁ ခု</item>
+    </plurals>
+</resources>

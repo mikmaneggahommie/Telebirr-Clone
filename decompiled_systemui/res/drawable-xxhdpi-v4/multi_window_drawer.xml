@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:right="17.0dip">
+        <bitmap android:src="@android:drawable/dropdown_ic_arrow_focused_holo_dark" />
+    </item>
+    <item android:left="17.0dip">
+        <bitmap android:src="@android:drawable/dropdown_normal_holo_dark" />
+    </item>
+</layer-list>

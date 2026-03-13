@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Туура эмес ПИН код киргизилди. Сизде %d аракет калды.</item>
+        <item quantity="one">Туура эмес ПИН коду киргизилди. Туура эмес ПИН коду %d дан көп киргизилсе, кызмат тейлегичиңизге түзмөгүңүздүн кулпун ачуу үчүн кайрылыңыз.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Туура эмес PUK код киргизилди. Эгер туура эмес PUK дагы %d жолу киргизилсе, SIM картасы түбөлүккө кулпуланат.</item>
+        <item quantity="one">Туура эмес PUK коду киргизилди. Туура эмес PUK коду %d дан көп киргизилсе, SIM картасы түбөлүккө кулпуланат.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d жакындагы сунуучулар</item>
+        <item quantity="one">Жакынкы 1 сунуучу</item>
+    </plurals>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">تم إدخال رقم PIN غير صحيح. تبقت لك ‏%d‏ من المحاولات.</item>
+        <item quantity="one">تم إدخال رقم PIN غير صحيح. إذا تم إدخال رقم PIN غير صحيح ‏%d‏‏ من المرات الإضافية، فسيتوجّب عليك الاتصال بمزود الخدمة لإلغاء قفل جهازك.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">تم إدخال رمز PUK غير صحيح. إذا تم إدخال رمز PUK غير صحيح ‏%d‏‏ من المرات الإضافية، بالتالي، سيتم إقفال بطاقة SIM بشكل دائم.</item>
+        <item quantity="one">تم إدخال رقم PUK غير صحيح. إذا تم إدخال رمز PUK غير صحيح ‏%d‏‏ من المرات الإضافية، فسيتم إقفال بطاقة SIM بشكل دائم.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d تطبيقات حديثة</item>
+        <item quantity="one">تطبيق واحد حديث</item>
+    </plurals>
+</resources>

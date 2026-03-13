@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="qstile_top_margin_row">14.0dip</dimen>
+    <dimen name="qscontainer_bottom_padding">10.0dip</dimen>
+</resources>

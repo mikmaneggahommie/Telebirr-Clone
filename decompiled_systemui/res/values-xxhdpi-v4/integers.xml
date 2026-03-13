@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="applist_item_icon_shadow_alpha">60</integer>
+    <integer name="centerbar_fling_non_quadview_ratio">38</integer>
+</resources>

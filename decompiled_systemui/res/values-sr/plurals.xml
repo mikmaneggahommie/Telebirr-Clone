@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Uneo/la si pogrešan PIN. Broj preostalih pokušaja: %d.</item>
+        <item quantity="one">Uneo/la si neispravan PIN kôd. Ako pogrešno uneseš PIN kôd još %d puta, moraćeš da kontaktiraš provajdera usluga da bi otključao/la svoj uređaj.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Uneo/la si pogrešan PUK. Ako pogrešno uneseš PUK %d puta, SIM kartica će trajno biti zaključana.</item>
+        <item quantity="one">Uneo/la si neispravan PUK. Ako pogrešno uneseš PUK još %d puta, SIM kartica će trajno biti zaključana.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d nedavnih aplikacija</item>
+        <item quantity="one">Jedna nedavna aplikacija</item>
+    </plurals>
+</resources>

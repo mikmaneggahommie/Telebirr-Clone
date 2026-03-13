@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Fel PIN-kod har angetts. Du har %d försök kvar.</item>
+        <item quantity="one">Fel PIN-kod har angetts. Om fel PIN-kod anges ytterligare %d gånger måste du kontakta tjänstleverantören för att kunna låsa upp enheten.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Fel PUK-kod har angetts. Om fel PUK-kod anges %d gånger spärras SIM-kortet permanent.</item>
+        <item quantity="one">Fel PUK-kod har angetts. Om fel PUK-kod anges ytterligare %d gånger spärras SIM-kortet permanent.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d nya program</item>
+        <item quantity="one">1 nytt program</item>
+    </plurals>
+</resources>

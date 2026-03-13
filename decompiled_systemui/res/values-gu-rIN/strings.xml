@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wifi_fail_to_scan">નેટવર્ક્સ માટે સ્કૅન કરી શકતા નથી</string>
+    <string name="wifi_security_none">કોઈ નહીં</string>
+    <string name="wifi_remembered">સાચવેલા</string>
+    <string name="wifi_disabled_generic">અક્ષમ કર્યો</string>
+    <string name="wifi_disabled_network_failure">IP કન્ફિગરેશન નિષ્ફળ</string>
+    <string name="wifi_disabled_wifi_failure">WiFi કનેક્શન નિષ્ફળ</string>
+    <string name="wifi_disabled_password_failure">પ્રમાણીકરણ સમસ્યા</string>
+    <string name="wifi_not_in_range">રેન્જમાં નથી</string>
+    <string name="wifi_no_internet">કોઈ ઇન્ટરનેટ અ‍ૅક્સેસ શોધાયું નથી, આપમેળે ફરીથી કનેક્ટ કરશે નહીં.</string>
+    <string name="saved_network">%1$s દ્વારા સચવાયું</string>
+    <string name="connected_via_wfa">Wi-Fi સહાયક દ્વારા કનેક્ટ થયું</string>
+    <string name="connected_via_passpoint">%1$s દ્વારા કનેક્ટ થયેલ</string>
+    <string name="available_via_passpoint">%1$s દ્વારા ઉપલબ્ધ</string>
+    <string name="wifi_connected_no_internet">કનેક્ટ કર્યું, કોઈ ઇન્ટરનેટ નથી</string>
+    <string name="bluetooth_disconnected">ડિસ્કનેક્ટ કર્યું</string>
+    <string name="bluetooth_disconnecting">ડિસ્કનેક્ટ થઈ રહ્યું છે...</string>
+    <string name="bluetooth_connecting">કનેક્ટ થઈ રહ્યું છે…</string>
+    <string name="bluetooth_connected">કનેક્ટ કર્યું</string>
+    <string name="bluetooth_pairing">જોડી કરી રહ્યું છે…</string>
+    <string name="bluetooth_connected_no_headset">કનેક્ટ કર્યું (કોઇ ફોન નથી)</string>
+    <string name="bluetooth_connected_no_a2dp">કનેક્ટ કર્યું (મીડિયા નથી)</string>
+    <string name="bluetooth_connected_no_map">કનેક્ટ કર્યું (કોઇ સંદેશ ઍક્સેસ નથી)</string>
+    <string name="bluetooth_connected_no_headset_no_a2dp">કનેક્ટ કરેલ (કોઈ ફોન અથવા મીડિયા નથી)</string>
+    <string name="bluetooth_profile_a2dp">મીડિયા ઓડિયો</string>
+    <string name="bluetooth_profile_headset">ફોન ઑડિઓ</string>
+    <string name="bluetooth_profile_opp">ફાઇલ સ્થાનાંતરણ</string>
+    <string name="bluetooth_profile_hid">ઇનપુટ ઉપકરણ</string>
+    <string name="bluetooth_profile_pan">ઇન્ટરનેટ ઍક્સેસ</string>
+    <string name="bluetooth_profile_pbap">સંપર્ક શેરિંગ</string>
+    <string name="bluetooth_profile_pan_nap">ઇન્ટરનેટ કનેક્શન શેરિંગ</string>
+    <string name="bluetooth_profile_map">સંદેશ ઍક્સેસ</string>
+    <string name="bluetooth_profile_sap">SIM ઍક્સેસ</string>
+    <string name="bluetooth_profile_pbap_summary">સંપર્ક શેરિંગ માટે ઉપયોગ કરો</string>
+    <string name="bluetooth_a2dp_profile_summary_connected">મીડિયા ઑડિઓ સાથે કનેક્ટ કર્યુ</string>
+    <string name="bluetooth_headset_profile_summary_connected">ફોન ઑડિઓ સાથે કનેક્ટ થયાં</string>
+    <string name="bluetooth_opp_profile_summary_connected">ફાઇલ સ્થાનાંતરણ સેવાથી કનેક્ટ થયાં</string>
+    <string name="bluetooth_map_profile_summary_connected">નકશા સાથે કનેક્ટ થયું</string>
+    <string name="bluetooth_sap_profile_summary_connected">SAP થી કનેક્ટ કરેલ</string>
+    <string name="bluetooth_opp_profile_summary_not_connected">ફાઇલ સ્થાનાંતરણ સેવાથી કનેક્ટ થયેલ નથી</string>
+    <string name="bluetooth_hid_profile_summary_connected">ઇનપુટ ઉપકરણ સાથે કનેક્ટ થયાં</string>
+    <string name="bluetooth_pan_user_profile_summary_connected">ઇન્ટરનેટ ઍક્સેસ માટે ઉપકરણથી કનેક્ટેડ છે</string>
+    <string name="bluetooth_pan_nap_profile_summary_connected">ઉપકરણ સાથે સ્થાનિક ઇન્ટરનેટ કનેક્શન શેર કરે છે</string>
+    <string name="bluetooth_pan_profile_summary_use_for">ઇન્ટરનેટ ઍક્સેસ માટે ઉપયોગ કરો</string>
+    <string name="bluetooth_map_profile_summary_use_for">નકશા માટે વાપરો</string>
+    <string name="bluetooth_sap_profile_summary_use_for">SIM ઍક્સેસ માટે ઉપયોગ કરો</string>
+    <string name="bluetooth_a2dp_profile_summary_use_for">મીડિયા ઑડિઓ માટે ઉપયોગ કરો</string>
+    <string name="bluetooth_headset_profile_summary_use_for">ફોન ઑડિઓ માટે ઉપયોગ કરો</string>
+    <string name="bluetooth_opp_profile_summary_use_for">ફાઇલ સ્થાનાંતર માટે ઉપયોગ કરો</string>
+    <string name="bluetooth_hid_profile_summary_use_for">ઇનપુટ માટે ઉપયોગ કરો</string>
+    <string name="bluetooth_pairing_accept">જોડી</string>
+    <string name="bluetooth_pairing_accept_all_caps">જોડી કરો</string>
+    <string name="bluetooth_pairing_decline">રદ કરો</string>
+    <string name="bluetooth_pairing_will_share_phonebook">જોડી કરવી એ કનેક્ટ કરેલ હોય ત્યારે તમારા સંપર્કો અને કૉલ ઇતિહાસની અ‍ૅક્સેસ આપે છે.</string>
+    <string name="bluetooth_pairing_error_message">%1$s સાથે જોડી કરી શક્યાં નહીં.</string>
+    <string name="bluetooth_pairing_pin_error_message">એક ખોટા PIN અથવા પાસકીને કારણે %1$s સાથે જોડી બનાવી શકાઈ નથી.</string>
+    <string name="bluetooth_pairing_device_down_error_message">%1$s સાથે સંચાર કરી શકાતો નથી.</string>
+    <string name="bluetooth_pairing_rejected_error_message">%1$s દ્વારા જોડી કરવાનું નકાર્યું.</string>
+    <string name="clear_cover_wday_day">E</string>
+    <string name="clear_cover_month_day_no_year">MMM d</string>
+    <string name="clear_cover_day_month_no_year">d MMM</string>
+    <string name="app_name">કીગાર્ડ</string>
+    <string name="keyguard_password_enter_pin_code">PIN કોડ લખો</string>
+    <string name="keyguard_password_enter_puk_code">SIM PUK અને નવો PIN કોડ લખો</string>
+    <string name="keyguard_password_enter_puk_prompt">SIM PUK કોડ</string>
+    <string name="keyguard_password_enter_pin_prompt">નવો SIM PIN કોડ</string>
+    <string name="keyguard_password_entry_touch_hint"><font size="17">પાસવર્ડ લખવા માટે ટચ કરો</font></string>
+    <string name="keyguard_password_enter_password_code">અનલૉક કરવા માટે પાસવર્ડ લખો</string>
+    <string name="keyguard_password_enter_pin_password_code">અનલૉક કરવા માટે PIN લખો</string>
+    <string name="keyguard_password_wrong_pin_code">ખોટો PIN કોડ.</string>
+    <string name="keyguard_charged">ચાર્જ થયું</string>
+    <string name="keyguard_plugged_in">ચાર્જ થઈ રહ્યું છે</string>
+    <string name="keyguard_low_battery">તમારું ચાર્જર કનેક્ટ કરો.</string>
+    <string name="keyguard_instructions_when_pattern_disabled">અનલૉક કરવા માટે મેનૂ દબાવો.</string>
+    <string name="keyguard_network_locked_message">નેટવર્ક લૉક થયું</string>
+    <string name="keyguard_missing_sim_message_short">કોઈ SIM કાર્ડ નથી</string>
+    <string name="keyguard_missing_sim_message">ફોનમાં SIM કાર્ડ નથી.</string>
+    <string name="keyguard_missing_sim_instructions">એક SIM કાર્ડ દાખલ કરો.</string>
+    <string name="keyguard_missing_sim_instructions_long">SIM કાર્ડ ખૂટે છે અથવા વાંચન યોગ્ય નથી. SIM કાર્ડ દાખલ કરો.</string>
+    <string name="keyguard_permanent_disabled_sim_message_short">બિનઉપયોગી SIM કાર્ડ.</string>
+    <string name="keyguard_permanent_disabled_sim_instructions">"તમારું SIM કાર્ડ કાયમીરૂપે અક્ષમ કરવામાં આવ્યું છે.
+ બીજા SIM કાર્ડ માટે તમારા વાયરલેસ સેવા પ્રદાતાનો સંપર્ક કરો."</string>
+    <string name="keyguard_sim_locked_message">SIM કાર્ડ લૉક કરેલ છે.</string>
+    <string name="keyguard_sim_puk_locked_message">SIM કાર્ડ, PUK-લૉક કરેલ છે.</string>
+    <string name="keyguard_sim_unlock_progress_dialog_message">SIM કાર્ડ અનલૉક કરી રહ્યાં છે…</string>
+    <string name="keyguard_accessibility_pattern_unlock">પેટર્ન અનલૉક.</string>
+    <string name="keyguard_accessibility_pin_unlock">પિન અનલૉક.</string>
+    <string name="keyguard_accessibility_password_unlock">પાસવર્ડ અનલૉક કરો.</string>
+    <string name="keyguard_accessibility_pattern_area">પેટર્ન ક્ષેત્ર.</string>
+    <string name="keyguard_accessibility_slide_area">સ્લાઇડ ક્ષેત્ર.</string>
+    <string name="keyguard_accessibility_pin_area">PIN ક્ષેત્ર</string>
+    <string name="keyguard_accessibility_sim_pin_area">SIM PIN ક્ષેત્ર</string>
+    <string name="keyguard_accessibility_sim_puk_area">SIM PUK ક્ષેત્ર</string>
+    <string name="keyguard_accessibility_next_alarm">%1$s માટે આગલો એલાર્મ સેટ કર્યો</string>
+    <string name="keyboardview_keycode_delete">કાઢી નાખો</string>
+    <string name="keyboardview_keycode_enter">દાખલ કરો</string>
+    <string name="kg_forgot_pattern_button_text">પેટર્ન ભૂલી ગયાં</string>
+    <string name="kg_wrong_pattern">ખોટી પેટર્ન દોરી</string>
+    <string name="kg_wrong_password">ખોટો પાસવર્ડ દાખલ કરેલ છે</string>
+    <string name="kg_wrong_pin">ખોટો PIN દાખલ કર્યો</string>
+    <string name="kg_too_many_failed_attempts_countdown">%d સેકંડમાં ફરી પ્રયાસ કરો.</string>
+    <string name="kg_pattern_instructions">અનલોક પેટર્ન દોરો</string>
+    <string name="kg_sim_pin_instructions">SIM PIN દાખલ કરો</string>
+    <string name="kg_sim_pin_instructions_multi">\"%1$s\" માટે SIM PIN દાખલ કરો</string>
+    <string name="kg_pin_instructions">PIN દાખલ કરો</string>
+    <string name="kg_password_instructions">પાસવર્ડ દાખલ કરો</string>
+    <string name="kg_puk_enter_puk_hint">SIM લોક કરેલ છે. PUK દાખલ કરો. વિગતો માટે સેવા પ્રદાતાનો સંપર્ક કરો.</string>
+    <string name="kg_puk_enter_puk_hint_multi">SIM \"%1$s\" હવે અક્ષમ છે. ચાલુ રાખવા માટે PUK કોડ દાખલ કરો. વિગતો માટે કેરીઅરનો સંપર્ક કરો.</string>
+    <string name="kg_puk_enter_pin_hint">જોઈતો PIN કોડ દાખલ કરો</string>
+    <string name="kg_enter_confirm_pin_hint">જોઈતા PIN કોડની પુષ્ટિ કરો</string>
+    <string name="kg_sim_unlock_progress_dialog_message">SIM કાર્ડ અનલૉક કરી રહ્યાં છે…</string>
+    <string name="kg_invalid_sim_pin_hint">એક PIN લખો જે 4 થી 8 સંખ્યાનો છે.</string>
+    <string name="kg_invalid_sim_puk_hint">PUK કોડ 8 અથવા વધુ નંબર્સનો હોવો જોઈએ.</string>
+    <string name="kg_invalid_puk">સાચો PUK કોડ ફરીથી દાખલ કરો. પુનરાવર્તિત પ્રયાસો SIM ને કાયમી રીતે અક્ષમ કરશે.</string>
+    <string name="kg_invalid_confirm_pin_hint">PIN કોડ્સ મેળ ખાતા નથી</string>
+    <string name="kg_login_too_many_attempts">ઘણા બધા પેટર્ન પ્રયાસો</string>
+    <string name="kg_too_many_failed_pin_attempts_dialog_message" formatted="false">"તમે %d વખત ખોટી રીતે તમારો PIN લખ્યો છે. 
+
+%d સેકંડમાં ફરીથી પ્રયાસ કરો."</string>
+    <string name="kg_too_many_failed_password_attempts_dialog_message" formatted="false">"તમે %d વખત ખોટી રીતે તમારો પાસવર્ડ લખ્યો છે. 
+
+%d સેકંડમાં ફરીથી પ્રયાસ કરો."</string>
+    <string name="kg_too_many_failed_pattern_attempts_dialog_message" formatted="false">"તમે %d વખત ખોટી રીતે તમારી અનલૉક પેટર્ન દોરી. 
+
+%d સેકંડમાં ફરીથી પ્રયાસ કરો."</string>
+    <string name="kg_failed_attempts_almost_at_wipe" formatted="false">તમે ફોનને અનલૉક કરવા માટે %d વખત ખોટી રીતે પ્રયાસ કર્યો. %d વધુ અસફળ પ્રયાસ પછી, આ ફોન ફરીથી સેટ કરવામાં આવશે, જે તેનો તમામ ડેટા કાઢી નાખશે.</string>
+    <string name="kg_failed_attempts_now_wiping">તમે %d વખત ખોટી રીતે ફોનને અનલૉક કરવાનો પ્રયાસ કર્યો. આ ફોન ફરીથી સેટ થશે, જે તેનો તમામ ડેટા કાઢી નાખશે.</string>
+    <string name="kg_failed_attempts_almost_at_erase_user" formatted="false">તમે ફોનને અનલૉક કરવા માટે %d વખત ખોટી રીતે પ્રયાસ કર્યો. %d વધુ અસફળ પ્રયાસ પછી, આ વપરાશકર્તા દૂર કરવામાં આવશે, જે તમામ વપરાશકર્તા ડેટા કાઢી નાખશે.</string>
+    <string name="kg_failed_attempts_now_erasing_user">તમે %d વખત ખોટી રીતે ફોનને અનલૉક કરવાનો પ્રયાસ કર્યો. આ વપરાશકર્તાને દૂર કરવામાં આવશે, જે તમામ વપરાશકર્તા ડેટાને કાઢી નાખશે.</string>
+    <string name="kg_failed_attempts_almost_at_erase_profile" formatted="false">તમે ફોનને અનલૉક કરવાનો %d વખત ખોટી રીતે પ્રયાસ કર્યો છે. હજી %d અસફળ પ્રયાસ પછી, કાર્ય પ્રોફાઇલ દૂર કરવામાં આવશે, જે તમામ પ્રોફાઇલ ડેટાને કાઢી નાખશે.</string>
+    <string name="kg_failed_attempts_now_erasing_profile">તમે %d વખત ખોટી રીતે ફોનને અનલૉક કરવાનો પ્રયાસ કર્યો. કાર્ય પ્રોફાઇલ દૂર કરવામાં આવશે, જે તમામ પ્રોફાઇલ ડેટાને કાઢી નાખશે.</string>
+    <string name="kg_failed_attempts_almost_at_login" formatted="false">"તમે તમારી અનલૉક પેટર્ન %d વખત ખોટી રીતે દોરી. હજી %d અસફળ પ્રયાસ પછી, તમને ઇમેઇલ એકાઉન્ટનો ઉપયોગ કરીને ફોનને અનલૉક કરવાનું કહેવામાં આવશે.
+
+ %d સેકંડમાં ફરીથી પ્રયાસ કરો."</string>
+    <string name="kg_password_wrong_pin_code_pukked">ખોટો SIM PIN કોડ, તમારે હવે તમારું ઉપકરણ અનલૉક કરવા માટે તમારા કેરિઅરનો સંપર્ક કરવો આવશ્યક છે.</string>
+    <string name="kg_password_wrong_puk_code_dead">SIM અનુપયોગી છે. તમારા કેરીઅરનો સંપર્ક કરો.</string>
+    <string name="kg_password_pin_failed">SIM PIN ઑપરેશન નિષ્ફળ થયું!</string>
+    <string name="kg_password_puk_failed">SIM PUK ઓપરેશન નિષ્ફળ થયું!</string>
+    <string name="kg_pin_accepted">કોડ સ્વીકાર્યો!</string>
+    <string name="keyguard_carrier_default">કોઈ સેવા .</string>
+    <string name="accessibility_ime_switch_button">ઇનપુટ પદ્ધતિ બટન સ્વિચ કરો.</string>
+    <string name="airplane_mode">એરપ્લેન મોડ</string>
+    <string name="kg_prompt_reason_restart_pattern">જ્યારે તમે ઉપકરણ ફરીથી સેટ કરો ત્યારે પેટર્ન જરૂરી છે.</string>
+    <string name="kg_prompt_reason_restart_pin">જ્યારે તમે ઉપકરણ ફરીથી સેટ કરો ત્યારે PIN જરૂરી છે.</string>
+    <string name="kg_prompt_reason_restart_password">જ્યારે તમે ઉપકરણ ફરીથી સેટ કરો ત્યારે પાસવર્ડ જરૂરી છે.</string>
+    <string name="kg_prompt_reason_switch_profiles_pattern">જ્યારે તમે પ્રોફાઇલ્સ સ્વિચ કરો ત્યારે પેટર્ન જરૂરી છે.</string>
+    <string name="kg_prompt_reason_switch_profiles_pin">જ્યારે તમે પ્રોફાઇલ્સ સ્વિચ કરો ત્યારે PIN જરૂરી છે.</string>
+    <string name="kg_prompt_reason_switch_profiles_password">જ્યારે તમે પ્રોફાઇલ્સ સ્વિચ કરો ત્યારે પાસવર્ડ જરૂરી છે.</string>
+    <string name="fingerprint_not_recognized">ઓળખાયેલ નથી</string>
+    <string name="kg_password_wrong_pin_code_maximum">SIM કાર્ડ લોક કરવામાં આવ્યું છે. તમારા સેવા પ્રદાતાનો સંપર્ક કરો.</string>
+    <string name="kg_fingerprints_password_unabled_instructions">ઉપકરણ પુનઃપ્રારંભ કર્યા પછી ફિંગરપ્રિન્ટ્સનો ઉપયોગ કરવામાં અસમર્થ. પાસવર્ડ દાખલ કરો.</string>
+    <string name="kg_fingerprints_password_unabled_instructions_fota">અપડેટ થયેલ સુરક્ષા નીતિ અનુસાર તમારો બેકઅપ પાસવર્ડ દાખલ કરો. જો તમે તમારો બેકઅપ પાસવર્ડ ભૂલી ગયા હોય, તો “બેકઅપ પાસવર્ડ બદલો” ટેપ કરો.</string>
+    <string name="fingerprint_change_reset_password">બેકઅપ પાસવર્ડ બદલો</string>
+    <string name="fingerprint_change_reset_password_help_text">તમારી આંગળીને હોમ સ્ક્રીન પર સ્વાઇપ કરો.</string>
+</resources>

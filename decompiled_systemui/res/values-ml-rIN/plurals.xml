@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">ഒരു തെറ്റായ PIN നൽകപ്പെട്ടു. നിങ്ങൾക്ക് %d ശ്രമങ്ങൾ ശേഷിക്കുന്നു.</item>
+        <item quantity="one">ഒരു തെറ്റായ PIN നൽകപ്പെട്ടു. തെറ്റായ ഒരു PIN %d തവണ കൂടി നൽകുകയാണെങ്കിൽ, നിങ്ങളുടെ ഉപകരണം അൺലോക്ക് ചെയ്യുന്നതിന് നിങ്ങളുടെ സേവന ദാതാവിനെ നിങ്ങൾക്ക് ബന്ധപ്പെടേണ്ടിവരും.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">ഒരു തെറ്റായ PUK നൽകപ്പെട്ടു. ഒരു തെറ്റായ PUK %d തവണ കൂടി നൽകുകയാണെങ്കിൽ, SIM കാർഡ് ശാശ്വതമായി ലോക്ക് ചെയ്യപ്പെടും.</item>
+        <item quantity="one">ഒരു തെറ്റായ PUK നൽകപ്പെട്ടു. ഒരു തെറ്റായ PUK %d തവണ കൂടി നൽകുകയാണെങ്കിൽ, SIM കാർഡ് ശാശ്വതമായി ലോക്ക് ചെയ്യപ്പെടും.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d ഏറ്റവും പുതിയ ആപ്സ്</item>
+        <item quantity="one">1 സമീപകാല ആപ്</item>
+    </plurals>
+</resources>

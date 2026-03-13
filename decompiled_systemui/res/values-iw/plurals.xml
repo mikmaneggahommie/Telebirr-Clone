@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">הוזן קוד PIN שגוי. לרשותך עוד %d ניסיונות.</item>
+        <item quantity="one">הוזן קוד PIN שגוי. אם יוזן קוד PIN שגוי עוד %d פעמים, תצטרך לפנות אל ספק השירות שלך כדי לבטל את נעילת המכשיר.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">הוזן קוד PUK שגוי. הזנת קוד PUK שגוי עוד %d פעמים תגרום לנעילת כרטיס ה-SIM לצמיתות.</item>
+        <item quantity="one">הוזן קוד PUK שגוי. אם יוזן קוד PUK שגוי עוד %d פעמים, כרטיס ה-SIM יינעל לצמיתות.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d יישומים אחרונים</item>
+        <item quantity="one">יישום אחרון אחד</item>
+    </plurals>
+</resources>

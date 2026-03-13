@@ -1,0 +1,9 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/mac2015/Downloads/Telebirr clone final/openviking_source/build/temp.macosx-12.0-x86_64-cpython-314/cmake_build/cmake_install.cmake",
+		"/Users/mac2015/Downloads/Telebirr clone final/openviking_source/build/temp.macosx-12.0-x86_64-cpython-314/cmake_build/leveldb_build/cmake_install.cmake",
+		"/Users/mac2015/Downloads/Telebirr clone final/openviking_source/build/temp.macosx-12.0-x86_64-cpython-314/cmake_build/spdlog_build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

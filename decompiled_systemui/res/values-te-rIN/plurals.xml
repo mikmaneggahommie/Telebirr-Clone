@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">చెల్లని PIN నమోదు చేయబడింది. మీకు %d ప్రయత్నాలు మిగిలి ఉన్నాయి.</item>
+        <item quantity="one">చెల్లని PIN నమోదు చేయబడింది. చెల్లని PIN %d సార్లు నమోదు చేయబడితే, మీ పరికరాన్ని అన్‌లాక్ చేయడానికి మీరు మీ సేవా ప్రదాతను సంప్రదించాల్సి ఉంటుంది.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">చెల్లని PUK నమోదు చేయబడింది. చెల్లని PUK %d సార్లు నమోదు చేయబడితే, SIM కార్డ్ శాశ్వతంగా లాక్ అవుతుంది.</item>
+        <item quantity="one">చెల్లని PUK నమోదు చేయబడింది. చెల్లని PUK %d సార్లు నమోదు చేయబడితే, SIM కార్డ్ శాశ్వతంగా లాక్ అవుతుంది.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d ఇటివల అప్లికేషన్లు</item>
+        <item quantity="one">1 ఇటివల అప్లికేషన్</item>
+    </plurals>
+</resources>

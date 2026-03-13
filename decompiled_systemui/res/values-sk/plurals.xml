@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Zadali ste nesprávny kód PIN. Počet zostávajúcich pokusov: %d.</item>
+        <item quantity="one">Zadali ste nesprávny kód PIN. Ak ešte %d-krát zadáte nesprávny kód PIN, budete sa musieť obrátiť na operátora a požiadať ho o odomknutie zariadenia.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Zadali ste nesprávny kód PUK. Ak ešte %d-krát zadáte nesprávny kód PUK, karta SIM sa natrvalo zablokuje.</item>
+        <item quantity="one">Zadali ste nesprávny kód PUK. Ak ešte %d-krát zadáte nesprávny kód PUK, karta SIM sa natrvalo zablokuje.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">Naposledy použité aplikácie v počte %d</item>
+        <item quantity="one">1 naposledy použitá aplikácia</item>
+    </plurals>
+</resources>

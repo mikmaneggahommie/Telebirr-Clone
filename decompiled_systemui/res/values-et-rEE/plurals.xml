@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Sisestatud PIN-kood on vale. Teil on jäänud %d katset.</item>
+        <item quantity="one">Sisestatud PIN-kood on vale. Kui vale PIN-kood sisestatakse veel %d korda, peate võtma oma seadme avamiseks ühendust oma teenusepakkujaga.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Sisestatud PUK-kood on vale. Kui vale PUK-kood sisestatakse veel %d korda, lukustub SIM-kaart jäädavalt.</item>
+        <item quantity="one">Sisestatud PUK-kood on vale. Kui vale PUK-kood sisestatakse veel %d korda, lukustatakse SIM-kaart jäädavalt.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d hiljutist rakendust</item>
+        <item quantity="one">1 hiljutine rakendus</item>
+    </plurals>
+</resources>

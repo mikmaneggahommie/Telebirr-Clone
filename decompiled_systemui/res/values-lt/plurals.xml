@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Įvestas neteisingas PIN kodas. Jums liko %d bandymų (-ai).</item>
+        <item quantity="one">Įvestas neteisingas PIN kodas. Jei neteisingą PIN kodą įvesite dar %d k., dėl įrenginio atrakinimo turėsite kreiptis į paslaugų teikėją.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Įvestas neteisingas PUK kodas. Jei neteisingas PUK kodas įvedamas %d k., SIM kortelė užrakinama visam laikui.</item>
+        <item quantity="one">Įvestas neteisingas PUK kodas. Jei neteisingą PUK kodą įvesite dar %d k., SIM kortelė bus užrakinta visam laikui.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">Neseniai įdiegtos programos: %d</item>
+        <item quantity="one">1 neseniai įdiegta programa</item>
+    </plurals>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Қате PIN код енгізілді. %d әрекетіңіз қалды.</item>
+        <item quantity="one">Қате PIN код енгізілді. Егер қате PIN код %d реттен көп енгізілген болса, құрылғы құлпын ашу үшін қызмет провайдеріңізге хабарласуыңыз керек болады.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Қате PUK код енгізілді. Егер қате PUK код %d реттен көп енгізілген болса, SIM карта толықтай құлыпталады.</item>
+        <item quantity="one">Қате PUK код енгізілді. Егер қате PUK код %d реттен көп енгізілген болса, SIM карта толықтай құлыпталады.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d соңғы бағдарлама</item>
+        <item quantity="one">1 соңғы бағдарлама</item>
+    </plurals>
+</resources>

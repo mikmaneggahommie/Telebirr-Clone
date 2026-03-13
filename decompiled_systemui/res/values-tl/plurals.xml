@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Naipasok na ang maling PIN. Mayroon kang %d (na) pagsubok na natitira.</item>
+        <item quantity="one">Naipasok na ang maling PIN. Kung isang maling PIN ay ipinasok ng %d higit pang beses, kailangan mong kontakin ang iyong service provider upang i-unlock ang iyong device.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Naipasok na ang maling PUK. Kung ipinasok ang maling PUK nang higit sa %d (na) beses, permanenteng mala-lock ang SIM card.</item>
+        <item quantity="one">Naipasok na ang maling PUK. Kung isang maling PUK ay ipinasok ng %d higit pang beses, ang SIM card ay permanente nang maila-lock.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d (na) kamakailang apps</item>
+        <item quantity="one">1 kamakailang app</item>
+    </plurals>
+</resources>

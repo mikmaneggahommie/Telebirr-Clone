@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">PIN кодоо буруу орууллаа. Та %d удаа оролдож болно.</item>
+        <item quantity="one">PIN кодыг буруу оруулсан байна. Хэрвээ PIN кодыг дахиад %d удаа буруу оруулсан бол төхөөрөмжийнхөө түгжээг нээхийн тулд үйлчилгээ үзүүлэгчтэйгээ холбоо барина уу.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">PUK кодоо буруу орууллаа. Хэрвээ PUK кодыг %d-с олон удаа буруу оруулсан бол SIM карт бүрмөсөн түгжигдэнэ.</item>
+        <item quantity="one">PUK кодыг буруу оруулсан байна. Хэрвээ PUK кодыг дахиад %d удаа буруу оруулсан бол SIM картыг бүрмөсөн түгжинэ.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">Сүүлийн %d програм</item>
+        <item quantity="one">Сүүлийн 1 програм</item>
+    </plurals>
+</resources>

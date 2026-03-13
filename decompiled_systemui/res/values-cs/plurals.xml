@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Byl zadán nesprávný PIN kód. Zbývá %d pokusů.</item>
+        <item quantity="one">Byl zadán chybný PIN kód. Pokud zadáte PIN kód ještě %dkrát nesprávně, budete muset kontaktovat svého poskytovatele služeb, aby zařízení odblokoval.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Byl zadán nesprávný PUK kód. Pokud zadáte PUK kód ještě %dkrát nesprávně, bude SIM karta trvale zablokovaná.</item>
+        <item quantity="one">Byl zadán chybný PUK kód. Pokud zadáte PUK kód ještě %dkrát nesprávně, bude SIM karta trvale zablokovaná.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d posledních aplikací</item>
+        <item quantity="one">1 poslední aplikace</item>
+    </plurals>
+</resources>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false" android:state_checked="true">
+        <bitmap android:src="@android:drawable/btn_star_off_normal_holo_light" android:tint="@color/tw_progress_color_control_activated" android:alpha="?android:disabledAlpha" />
+    </item>
+    <item android:state_enabled="false">
+        <bitmap android:src="@android:drawable/btn_star_big_on_disable_focused" android:tint="@color/tw_progress_color_control_normal" android:alpha="?android:disabledAlpha" />
+    </item>
+    <item android:state_checked="true" android:id="@id/on">
+        <bitmap android:src="@android:drawable/btn_star_off_normal_holo_light" android:tint="@color/tw_progress_color_control_activated" />
+    </item>
+    <item android:id="@id/off">
+        <bitmap android:src="@android:drawable/btn_star_big_on_disable_focused" android:tint="@color/tw_progress_color_control_normal" />
+    </item>
+    <transition android:toId="@id/on" android:fromId="@id/off">
+        <animation-list>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_big_on_disable_focused" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_big_on_pressed" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_big_on_selected" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_holo_dark" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_holo_light" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_label_background" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_material" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_mtrl_alpha" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_off_disabled_focused_holo_dark" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_off_disabled_focused_holo_light" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_off_disabled_holo_dark" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_off_disabled_holo_light" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_off_focused_holo_dark" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_off_focused_holo_light" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_off_normal_holo_dark" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_off_normal_holo_light" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+        </animation-list>
+    </transition>
+    <transition android:toId="@id/off" android:fromId="@id/on">
+        <animation-list>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_search_dialog_selected" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_search_dialog_voice" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_search_dialog_voice_default" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_search_dialog_voice_pressed" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_search_dialog_voice_selected" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_square_overlay" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_square_overlay_disabled" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_square_overlay_disabled_focused" android:tint="@color/tw_progress_color_control_activated" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_square_overlay_normal" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_square_overlay_pressed" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_square_overlay_selected" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_big_off_disable" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_big_off_disable_focused" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_big_off_pressed" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_big_off_selected" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+            <item android:duration="15">
+                <bitmap android:src="@android:drawable/btn_star_big_on_disable" android:tint="@color/tw_progress_color_control_normal" />
+            </item>
+        </animation-list>
+    </transition>
+</animated-selector>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Helytelen PIN kódot adott meg. Még %d próbálkozása van.</item>
+        <item quantity="one">Helytelen PIN kódot adott meg. Ha még %d alkalommal helytelen PIN-t ad meg, akkor a szolgáltatóhoz kell fordulnia az eszköz feloldása érdekében.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Helytelen PUK kódot adott meg. Ha még %d alkalommal helytelen PUK kódot ad meg, ezzel véglegesen blokkolja a SIM kártyát.</item>
+        <item quantity="one">Helytelen PUK kódot adott meg. Ha még %d alkalommal helytelen PUK kódot ad meg, ezzel véglegesen blokkolja a SIM kártyát.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d legutóbbi alkalmazás</item>
+        <item quantity="one">1 legutóbbi alkalmazás</item>
+    </plurals>
+</resources>

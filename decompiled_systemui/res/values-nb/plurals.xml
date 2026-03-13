@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Det er angitt feil PIN-kode. Du har %d forsøk igjen.</item>
+        <item quantity="one">Det er angitt feil PIN-kode. Hvis feil PIN-kode angis %d ganger til, må du kontakte tjenesteleverandøren din for å låse opp enheten.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Det er angitt feil PUK-kode. Hvis feil PUK-kode angis %d ganger til, blir SIM-kortet låst permanent.</item>
+        <item quantity="one">Det er angitt feil PUK-kode. Hvis feil PUK-kode angis %d ganger til, blir SIM-kortet låst permanent.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d nylig brukte apper</item>
+        <item quantity="one">1 nylig brukt app</item>
+    </plurals>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Rangt PIN-númer var slegið inn. Þú átt %d tilraunir eftir.</item>
+        <item quantity="one">Rangt PIN-númer var slegið inn. Ef rangt PIN-númer er slegið inn %d sinnum í viðbót þarftu að hafa samband við símafyrirtækið til að opna tækið.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Rangt PUK-númer var slegið inn. Ef rangt PUK-númer er slegið inn %d sinnum í viðbót verður SIM-kortinu læst varanlega.</item>
+        <item quantity="one">Rangt PUK-númer var slegið inn. Ef rangt PUK-númer er slegið inn %d sinnum í viðbót verður SIM-kortinu læst varanlega.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d nýleg forrit</item>
+        <item quantity="one">1 nýlegt forrit</item>
+    </plurals>
+</resources>

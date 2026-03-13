@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Введен неправильный PIN-код. Осталось попыток: %d.</item>
+        <item quantity="one">Был введен неправильный PIN-код. При вводе неверного PIN-кода еще следующее количество раз: %d вам придется связаться с поставщиком услуг, чтобы разблокировать устройство.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Введен неправильный PUK-код. Если неправильно ввести PUK-код %d раз или более, SIM-карта будет окончательно заблокирована.</item>
+        <item quantity="one">Был введен неправильный PUK-код. При вводе неверного PUK-кода еще следующее количество раз: %d ваша SIM-карта будет окончательно заблокирована.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">Недавно использованных приложений: %d</item>
+        <item quantity="one">1 недавно использованное приложение</item>
+    </plurals>
+</resources>

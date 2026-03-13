@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">ತಪ್ಪಾದ PIN ನಮೂದಿಸಲಾಗಿದೆ. ನಿಮ್ಮಲ್ಲಿ %d ಪ್ರಯತ್ನಗಳು ಬಾಕಿ ಉಳಿದಿವೆ.</item>
+        <item quantity="one">ತಪ್ಪಾದ PIN ನಮೂದಿಸಲಾಗಿದೆ. ಒಂದು ವೇಳೆ ನೀವು %d ಹೆಚ್ಚಿನ ಬಾರಿ ತಪ್ಪಾದ PIN ನಮೂದಿಸಿದರೆ, ನಿಮ್ಮ ಸಾಧನವನ್ನು ಅನ್‌ಲಾಕ್ ಮಾಡಲು ನಿಮ್ಮ ಸೇವಾ ಪೂರೈಕೆದಾರರನ್ನು ಸಂಪರ್ಕಿಸಬೇಕಾಗುತ್ತದೆ.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">ತಪ್ಪಾದ PUK ನಮೂದಿಸಲಾಗಿದೆ. ಒಂದು ವೇಳೆ PUK ಅನ್ನು %d ಹೆಚ್ಚಿನ ಬಾರಿ ತಪ್ಪಾಗಿ ನಮೂದಿಸಿದರೆ, SIM ಕಾರ್ಡ್ ಅನ್ನು ಶಾಶ್ವತವಾಗಿ ಲಾಕ್ ಮಾಡಲಾಗುತ್ತದೆ.</item>
+        <item quantity="one">ತಪ್ಪಾದ PUK ನಮೂದಿಸಲಾಗಿದೆ. ಒಂದು ವೇಳೆ ನೀವು %d ಹೆಚ್ಚಿನ ಬಾರಿ ತಪ್ಪಾದ PUK ನಮೂದಿಸಿದರೆ, SIM ಕಾರ್ಡ್ ಶಾಶ್ವತವಾಗಿ ಲಾಕ್ ಆಗುತ್ತದೆ.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d ಇತ್ತೀಚಿನ ಅನ್ವಯಿಸುವಿಕೆಗಳು</item>
+        <item quantity="one">1 ಇತ್ತೀಚಿನ ಅನ್ವಯಿಸುವಿಕೆ</item>
+    </plurals>
+</resources>

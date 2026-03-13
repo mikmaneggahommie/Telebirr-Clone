@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">PIN yang dimasukkan salah. Anda memiliki %d upaya tersisa.</item>
+        <item quantity="one">PIN yang dimasukkan salah. Apabila PIN yang dimasukkan salah %d kali lagi, Anda harus menghubungi penyedia layanan untuk membuka kunci perangkat.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">PUK yang dimasukkan salah. Apabila PUK yang dimasukkan salah %d kali lagi, kartu SIM akan dikunci secara permanen.</item>
+        <item quantity="one">PUK yang dimasukkan salah. Apabila PUK yang dimasukkan salah %d kali lagi, kartu SIM akan dikunci secara permanen.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d aplikasi terbaru</item>
+        <item quantity="one">1 aplikasi terbaru</item>
+    </plurals>
+</resources>

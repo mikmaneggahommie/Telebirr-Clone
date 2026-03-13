@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">PIN ที่ใส่ไม่ถูกต้อง คุณเหลืออีก %d ครั้ง</item>
+        <item quantity="one">PIN ที่ใส่ไม่ถูกต้อง ถ้าใส่ PIN ที่ไม่ถูกต้องอีก %d ครั้ง คุณจะต้องติดต่อผู้ให้บริการของคุณ เพื่อปลดล็อคอุปกรณ์ของคุณ</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">PUK ที่ใส่ไม่ถูกต้อง ถ้าใส่ PUK ที่ไม่ถูกต้องอีก %d ครั้ง SIM การ์ดจะถูกล็อคอย่างถาวร</item>
+        <item quantity="one">PUK ที่ใส่ไม่ถูกต้อง ถ้าใส่ PUK ที่ไม่ถูกต้องอีก %d ครั้ง SIM การ์ดจะถูกล็อคอย่างถาวร</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d ​แอพ​ล่า​สุด</item>
+        <item quantity="one">1 ​แอพ​ล่า​สุด</item>
+    </plurals>
+</resources>

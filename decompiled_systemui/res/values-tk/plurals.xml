@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Nädogry PIN girizildi. Ýene %d synanyşygyňyz galdy.</item>
+        <item quantity="one">Nädogry PIN girizildi. Ýene %d gezek nädogry PIN girizseňiz, enjamyň gulpuny açmak üçin, öz hyzmat üpjün edijiňize ýüz tutmaly bolarsyňyz.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Nädogry PUK girizildi. Ýene %d gezek nädogry PUK girizseňiz, SIM karta hemişelik gulplanar.</item>
+        <item quantity="one">Nädogry PUK girizildi. Ýene %d gezek nädogry PUK girizseňiz, SIM karta hemişelik gulplanar.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d soňky ulanylan gollanmalar</item>
+        <item quantity="one">1 soňky goll</item>
+    </plurals>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">PIN okerra adierazi duzu. %d saiakera geratzen zaizkizu.</item>
+        <item quantity="one">PIN okerra adierazi duzu. PIN okerra beste %d aldiz adieraziz gero, zerbitzu hornitzailearekin jarri beharko duzu harremanetan gailua desblokeatzeko.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">PUK okerra adierazi duzu. PUK okerra beste %d aldiz adieraziz gero, SIM txartela behin betiko blokeatuko da.</item>
+        <item quantity="one">PUK okerra adierazi duzu. PUK okerra beste %d aldiz adieraziz gero, SIM txartela behin betiko blokeatuko da.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d aplikazio berri</item>
+        <item quantity="one">Aplikazio berri 1</item>
+    </plurals>
+</resources>

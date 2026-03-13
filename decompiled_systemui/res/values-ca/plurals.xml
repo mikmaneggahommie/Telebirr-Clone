@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">"S'ha introduït un PIN incorrecte. Li queden %d intents."</item>
+        <item quantity="one">"S'ha introduït un PIN incorrecte. Si s'introdueix un PIN incorrecte %d cops més, haurà de posar-se en contacte amb el seu proveïdor de serveis per desbloquejar el dispositiu."</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">"S'ha introduït un PUK incorrecte. Si s'introdueix un PUK incorrecte %d cops, la targeta SIM es bloquejarà permanentment."</item>
+        <item quantity="one">"S'ha introduït un PUK incorrecte. Si s'introdueix un PUK incorrecte %d cops més, la targeta SIM es bloquejarà permanentment."</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d aplicacions recents</item>
+        <item quantity="one">1 aplicació recent</item>
+    </plurals>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">PIN-и нодуруст ворид карда шуд. Шумо боз %d кӯшиш доред.</item>
+        <item quantity="one">Як PIN-и нодуруст ворид карда шуд. Агар як PIN-и нодуруст боз %d маротиба ворид карда шавад, ба шумо лозим меояд, ки барои кушодани банди дастгоҳ бо провайдери хизматрасони худ тамос гиред.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">PUK-и нодуруст ворид карда шуд. Агар PUK-и хато боз %d маротиба ворид карда шавад, корти SIM бебозгашт баста мешавад.</item>
+        <item quantity="one">Як PUK-и нодуруст ворид карда шуд. Агар як PUK-и нодуруст боз %d маротиба ворид карда шавад, SIM-корт бебозгашт баста мешавад.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d барномаи охирин</item>
+        <item quantity="one">1 барномаи охирин</item>
+    </plurals>
+</resources>

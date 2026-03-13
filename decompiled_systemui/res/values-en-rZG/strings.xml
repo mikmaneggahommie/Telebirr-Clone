@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bluetooth_pairing">Pairing…</string>
+    <string name="bluetooth_profile_a2dp">Media audio</string>
+    <string name="bluetooth_profile_headset">Call audio</string>
+    <string name="bluetooth_profile_textinput">Text input</string>
+    <string name="bluetooth_profile_pan">Internet access</string>
+    <string name="bluetooth_a2dp_profile_summary_connected">Connected for media audio</string>
+    <string name="bluetooth_headset_profile_summary_connected">Connected for call audio</string>
+    <string name="bluetooth_hid_profile_summary_connected">Connected as input device</string>
+    <string name="bluetooth_summary_connected_to_a2dp_headset">Connected for call and media audio</string>
+    <string name="bluetooth_pan_nap_connected">Connected to provide Internet connection</string>
+    <string name="bluetooth_pan_panu_connected">Connected to access Internet connection</string>
+    <string name="bluetooth_pan_profile_summary_use_for">Use for Internet access.</string>
+    <string name="bluetooth_pairing_pin_error_message">Unable to pair with %1$s. Make sure %2$s is ready to pair.</string>
+    <string name="bluetooth_hid_connection_error_message">Unable to connect device to Bluetooth input device while using it as Bluetooth input device.</string>
+    <string name="quickpanel_data_roaming_text">"Data
+roaming"</string>
+    <string name="wifi_authentication_succeed">Authenticated.</string>
+    <string name="wifi_authentication_failed">Authentication failed.</string>
+    <string name="wifi_authentication_succeed_kt">Wi-Fi AP authenticated.</string>
+    <string name="wifi_authentication_failed_kt">Failed to authenticate Wi-Fi AP.</string>
+    <string name="wifi_authentication_not_subscribed">Unable to connect to %s network. Subscribe to service then try again.</string>
+    <string name="wifi_authentication_no_response">Failed to connect to Wi-Fi AP.</string>
+    <string name="wifi_authentication_invalid_value">Authentication failed. Check ID and password.</string>
+    <string name="recents_app_info_button_label">Application info</string>
+    <string name="battery_saver_notification_title_sec">Power saving mode enabled</string>
+    <string name="battery_saver_notification_text_sec">Device performance limited and background data restricted</string>
+    <string name="battery_saver_notification_text_data_restrict">Your device performance is limited and the use of Wi-Fi and mobile networks in the background is restricted. Updates will not be installed for Email, Messages, Music, Phone, SNS apps, games, and other apps which include features that rely on the use of data.</string>
+    <string name="battery_saver_notification_text_no_data_restrict">Device performance limited</string>
+    <string name="battery_saver_notification_action_text_sec">Turn off</string>
+    <string name="battery_saver_notification_text_sec_chn">Device performance limited</string>
+    <string name="quickpanel_dormant_mode_content_description">Do not disturb</string>
+    <string name="quickpanel_network_booster_content_description">Download booster</string>
+    <string name="quickpanel_silent_mode_mute">Mute</string>
+    <string name="quickpanel_auto_rotate_text">"Auto
+rotate"</string>
+    <string name="quickpanel_dormant_mode_text">"Do not
+disturb"</string>
+    <string name="quickpanel_smart_stay_text">"Smart
+stay"</string>
+    <string name="smart_bonding_turn_off_text">Unable to use Download booster while %1$s is enabled. Disable %2$s and try again.</string>
+    <string name="smart_bonding_popup_msg_wifi">Wi-Fi is currently turned off. To enable Download booster, both Wi-Fi and Mobile data must be turned on. Downloading via mobile networks may result in additional charges depending on your payment plan.</string>
+    <string name="smart_bonding_popup_msg_wifi_data">Wi-Fi and Mobile data are currently turned off. To enable Download booster, both Wi-Fi and Mobile data must be turned on. Downloading via mobile networks may result in additional charges depending on your payment plan.</string>
+    <string name="smart_bonding_popup_msg">Download booster will be enabled. Downloading via mobile networks may result in additional charges depending on your payment plan.</string>
+    <string name="dialog_battery_data_warning">Mobile hotspot will be enabled. This will increase battery consumption and data usage.</string>
+    <string name="airplane_mode_dialog_message">Flight mode allows you to turn off calling, messaging and data network features. It also turns off connectivity features such as Wi-Fi and Bluetooth. To use Wi-Fi and Bluetooth, turn them on in Settings or on the notification panel.</string>
+    <string name="tw_global_actions_airplane_mode_on_status_confirm_china">Flight mode allows you to turn off calling, messaging and data network features. It also turns off connectivity features such as WLAN and Bluetooth. To use WLAN and Bluetooth, turn them on in Settings or on the notification panel.</string>
+    <string name="recent_help_dialog_title">The Recents key</string>
+    <string name="recent_menukey_press_description_no_help">The menu key has been replaced by the recents key to allow you to quickly change between the applications you used most recently.</string>
+    <string name="recent_menukey_press_description_att">The menu key has been replaced by the recent key. While in an application, press and hold the recent key to see menu options.</string>
+    <string name="recent_help_dialog_title_for_split_view">New Multi window features</string>
+    <string name="recent_menukey_press_description_for_split_view_1">To open applications in split screen view, tap %s on the title bar of the application window. This icon is shown when the application supports split screen view.</string>
+    <string name="recent_menukey_press_description_for_split_view_1_talk">To open applications in split screen view, tap the split screen icon on the title bar of the application window. This icon is shown when the application supports split screen view.</string>
+    <string name="recent_menukey_press_description_for_split_view_2">Tap and hold an application window to open the application as a pop-up. To change from pop-up view to split screen view, drag the application pop-up to the top or the bottom of the screen.</string>
+    <string name="recent_help_dialog_title_for_popup_view">Using Multi window view</string>
+    <string name="recent_menukey_press_description_for_popup_view_1">To open apps in split screen view, tap %s on the title bar of the app window. This icon is shown when the app supports split screen view.</string>
+    <string name="recent_menukey_press_description_for_popup_view_1_talk">To open apps in split screen view, tap the split screen icon on the title bar of the app window. This icon is shown when the app supports split screen view.</string>
+    <string name="recent_menukey_press_description_for_popup_view_2">You can also press and hold the Recents key to open apps in split screen view.</string>
+    <string name="recent_menukey_press_description_for_popup_view_3">View an app in pop-up view by swiping downwards diagonally from either corner at the top of the screen while the app is open and shown on the screen.</string>
+    <string name="recent_menukey_help_button">Help</string>
+    <string name="tw_lock_to_app_title">Enable Pin windows</string>
+    <string name="tw_unable_to_pin_title">Cannot pin %s</string>
+    <string name="tw_unable_to_pin_description">This app does not support Pin windows.</string>
+    <string name="tw_unable_to_pin_description_toast">Unable to pin app. %s closed. Unknown error occurred.</string>
+    <string name="tw_screen_pinning_positive">Start</string>
+    <string name="global_actions_airplane_mode_on_status_confirm">Flight mode allows you to turn off calling, messaging and data network features. It also turns off connectivity features such as Wi-Fi and Bluetooth. To use Wi-Fi and Bluetooth, turn them on in Settings or on the notification panel.</string>
+    <string name="dnd_noti_title">Do not disturb enabled</string>
+    <string name="mobile_hotspot_dialog_nosim_warning_dcm">Insert a SIM card to use Wi-Fi tethering.</string>
+    <string name="accessibility_volume_expand">Expand</string>
+    <string name="accessibility_volume_collapse">Collapse</string>
+    <string name="power_saving_confirm_popup_title">Enable Power saving mode</string>
+    <string name="power_saving_confirm_popup_text">Power saving mode will be enabled. Your device performance will be limited and the use of Wi-Fi and mobile networks in the background will be restricted. Updates will not be installed for Email, Messages, Music, Phone, SNS apps, games, and other apps which include features that rely on the use of data.</string>
+    <string name="mobile_hotspot_dialog_nosim_warning_title_jpn">Unable to enable Wi-Fi tethering</string>
+</resources>

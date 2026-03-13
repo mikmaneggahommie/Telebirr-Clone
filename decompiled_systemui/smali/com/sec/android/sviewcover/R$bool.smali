@@ -1,0 +1,132 @@
+.class public final Lcom/sec/android/sviewcover/R$bool;
+.super Ljava/lang/Object;
+.source "R.java"
+
+
+# annotations
+.annotation system Ldalvik/annotation/EnclosingClass;
+    value = Lcom/sec/android/sviewcover/R;
+.end annotation
+
+.annotation system Ldalvik/annotation/InnerClass;
+    accessFlags = 0x19
+    name = "bool"
+.end annotation
+
+
+# static fields
+.field public static final config_dead_zone_flash:I = 0x7f0d001e
+
+.field public static final config_disableMenuKeyInLockScreen:I = 0x7f0d000f
+
+.field public static final config_disableWifiAndBluetooth:I = 0x7f0d0023
+
+.field public static final config_display_APM:I = 0x7f0d0012
+
+.field public static final config_enableDataSwitch:I = 0x7f0d002e
+
+.field public static final config_enableKeyguardService:I = 0x7f0d0027
+
+.field public static final config_enableLockScreenRotation:I = 0x7f0d0001
+
+.field public static final config_enableLockScreenTranslucentDecor:I = 0x7f0d0002
+
+.field public static final config_gui_new_help_popup:I = 0x7f0d0030
+
+.field public static final config_gui_preview:I = 0x7f0d0031
+
+.field public static final config_hspa_data_distinguishable:I = 0x7f0d0017
+
+.field public static final config_isSViewCover2:I = 0x7f0d0000
+
+.field public static final config_keyguardShowCameraAffordance:I = 0x7f0d001c
+
+.field public static final config_keyguardUserSwitcher:I = 0x7f0d0029
+
+.field public static final config_recentsAppIsFullScreen:I = 0x7f0d002f
+
+.field public static final config_recents_fake_shadows:I = 0x7f0d0016
+
+.field public static final config_recents_interface_for_tablets:I = 0x7f0d0013
+
+.field public static final config_recents_thumbnail_image_fits_to_xy:I = 0x7f0d0014
+
+.field public static final config_recents_use_hardware_layers:I = 0x7f0d0015
+
+.field public static final config_show4GForLTE:I = 0x7f0d0020
+
+.field public static final config_show4GForLTE_ATO:I = 0x7f0d0032
+
+.field public static final config_showDataConnectionView:I = 0x7f0d0022
+
+.field public static final config_showEmergencyButton:I = 0x7f0d0011
+
+.field public static final config_showEmergencyCallLabelOnly:I = 0x7f0d0021
+
+.field public static final config_showMin3G:I = 0x7f0d001a
+
+.field public static final config_showPhoneRSSIForData:I = 0x7f0d0019
+
+.field public static final config_showRotationLock:I = 0x7f0d001b
+
+.field public static final config_showRsrpSignalLevelforLTE:I = 0x7f0d0024
+
+.field public static final config_statusBarShowNumber:I = 0x7f0d0018
+
+.field public static final config_status_bar_scrim_behind_use_src:I = 0x7f0d001d
+
+.field public static final doze_display_state_supported:I = 0x7f0d002a
+
+.field public static final doze_pulse_on_notifications:I = 0x7f0d002d
+
+.field public static final doze_pulse_on_pick_up:I = 0x7f0d002c
+
+.field public static final doze_pulse_on_significant_motion:I = 0x7f0d002b
+
+.field public static final enable_ticker:I = 0x7f0d0028
+
+.field public static final enable_volume_ui:I = 0x7f0d0033
+
+.field public static final icccardexist_hide_emergencybutton:I = 0x7f0d000d
+
+.field public static final kg_show_ime_at_screen_on:I = 0x7f0d0003
+
+.field public static final kg_sim_puk_account_full_screen:I = 0x7f0d000e
+
+.field public static final kg_use_all_caps:I = 0x7f0d0004
+
+.field public static final quick_settings_rssi_tile_capitalization:I = 0x7f0d001f
+
+.field public static final recents_has_transposed_nav_bar:I = 0x7f0d0026
+
+.field public static final recents_has_transposed_search_bar:I = 0x7f0d0025
+
+.field public static final theme_use_clock_background_image:I = 0x7f0d000c
+
+.field public static final theme_use_image_clock:I = 0x7f0d0010
+
+.field public static final theme_use_image_delete_button:I = 0x7f0d0007
+
+.field public static final theme_use_image_pinlock:I = 0x7f0d0005
+
+.field public static final theme_use_imagebg_pinlock:I = 0x7f0d0006
+
+.field public static final theme_use_pattern_failed_image:I = 0x7f0d000b
+
+.field public static final theme_use_pattern_line_color:I = 0x7f0d0008
+
+.field public static final theme_use_pattern_normal_image:I = 0x7f0d0009
+
+.field public static final theme_use_pattern_success_image:I = 0x7f0d000a
+
+
+# direct methods
+.method public constructor <init>()V
+    .locals 0
+
+    .prologue
+    .line 993
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    return-void
+.end method

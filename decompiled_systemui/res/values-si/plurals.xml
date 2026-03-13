@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">වැරදි PIN අංකයක් ඇතුළත් කෙරිණි. ඔබට ප්‍රයත්න %d ක් ඉතිරියි.</item>
+        <item quantity="one">වැරදි PIN අංකයක් ඇතුළු කෙරිණි. වැඩිදුර %d වතාවක් වැරදි PIN අංකයක් ඇතුළු කෙරිණි, ඔබට ඔබේ උපාංගය අගුලු හැරීමට ඔබේ සේවා සැපයුම්කරු සම්බන්ධ කර ගැනීමට සිදු වේ.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">වැරදි PUK අංකයක් ඇතුළත් කෙරිණි. වැරදි PUK අංකයක් %d වතාවක් ඇතුළත් කෙරිණි, SIM කාඩ්පත ස්ථීරවම අගුලු වැටෙනු ඇත.</item>
+        <item quantity="one">වැරදි PUK අංකයක් ඇතුළු කෙරිණි. වැඩිදුර %d වතාවක් වැරදි PUK අංකයක් ඇතුළු කෙරිණි, SIM කාඩ්පත ස්ථීරවම අගුලු වැටෙනු ඇත.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">මෑතකාලීන යෙදුම් %d</item>
+        <item quantity="one">මෑතකාලීන යෙදුම් 1</item>
+    </plurals>
+</resources>

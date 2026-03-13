@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">একটি ভুল PIN লেখা হয়েছে। আপনার %dটি প্রয়াস বাকি আছে।</item>
+        <item quantity="one">একটি ভুল PIN লেখা হয়েছে। একটি ভুল PIN আরও %d বার লেখা হলে আপনার ডিভাইস আনলক করতে আপনাকে আপনার পরিষেবা সরবরাহকারীর সাথে যোগাযোগ করতে হবে।</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">একটি ভুল PUK লেখা হয়েছে। একটি ভুল PUK আরও %d বার লেখা হলে SIM কার্ডটি স্থায়ীভাবে লক হবে।</item>
+        <item quantity="one">একটি ভুল PUK লেখা হয়েছে। একটি ভুল PUK আরও %d বার লেখা হলে SIM কার্ডটি স্থায়ীভাবে লক হবে।</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%dটি সাম্প্রতিক অ্যাপ</item>
+        <item quantity="one">1টি সাম্প্রতিক অ্যাপ</item>
+    </plurals>
+</resources>

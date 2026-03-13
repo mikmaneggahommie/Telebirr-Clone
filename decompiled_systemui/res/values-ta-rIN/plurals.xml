@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">தவறான PIN உள்ளிடப்பட்டுள்ளது. உங்களுக்கு %d முயற்சிகள் மீதமுள்ளது.</item>
+        <item quantity="one">தவறான PIN உள்ளிடப்பட்டுள்ளது. தவறான PIN மேலும் %d முறைகள் உள்ளிடப்பட்டால், உங்கள் சாதனத்தை பூட்டுநீக்க சேவை வழங்குநரை நீங்கள் தொடர்பு கொள்ள வேண்டும்.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">தவறான PUK உள்ளிடப்பட்டுள்ளது. தவறான PUK மேலும் %d முறைகள் உள்ளிடப்பட்டால, இந்த SIM அட்டை நிரந்தரமாக பூட்டப்படும்.</item>
+        <item quantity="one">தவறான PUK உள்ளிடப்பட்டுள்ளது. தவறான PUK மேலும் %dமுறைகள் உள்ளிடப்பட்டால், இந்த SIM அட்டை நிரந்தரமாக பூட்டப்படும்.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d சமீபத்திய பயன்பாடுகள்</item>
+        <item quantity="one">1 சமீபத்திய பயன்பாடு</item>
+    </plurals>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">E ke futur gabim PIN-in. Të kanë mbetur edhe %d orvatje.</item>
+        <item quantity="one">Është futur një PIN i pasaktë. Në qoftë se e fut PIN-in gabim edhe %d herë, do të duhet të lidhesh me ofruesin e shërbimit, që ta zhbllokosh pajisjen.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">E ke futur gabim PUK-un. Në qoftë se e fut PUK-un gabim edhe %d herë, karta SIM do të bllokohet përfundimisht.</item>
+        <item quantity="one">Është futur një PUK i pasaktë. Në qoftë se e fut PUK-un gabim edhe %d herë, karta SIM do të bllokohet përfundimisht.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d aplikacione të fundit</item>
+        <item quantity="one">1 aplikacion i fundit</item>
+    </plurals>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Быў уведзены няправільны PIN-код. Засталося спроб: %d.</item>
+        <item quantity="one">Быў уведзены няправільны PIN-код. Калі няправільны PIN-код будзе уведзены яшчэ %d разоў, вам трэба будзе звярнуцца да пастаўшчыка паслуг, каб разблакіраваць прыладу.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Быў уведзены няправільны PUK-код. Калі няправільны PUK-код уведзены %d разоў, SIM-карта будзе заблакіравана назаўжды.</item>
+        <item quantity="one">Быў уведзены няправільны PUK-код. Калі няправільны PUK-код будзе уведзены яшчэ %d разоў, SIM-карта будзе заблакіравана назаўжды.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">Апошніх праграм: %d</item>
+        <item quantity="one">1 апошняя праграма</item>
+    </plurals>
+</resources>

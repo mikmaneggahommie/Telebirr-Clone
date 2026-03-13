@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code">
+        <item quantity="other">Er is een onjuiste pincode ingevoerd. U hebt %d pogingen over.</item>
+        <item quantity="one">Er is een onjuiste pincode ingevoerd. Als u nog %d keer een onjuiste pincode invoert, moet u contact opnemen met uw serviceprovider om uw apparaat te ontgrendelen.</item>
+    </plurals>
+    <plurals name="kg_password_wrong_puk_code">
+        <item quantity="other">Er is een onjuiste PUK ingevoerd. Als er nog %d keer een onjuiste PUK wordt ingevoerd, wordt de SIM-kaart permanent vergrendeld.</item>
+        <item quantity="one">Er is een onjuiste PUK ingevoerd. Als u nog %d keer een onjuiste PUK invoert, wordt de SIM-kaart permanent vergrendeld.</item>
+    </plurals>
+    <plurals name="status_bar_accessibility_recent_apps">
+        <item quantity="other">%d recente apps</item>
+        <item quantity="one">1 recente app</item>
+    </plurals>
+</resources>
