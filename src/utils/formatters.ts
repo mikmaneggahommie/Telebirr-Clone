@@ -226,3 +226,15 @@ export const generateInitialTransactionID = () => {
   for (let i = 0; i < 9; i++) suffix += chars.charAt(Math.floor(Math.random() * chars.length));
   return `D${suffix}`;
 };
+
+export type FieldErrorKey =
+  | "amount"
+  | "time"
+  | "date"
+  | "battery"
+  | "transactionId"
+  | "senderName"
+  | "receiverName"
+  | "fNo"
+  | "transactionTime"
+  | "transactionNumber";

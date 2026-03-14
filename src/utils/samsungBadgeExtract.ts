@@ -1,9 +1,9 @@
 const SAMSUNG_BADGE_BASE_PATH = "/status/samsung/";
 
-const MIN_FOREGROUND_DELTA = 24;
-const SATURATION_ALLOWANCE = 32;
-const ALPHA_SCALE = 12;
-const MIN_CROP_ALPHA = 18;
+const MIN_FOREGROUND_DELTA = 32;
+const SATURATION_ALLOWANCE = 24;
+const ALPHA_SCALE = 14;
+const MIN_CROP_ALPHA = 10;
 
 const processedBadgeCache = new Map<string, Promise<string>>();
 
@@ -51,11 +51,15 @@ const sampleBackgroundLuma = (pixels: Uint8ClampedArray, width: number, height: 
 
   points.push([0, 0], [maxX, 0], [0, maxY], [maxX, maxY]);
 
-  const samples = points.map(([x, y]) => readLuma(x, y)).sort((a, b) => a - b);
-  if (samples.length === 0) return 235;
+  const samples = points
+    .map(([x, y]) => readLuma(x, y))
+    .filter((l) => l > 30) // Ignore black letterboxing
+    .sort((a, b) => a - b);
 
-  const percentile25 = samples[Math.floor(samples.length * 0.25)];
-  return Math.max(200, percentile25);
+  if (samples.length === 0) return 230;
+
+  const median = samples[Math.floor(samples.length * 0.5)];
+  return Math.max(180, median);
 };
 
 const findOpaqueBounds = (

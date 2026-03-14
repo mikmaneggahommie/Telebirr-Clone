@@ -8,7 +8,6 @@ import {
   Mail,
   PlaySquare,
   Usb,
-  Leaf
 } from "lucide-react";
 import {
   applyTweaks,
@@ -154,6 +153,7 @@ export interface ReceiptData {
   samsungShowHotspot: boolean;
   samsungShowVpn: boolean;
   samsungShowNfc: boolean;
+  samsungShowPowerSaving: boolean;
   samsungIconEnabled: Record<SamsungStatusIconFile, boolean>;
   samsungNetworkTypeIcon: SamsungNetworkTypeIconFile;
   samsungSignalIcon: SamsungSignalIconFile;
@@ -514,20 +514,16 @@ export const TelebirrReceipt = ({
   );
   const samsungWifiStrength = data.wifiStrength ?? 3;
   const showWifiIcon = samsungShowWifi && !samsungAirplaneEnabled && samsungWifiStrength > 0;
-  const showNetworkLabel = samsungShowNetworkLabel && !samsungAirplaneEnabled;
+  const showNetworkLabel = samsungShowNetworkLabel && !samsungAirplaneEnabled && !showWifiIcon;
   const showSignalIcon = samsungShowSignal && !samsungAirplaneEnabled;
   const batteryLabel = `${batteryNum}%`;
   const batteryLabelWidth = Math.max(18, batteryLabel.length * 6.2);
 
   let batteryColor = samsungStatusColor;
-  let showPowerLeaf = false;
-
   if (data.batteryCharging) {
     batteryColor = "#4cdc6b"; // Green
-    if (data.iosLowPowerMode) showPowerLeaf = true;
   } else if (data.iosLowPowerMode) {
     batteryColor = "#fbbc05"; // Yellow
-    showPowerLeaf = true;
   } else if (batteryNum <= 20) {
     batteryColor = "#fc4b43"; // Red
   }
@@ -551,16 +547,44 @@ export const TelebirrReceipt = ({
     "location.jpg": { width: 11, height: 12 },
     "mobile-hotspot-enabled.jpeg": { width: 12, height: 12 },
     "mute.jpg": { width: 12, height: 12 },
-    "vpn-service-connected.jpeg": { width: 12, height: 12 },
+    "vpn-service-connected.jpeg": { width: 14, height: 14 },
+    "power-saving-icon1.png": { width: 13.5, height: 13.5 },
+    "vibrate-icon1.png": { width: 13.5, height: 13.5 },
   };
 
-  const samsungSystemCandidates = SAMSUNG_SYSTEM_TOGGLE_ICON_FILES
-    .filter((file) => samsungIconEnabled[file])
-    .map((file) => ({
-      file,
-      width: samsungSystemIconSize[file].width,
-      height: samsungSystemIconSize[file].height,
-    }));
+  const samsungSystemCandidates: { file: SamsungSystemToggleIconFile; width: number; height: number }[] = [];
+  for (const file of SAMSUNG_SYSTEM_TOGGLE_ICON_FILES) {
+    // 1. Specific System Toggles (Handled by dedicated state)
+    if (file === "power-saving-icon1.png") {
+      if (data.samsungShowPowerSaving) {
+        samsungSystemCandidates.push({ file, ...samsungSystemIconSize[file] });
+      }
+      continue;
+    }
+
+    if (file === "vibrate-icon1.png") {
+      if (data.samsungSoundMode === "vibrate") {
+        samsungSystemCandidates.push({ file, ...samsungSystemIconSize[file] });
+      }
+      continue;
+    }
+
+    if (file === "mute.jpg") {
+      if (data.samsungSoundMode === "mute") {
+        samsungSystemCandidates.push({ file, ...samsungSystemIconSize[file] });
+      }
+      continue;
+    }
+
+    // 2. Generic System Icons (Handled by samsungIconEnabled map)
+    if (samsungIconEnabled[file]) {
+      samsungSystemCandidates.push({
+        file,
+        width: samsungSystemIconSize[file].width,
+        height: samsungSystemIconSize[file].height,
+      });
+    }
+  }
   const maxSystemIconsByNotch = notchType === "punch_center" ? 3 : notchType === "punch_left" ? 4 : 5;
   let systemWidth = 0;
   const visibleSystemCandidates: typeof samsungSystemCandidates = [];
@@ -726,9 +750,7 @@ export const TelebirrReceipt = ({
               </div>
             )}
 
-            {showPowerLeaf && (
-              <Leaf size={11} strokeWidth={2.4} color={samsungStatusColor} style={{ marginRight: "1px" }} />
-            )}
+
 
             {!samsungAirplaneEnabled && (
               <>
@@ -736,33 +758,33 @@ export const TelebirrReceipt = ({
                   <SamsungFolderIcon
                     file={data.samsungWifiIcon}
                     color={samsungStatusColor}
-                    width={14}
-                    height={10}
+                    width={15}
+                    height={13}
                   />
                 )}
                 {showNetworkLabel && (
                   <SamsungFolderIcon
                     file={data.samsungNetworkTypeIcon}
                     color={samsungStatusColor}
-                    width={16}
-                    height={10}
+                    width={17}
+                    height={12}
                   />
                 )}
                 {showSignalIcon && (
                   <SamsungFolderIcon
                     file={data.samsungSignalIcon}
                     color={samsungStatusColor}
-                    width={12}
-                    height={10}
+                    width={14}
+                    height={13}
                   />
                 )}
                 {(showSignalIcon && data.simCount === 2) && (
                   <SamsungFolderIcon
                     file={data.samsungSignalIcon}
                     color={samsungStatusColor}
-                    width={12}
-                    height={10}
-                    style={{ marginLeft: "-2px" }} // Slightly overlap for dual sim look
+                    width={14}
+                    height={13}
+                    style={{ marginLeft: "-3px" }}
                   />
                 )}
               </>

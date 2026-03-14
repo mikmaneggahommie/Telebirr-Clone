@@ -29,14 +29,16 @@ export const SAMSUNG_BATTERY_ICON_FILES = [
 ] as const;
 
 export const SAMSUNG_SYSTEM_TOGGLE_ICON_FILES = [
-  "airplane_mode.jpg",
+  "vpn-service-connected.jpeg",
+  "power-saving-icon1.png",
   "alarm.jpg",
+  "vibrate-icon1.png",
   "mute.jpg",
   "location.jpg",
-  "bluetooth.jpg",
-  "vpn-service-connected.jpeg",
   "mobile-hotspot-enabled.jpeg",
+  "bluetooth.jpg",
   "casting-activated.jpeg",
+  "airplane_mode.jpg",
 ] as const;
 
 export type SamsungNetworkTypeIconFile = (typeof SAMSUNG_NETWORK_TYPE_ICON_FILES)[number];
@@ -87,6 +89,8 @@ export const SAMSUNG_STATUS_ICON_LABELS: Record<SamsungStatusIconFile, string> =
   "mobile-hotspot-enabled.jpeg": "Hotspot",
   "mute.jpg": "Mute",
   "vpn-service-connected.jpeg": "VPN",
+  "power-saving-icon1.png": "Power Saving",
+  "vibrate-icon1.png": "Vibrate",
 };
 
 const STATUS_DARK = "#1C1C1E";

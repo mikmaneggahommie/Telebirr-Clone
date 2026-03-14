@@ -91,13 +91,6 @@ const waitForCaptureReady = async (node: HTMLElement) => {
   await nextFrame();
 };
 
-const generateInitialTransactionID = () => {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let suffix = "";
-  for (let i = 0; i < 9; i++) suffix += chars.charAt(Math.floor(Math.random() * chars.length));
-  return `D${suffix}`;
-};
-
 export function App() {
   const [copied, setCopied] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<FieldErrorKey, string>>>({});
@@ -172,17 +165,18 @@ export function App() {
     samsungOneUiEra: "oneui6",
     samsungNetworkTypeSim1: "LTE",
     samsungNetworkTypeSim2: "LTE",
-    samsungShowNetworkLabel: true,
+    samsungShowNetworkLabel: false,
     samsungShowWifi: true,
     samsungShowSignal: true,
     samsungShowBatteryPercent: true,
     samsungShowBluetooth: false,
     samsungShowAirplane: false,
-    samsungShowAlarm: true,
+    samsungShowAlarm: false,
     samsungShowLocation: false,
     samsungShowHotspot: false,
     samsungShowVpn: false,
     samsungShowNfc: false,
+    samsungShowPowerSaving: false,
     samsungNotificationMode: "none",
     samsungNotifMessages: false,
     samsungNotifPhone: false,
@@ -197,8 +191,8 @@ export function App() {
     samsungShowRotationLock: false,
     samsungIconEnabled: {
       ...createSamsungIconEnabledState(),
-      "alarm.jpg": true,
-      "lte.jpg": true,
+      "alarm.jpg": false,
+      "lte.jpg": false,
       "signal_strength.jpg": true,
       "wifi.jpg": true,
       "battery_level.jpg": true,
@@ -251,6 +245,15 @@ export function App() {
       }));
     }
   }, [data.showMobileData, data.iosWifiEnabled]);
+
+  useEffect(() => {
+    if (data.samsungShowWifi && data.samsungShowNetworkLabel) {
+      setData((prev) => ({
+        ...prev,
+        samsungShowNetworkLabel: false,
+      }));
+    }
+  }, [data.samsungShowWifi, data.samsungShowNetworkLabel]);
 
   const setSamsungCategoryIcon = <
     K extends "samsungNetworkTypeIcon" | "samsungSignalIcon" | "samsungWifiIcon" | "samsungBatteryIcon",
@@ -1046,6 +1049,7 @@ export function App() {
                       <label className="block text-[10px] font-black text-[#6a7569] uppercase tracking-widest mb-1 border-b border-[#e1eae2] pb-2">Right Side (System)</label>
                       <div className="grid grid-cols-2 gap-3">
                         <InlineToggle label="Power Save" labelOffset="ml-1" enabled={data.iosLowPowerMode} onClick={() => set({ iosLowPowerMode: !data.iosLowPowerMode, batteryCharging: false })} />
+                        <InlineToggle label="Samsung PS" labelOffset="ml-1" enabled={data.samsungShowPowerSaving} onClick={() => set({ samsungShowPowerSaving: !data.samsungShowPowerSaving })} />
                         <InlineToggle label="Bluetooth" labelOffset="ml-1" enabled={data.showBluetooth} onClick={() => set({ showBluetooth: !data.showBluetooth })} />
                         <InlineToggle label="DND" labelOffset="ml-1" enabled={data.samsungShowDnd} onClick={() => set({ samsungShowDnd: !data.samsungShowDnd })} />
                         <InlineToggle label="Location" labelOffset="ml-1" enabled={data.showLocation} onClick={() => set({ showLocation: !data.showLocation })} />
